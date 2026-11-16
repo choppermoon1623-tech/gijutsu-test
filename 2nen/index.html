@@ -1,0 +1,1005 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2年技術 テスト勉強</title>
+<style>
+:root{
+  --bg:#f6f3ec; --card:#fff; --ink:#1f2633; --sub:#5a6272; --line:#ddd6c7;
+  --ene:#c8641e; --hatsu:#2f6fb5; --hen:#96700a; --kairo:#178a7e; --anzen:#c0392b; --mix:#374151;
+  --ok:#1e8a4c; --ng:#c0392b; --hl:#fff2b8;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"BIZ UDPGothic","BIZ UDGothic","Hiragino Sans","Yu Gothic",sans-serif;line-height:1.6;-webkit-text-size-adjust:100%}
+button{font:inherit;cursor:pointer}
+header{background:#1f2633;color:#fff;padding:10px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:5}
+header h1{font-size:18px;margin:0;flex:1}
+header button{background:#ffffff22;color:#fff;border:1px solid #ffffff55;border-radius:8px;padding:4px 12px}
+main{max-width:760px;margin:0 auto;padding:16px}
+.hidden{display:none!important}
+h2{font-size:20px;margin:6px 0 12px}
+.lead{color:var(--sub);font-size:14px;margin:0 0 14px}
+/* home */
+.unit{background:var(--card);border-radius:14px;padding:14px 16px;margin-bottom:12px;border-left:8px solid var(--c);box-shadow:0 1px 3px #0001}
+.unit .t{font-weight:bold;font-size:18px}
+.unit .s{color:var(--sub);font-size:13px}
+.unit .bar{height:6px;background:#eee;border-radius:3px;margin:8px 0 10px;overflow:hidden}
+.unit .bar i{display:block;height:100%;background:var(--c)}
+.unit .stat{font-size:12px;color:var(--sub)}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:2px solid var(--c,#555);background:#fff;color:var(--c,#555);border-radius:10px;padding:8px 14px;font-weight:bold;min-width:84px}
+.btn.fill{background:var(--c,#555);color:#fff}
+.btn:disabled{opacity:.4;cursor:default}
+.opts{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:14px;margin:4px 0 14px;color:var(--sub)}
+.opts select{font:inherit;padding:4px 8px;border-radius:8px;border:1px solid var(--line)}
+/* quiz */
+.qhead{display:flex;justify-content:space-between;font-size:13px;color:var(--sub)}
+.prog{height:8px;background:#e6e0d3;border-radius:4px;overflow:hidden;margin:4px 0 14px}
+.prog i{display:block;height:100%;background:var(--c);transition:width .3s}
+.qcard{background:var(--card);border-radius:14px;padding:16px;box-shadow:0 1px 3px #0001}
+.tag{display:inline-block;font-size:12px;background:var(--c);color:#fff;border-radius:20px;padding:1px 10px;margin-bottom:6px}
+.qtext{font-size:18px;font-weight:bold;margin:0 0 12px}
+.fig{text-align:center;margin:4px 0 12px}
+.fig svg{max-width:100%;height:auto}
+.choices{display:grid;gap:8px}
+.choice{text-align:left;background:#fff;border:2px solid var(--line);border-radius:10px;padding:10px 12px;font-size:16px;display:flex;gap:10px;align-items:flex-start}
+.choice .n{flex:none;width:24px;height:24px;border-radius:50%;background:#eee;font-size:13px;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.choice:hover:not(:disabled){border-color:var(--c)}
+.choice.ok{border-color:var(--ok);background:#e8f6ee}
+.choice.ng{border-color:var(--ng);background:#fbeaea}
+.choice:disabled{cursor:default;color:inherit}
+.fb{margin-top:12px;border-radius:10px;padding:10px 12px;font-size:15px}
+.fb.ok{background:#e8f6ee;border:1px solid #b7dfc7}
+.fb.ng{background:#fbeaea;border:1px solid #efc2bd}
+.fb b{font-size:17px}
+.next{margin-top:12px;width:100%;padding:12px;font-size:17px}
+.play{background:var(--c);color:#fff;border:none;border-radius:30px;padding:8px 18px;font-weight:bold;margin-bottom:12px}
+/* order */
+.picked{min-height:46px;border:2px dashed var(--line);border-radius:10px;padding:6px;display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;align-items:center}
+.picked:empty::before{content:"下のボタンを順番にタップ";color:#aaa;font-size:14px;padding-left:4px}
+.chip{border:2px solid var(--c);background:#fff;color:var(--ink);border-radius:20px;padding:5px 12px;font-size:15px}
+.chip.in{background:var(--c);color:#fff}
+.chip.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.chip.ng{background:var(--ng);border-color:var(--ng);color:#fff}
+.chip:disabled{cursor:default}
+.pool{display:flex;flex-wrap:wrap;gap:6px}
+/* result */
+.score{font-size:46px;font-weight:bold;text-align:center;color:var(--c);margin:6px 0 0}
+.msg{text-align:center;margin:0 0 14px}
+.miss{background:#fff;border-radius:10px;padding:10px 12px;margin-bottom:8px;border-left:5px solid var(--ng);font-size:14px}
+.miss .a{color:var(--ok);font-weight:bold}
+/* cards */
+.flash{background:var(--card);border-radius:16px;min-height:230px;padding:22px 18px;box-shadow:0 2px 6px #0002;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;cursor:pointer;user-select:none;border-top:8px solid var(--c)}
+.flash .front{font-size:19px;font-weight:bold}
+.flash .back{font-size:22px;font-weight:bold;color:var(--c)}
+.flash .ex{font-size:14px;color:var(--sub);margin-top:10px}
+.flash .hint{font-size:12px;color:#999;margin-top:14px}
+.cardnav{display:flex;gap:8px;margin-top:12px}
+.cardnav .btn{flex:1;padding:12px}
+/* summary */
+.sum{background:var(--card);border-radius:14px;padding:14px 16px;margin-bottom:12px;box-shadow:0 1px 3px #0001}
+.sum h3{margin:0 0 8px;font-size:17px;color:var(--c);border-bottom:2px solid var(--c);padding-bottom:3px}
+.sum p,.sum li{font-size:15px}
+.sum ul{padding-left:20px;margin:6px 0}
+.k{background:linear-gradient(transparent 55%,var(--hl) 55%);font-weight:bold}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:6px 0}
+table.t th,table.t td{border:1px solid var(--line);padding:5px 6px;text-align:center;vertical-align:middle}
+table.t th{background:#f3efe5}
+.flow{display:flex;flex-direction:column;gap:4px;margin:6px 0}
+.flow div{background:#f3efe5;border-radius:8px;padding:6px 10px;font-size:14px;position:relative}
+.flow div b{color:var(--c)}
+.mini{font-size:13px;color:var(--sub)}
+.keys{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
+.keys .kk{border:1px solid var(--line);border-radius:10px;padding:4px;text-align:center;font-size:13px}
+.chordbtns{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.chordbtns button{border:1px solid var(--c);background:#fff;color:var(--c);border-radius:8px;padding:4px 10px;font-size:14px}
+.tip{background:#fffbea;border:1px solid #efe1a4;border-radius:10px;padding:8px 12px;font-size:14px;margin-top:8px}
+footer{text-align:center;font-size:12px;color:#999;padding:20px}
+@media (max-width:480px){.qtext{font-size:17px}.choice{font-size:15px}}
+
+/* ---- 技術版の追加 ---- */
+.point{background:var(--c);color:#fff;border-radius:14px;padding:12px 16px;margin-bottom:12px}
+.point h3{margin:0 0 4px;font-size:16px}
+.point ul{margin:0;padding-left:20px}
+.point li{font-size:15px}
+.sum{scroll-margin-top:60px}
+.sum.hit{outline:3px solid var(--c)}
+.row3{display:flex;align-items:stretch;gap:4px;margin:8px 0}
+.row3>div{flex:1;min-width:0;background:#f3efe5;border-radius:10px;padding:8px 4px;text-align:center;font-size:13px;border-top:4px solid var(--c)}
+.row3>div b{display:block;font-size:15px;color:var(--c)}
+.row3>i{flex:none;align-self:center;font-style:normal;color:var(--c);font-size:12px}
+.flow.arrow div:not(:last-child){margin-bottom:14px}
+.flow.arrow div:not(:last-child)::after{content:"▼";position:absolute;left:50%;bottom:-18px;transform:translateX(-50%);color:var(--c);font-size:11px}
+.flow.steps div:nth-child(2){margin-left:8%}
+.flow.steps div:nth-child(3){margin-left:16%}
+.sw{display:inline-block;width:28px;height:10px;border-radius:5px;border:1px solid #888;vertical-align:middle;margin-right:6px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:6px 0}
+.grid2 div{background:#f3efe5;border-radius:8px;padding:6px 8px;font-size:14px}
+table.t td.l{text-align:left}
+table.t.nw td:first-child{white-space:nowrap}
+rt{font-size:9px;font-weight:normal}
+.hide .k{color:transparent;background:var(--hl);border-radius:4px;cursor:pointer;user-select:none}
+.hide .k.show{color:inherit;background:linear-gradient(transparent 55%,var(--hl) 55%)}
+.lk{border:none;background:none;color:#2f6fb5;text-decoration:underline;padding:0;font-size:13px}
+#hideNote{font-size:13px;color:var(--sub);align-self:center}
+.sym{stroke:currentColor;stroke-width:3.5;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.w{stroke:#222;stroke-width:2.1;fill:none;stroke-linejoin:round}
+.symg{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:6px;margin:6px 0}
+.symg div{border:2px solid #ccc;border-radius:10px;padding:4px 2px;text-align:center;font-size:12px;background:#fff}
+.symg div b{display:block;font-weight:normal}
+.symg .p{border-color:#c8641e}.symg .c{border-color:#2f6fb5}.symg .l{border-color:#b58500}.symg .w{border-color:#178a7e;stroke:none}
+.row3{flex-wrap:nowrap}
+</style>
+</head>
+<body>
+<header>
+  <h1>🔧 2年 技術 テスト勉強</h1>
+  <button id="homeBtn" class="hidden" onclick="go('home')">ホーム</button>
+</header>
+<main id="app"></main>
+<footer>成績はこの端末のブラウザだけに保存されます</footer>
+
+<script>
+'use strict';
+/* ===================== 単元 ===================== */
+const UNITS = {
+  ene:{name:'エネルギー変換の技術',sub:'入力 → 変換 → 出力 と、にげていくエネルギー（ロス）',c:'var(--ene)',icon:'🔁'},
+  hatsu:{name:'発電の仕組みと特徴',sub:'電磁誘導・変換効率・発電方法の比較・エネルギーミックス',c:'var(--hatsu)',icon:'⚡'},
+  hen:{name:'電気エネルギーの変換',sub:'電気を 光・熱・運動・信号 に変える仕組み',c:'var(--hen)',icon:'💡'},
+  kairo:{name:'電気回路の仕組み',sub:'電源・導線・負荷・制御する部分 と 回路図（電気用図記号）',c:'var(--kairo)',icon:'🔌'},
+  anzen:{name:'電気機器を安全に使う技術',sub:'漏電・感電・ショート、ブレーカ、定格と電流の計算',c:'var(--anzen)',icon:'🛡️'}
+};
+
+/* ===================== 電気用図記号（図として使う） ===================== */
+const SYMS = {
+  bat:'<g class="sym"><path d="M-50 0H-7M7 0H50M-7 -24V24"/><path d="M7 -12V12" stroke-width="8"/></g>',
+  lamp:'<g class="sym"><path d="M-50 0H-17M17 0H50"/><circle r="17"/><path d="M-12 -12L12 12M-12 12L12 -12"/></g>',
+  lampon:'<g class="sym"><path d="M-50 0H-17M17 0H50"/><circle r="17" fill="#ffd96b"/><path d="M-12 -12L12 12M-12 12L12 -12"/></g><g class="sym" stroke="#e0a400" stroke-width="3"><path d="M0 -24V-30M17 -17L22 -22M-17 -17L-22 -22"/></g>',
+  diode:'<g class="sym"><path d="M-50 0H50"/><path d="M-12 -14L12 0L-12 14Z" fill="#fff"/><path d="M12 -15V15"/></g>',
+  led:'<g class="sym"><path d="M-50 0H50"/><path d="M-12 -14L12 0L-12 14Z" fill="#fff"/><path d="M12 -15V15"/><path d="M-1 -16L9 -26M8 -16L18 -26"/></g><g fill="currentColor"><path d="M11 -28L8.5 -20.5L3.5 -25.5Z"/><path d="M20 -28L17.5 -20.5L12.5 -25.5Z"/></g>',
+  motor:'<g class="sym"><path d="M-50 0H-19M19 0H50"/><circle r="19"/></g><text x="0" y="9" text-anchor="middle" font-size="26" font-weight="900" fill="currentColor" font-family="sans-serif">M</text>',
+  buzzer:'<g class="sym"><path d="M-50 0H-8V-10M50 0H8V-10"/><path d="M-18 -26H18A18 18 0 0 1 -18 -26Z"/></g>',
+  sw:'<g class="sym"><path d="M-50 0H-18M18 0H50M-18 0L16 -20"/></g>',
+  swon:'<g class="sym"><path d="M-50 0H-18M18 0H50M-18 0L18 -3"/></g>',
+  cap:'<g class="sym"><path d="M-50 0H-7M7 0H50M-7 -19V19M7 -19V19"/></g>',
+  res:'<g class="sym"><path d="M-50 0H-25M25 0H50"/><rect x="-25" y="-10" width="50" height="20"/></g>',
+  vres:'<g class="sym"><path d="M-50 0H-25M25 0H50"/><rect x="-25" y="-10" width="50" height="20"/><path d="M-22 19L16 -14"/></g><path d="M22 -19L18.5 -10L13 -16.5Z" fill="currentColor"/>',
+  cds:'<g class="sym"><path d="M-50 0H-25M25 0H50"/><rect x="-25" y="-10" width="50" height="20"/><path d="M-24 -30L-15 -19M-11 -30L-2 -19"/></g><g fill="currentColor"><path d="M-11 -14L-18.5 -16.5L-12.5 -21.5Z"/><path d="M2 -14L-5.5 -16.5L0.5 -21.5Z"/></g>',
+  join:'<g class="sym"><path d="M-50 0H50M0 0V30"/></g><circle r="5.5" fill="currentColor"/>',
+  cross:'<g class="sym"><path d="M-50 0H50M0 -30V30"/></g>'
+};
+function sym(n,w){return `<svg viewBox="-54 -36 108 72" width="${w||84}" style="color:#222">${SYMS[n]}</svg>`;}
+function at(n,x,y,r,s){return `<g transform="translate(${x},${y}) rotate(${r||0}) scale(${s||0.6})" style="color:#222">${SYMS[n]}</g>`;}
+function symCell(n,name,cls){return `<div class="${cls||''}">${sym(n,76)}<b>${name}</b></div>`;}
+function staffSVG(f){return f&&SYMS[f]?sym(f,150):'';}
+
+/* ===================== 問題のタグ → まとめの何番か ===================== */
+const SEC = {
+  ene:{'エネルギーの種類':1,'エネルギー変換':2,'入力と出力':3,'ドライヤー':4,'身近な製品':4,'ロス':5,'これから':6},
+  hatsu:{'電磁誘導':1,'発電機とモータ':2,'発電とは':3,'もとのエネルギー':4,'変換効率':5,'3つのものさし':6,'くらべる':6,'エネルギーミックス':7,'2030年':8},
+  hen:{'4つの利用':1,'光':2,'LED':3,'熱':4,'エアコン':5,'運動':6,'信号':7,'安全':8},
+  kairo:{'4つの部分':1,'仲間分け':1,'輪':2,'制御':3,'回路図':4,'図記号':5,'かき方':6,'LEDと抵抗':7},
+  anzen:{'事故の原因':1,'用語':2,'ブレーカ':3,'切れたら':4,'アース線':5,'トラッキング':6,'コード':6,'定格':7,'PSE':7,'計算':8,'警告図記号':9,'災害':9}
+};
+const MARU='①②③④⑤⑥⑦⑧⑨';
+function secOf(q){return q.s||(SEC[q.u]||{})[q.tag]||0;}
+function secHint(q){const n=secOf(q);return n?`<br><span class="mini">📘 「まとめ」の${MARU[n-1]}にのっています</span>`:'';}
+function secLink(q){const n=secOf(q);return n?`<br><button class="lk" onclick="jump('${q.u}',${n})">📘 まとめ${MARU[n-1]}で確認する</button>`:'';}
+function jump(u,n){
+  go('sum',u);
+  const el=document.querySelectorAll('.sum')[n-1];
+  if(el){el.classList.add('hit');el.scrollIntoView({block:'start'});}
+}
+/* まとめ：マーカーをかくす */
+function toggleHide(){
+  const b=document.querySelector('#sumbody'),on=b.classList.toggle('hide');
+  b.querySelectorAll('.k.show').forEach(x=>x.classList.remove('show'));
+  document.querySelector('#hideBtn').textContent=on?'👀 ぜんぶ見せる':'🙈 マーカーをかくして確認';
+  document.querySelector('#hideNote').textContent=on?'かくれた所を、答えを思いうかべてからタップしよう':'';
+}
+document.addEventListener('click',e=>{const k=e.target.closest&&e.target.closest('.hide .k');if(k)k.classList.toggle('show');});
+
+/* ===================== 問題 ===================== */
+const Q = [
+/* ---------- エネルギー変換の技術 ---------- */
+{id:'e01',u:'ene',tag:'エネルギーの種類',q:'照明は、電気エネルギーを主に何エネルギーに変えている？',a:'光エネルギー',d:['熱エネルギー','運動エネルギー','音エネルギー'],e:'照明の目的は「明るくする」こと。だから出力は光。'},
+{id:'e02',u:'ene',tag:'エネルギーの種類',q:'エアコンは、電気エネルギーを主に何エネルギーとして役立てている？',a:'熱エネルギー',d:['光エネルギー','音エネルギー','位置エネルギー'],e:'暖める・冷やす＝熱にかかわる働き。'},
+{id:'e03',u:'ene',tag:'エネルギーの種類',q:'扇風機や時計の針は、電気エネルギーを何エネルギーに変えている？',a:'運動エネルギー',d:['光エネルギー','熱エネルギー','化学エネルギー'],e:'回る・動く＝運動エネルギー。'},
+{id:'e04',u:'ene',tag:'エネルギーの種類',q:'教室の照明の光も、エアコンの熱も、扇風機の運動も、もとをたどると何から来ている？',a:'電気エネルギー（コンセント）',d:['光エネルギー','運動エネルギー','音エネルギー'],e:'入り口はぜんぶ同じ「電気」。出口が光・熱・運動に分かれている。'},
+{id:'e05',u:'ene',tag:'エネルギー変換',q:'エネルギーを、目的に合わせて使いやすい形に変えるはたらきを何という？',a:'エネルギー変換',d:['エネルギー保存','エネルギー供給','エネルギー消費'],e:'明るくしたい・暖めたい・動かしたい、という目的に合わせて形を変える。'},
+{id:'e06',u:'ene',tag:'エネルギー変換',q:'電気エネルギーを、わざわざ別のエネルギーに変換して使うのはなぜ？',a:'電気そのものは見えず、そのままでは使えないから',d:['電気は量が少ないから','電気は値段が高いから','電気はためておけるから'],e:'電気は「料理する前の材料」。変換（調理）して、はじめて役に立つ形になる。'},
+{id:'e07',u:'ene',tag:'入力と出力',type:'order',q:'機器のはたらきを表す3つの箱を、順に並べよう',items:['入力','変換','出力'],e:'入れる（入力）→ 中の仕組みで変える（変換）→ 出てくる（出力）。'},
+{id:'e08',u:'ene',tag:'入力と出力',q:'「入力 → 変換 → 出力」の「入力」とは？',a:'もとのエネルギー（多くは電気）',d:['目的のエネルギー','中の仕組み（部品）','にげていくエネルギー'],e:'機器に「入ってくる」エネルギーが入力。'},
+{id:'e09',u:'ene',tag:'入力と出力',q:'「入力 → 変換 → 出力」の「出力」とは？',a:'目的のエネルギー（光・熱・運動・音など）',d:['もとのエネルギー','コンセントの電気','中の仕組み（部品）'],e:'機器から「出ていく」、目的に合ったエネルギーが出力。'},
+{id:'e10',u:'ene',tag:'入力と出力',q:'照明を3つの箱に当てはめたとき、「変換」にあたるものは？',a:'LED・電球',d:['電気','光','コンセント'],e:'入力：電気 → 変換：LED・電球 → 出力：光。'},
+{id:'e11',u:'ene',tag:'ドライヤー',q:'ドライヤーの出力（2つ）の組み合わせは？',a:'熱エネルギーと運動エネルギー',d:['光エネルギーと音エネルギー','熱エネルギーと光エネルギー','運動エネルギーと光エネルギー'],e:'温かい「風」＝熱＋運動（風）。出力は1つとは限らない。'},
+{id:'e12',u:'ene',tag:'ドライヤー',q:'ドライヤーの中で、熱をつくっている部品は？',a:'電熱線',d:['モータ','ファン','スイッチ'],e:'電熱線に電流が流れて熱くなる。'},
+{id:'e13',u:'ene',tag:'ドライヤー',q:'ドライヤーの中で、風をつくっている部品は？',a:'モータとファン',d:['電熱線','コード','プラグ'],e:'モータがファンを回して風（運動エネルギー）になる。'},
+{id:'e14',u:'ene',tag:'ドライヤー',q:'ドライヤーを温風から冷風に切りかえた。減らした出力は？',a:'熱エネルギー',d:['運動エネルギー','電気エネルギー','光エネルギー'],e:'風（運動）はそのまま、電熱線の熱だけを止めている。'},
+{id:'e15',u:'ene',tag:'身近な製品',q:'テレビの出力（2つ）の組み合わせは？',a:'光エネルギーと音エネルギー',d:['熱エネルギーと運動エネルギー','運動エネルギーと光エネルギー','熱エネルギーと音エネルギー'],e:'画面の光だけでなく、音も目的。音を消したらテレビとして成り立たない。'},
+{id:'e16',u:'ene',tag:'身近な製品',q:'洗濯機の主な出力は？',a:'運動エネルギー',d:['光エネルギー','熱エネルギー','水のエネルギー'],e:'「きれいになる」は結果。そのために動いているのはドラムの回転＝運動。'},
+{id:'e17',u:'ene',tag:'身近な製品',q:'テレビ・洗濯機・照明は、入力が同じ「電気」なのに出力がちがう。なぜ？',a:'目的がちがい、変換する仕組み（中の部品）がちがうから',d:['使う電気の種類がちがうから','コンセントの形がちがうから','作った会社がちがうから'],e:'機器は、入力されたエネルギーを「目的に合った形」へ変換している。'},
+{id:'e18',u:'ene',tag:'ロス',q:'変換のとき、目的以外のエネルギーとしてにげていく分を何という？',a:'ロス（損失）',d:['入力','出力','効率'],e:'入れたエネルギーの全部が目的の形になるわけではない。'},
+{id:'e19',u:'ene',tag:'ロス',q:'ロスとして出てくることが多いエネルギーは？',a:'熱や音',d:['電気や光','運動や電気','光や運動'],e:'機器が温かくなる・音がする、はロスのしるし。'},
+{id:'e20',u:'ene',tag:'ロス',q:'スマートフォンを使っていると熱くなるのはなぜ？',a:'目的ではない熱（ロス）が出ているから',d:['温めることが目的の機械だから','こわれているから','電気が足りないから'],e:'スマホの目的は光・音・計算。熱はねらっていないのに出てしまうロス。故障ではない。'},
+{id:'e21',u:'ene',tag:'ロス',q:'LED照明に入力した電気を100とすると、約80が光になる。残りの約20は何になる？（授業の例）',a:'熱',d:['音','運動','電気のまま残る'],e:'約20は熱としてにげる。数値は例で、製品によって変わる。'},
+{id:'e22',u:'ene',tag:'ロス',q:'ロスについて正しいのは？',a:'ゼロにはできないが、減らすことはできる',d:['工夫すればゼロにできる','減らすことはできない','ロスは多いほどよい'],e:'ロスは避けられない。でも技術の工夫で減らしてきた。'},
+{id:'e23',u:'ene',tag:'ロス',q:'白熱電球からLEDに変わったのは、何のための工夫？',a:'ロスを減らすため',d:['熱を多く出すため','電気を多く使うため','重くするため'],e:'同じ明るさでも、熱としてにげる分が少ない。'},
+{id:'e24',u:'ene',tag:'ロス',q:'ロスを減らすと良いこととして、当てはまらないものは？',a:'機器が熱くなりやすくなる',d:['電気代が減る','環境にやさしい','機器が長持ちする'],e:'ロス（熱）が減るので、むしろ熱くなりにくい。'},
+{id:'e25',u:'ene',tag:'ロス',q:'扇風機で出るロスは？',a:'音やモータの熱',d:['風','回転','電気'],e:'風（運動）は目的。音とモータの熱は、目的ではないのに出るロス。'},
+{id:'e26',u:'ene',tag:'これから',q:'運動エネルギーを目的の場所へ伝える部品（動力の伝達）の例は？',a:'歯車・プーリ・リンク',d:['LED・電球','ブレーカ・アース線','電熱線・ニクロム線'],e:'これから学ぶ3つ：効率化／回路と安全／動力の伝達。'},
+
+/* ---------- 発電の仕組みと特徴 ---------- */
+{id:'h01',u:'hatsu',tag:'電磁誘導',q:'発電の基本になる2つの部品は？',a:'コイルと磁石',d:['電池とスイッチ','LEDと抵抗器','ヒーターとファン'],e:'発電の基本は「コイル」と「磁石」。'},
+{id:'h02',u:'hatsu',tag:'電磁誘導',q:'磁石を動かすと、コイルに電流が発生する。この現象を何という？',a:'電磁誘導',d:['誘導加熱','放電','静電気'],e:'磁石（磁界）の変化が、コイルに電流を生む。'},
+{id:'h03',u:'hatsu',tag:'発電機とモータ',q:'運動の力を電気に変える装置は？',a:'発電機',d:['モータ','電池','スピーカ'],e:'回す（運動）→ 電気。逆向きがモータ。'},
+{id:'h04',u:'hatsu',tag:'発電機とモータ',q:'電気を運動の力に変える装置は？',a:'モータ',d:['発電機','コイル','タービン'],e:'電気 → 回る（運動）。発電機とは逆向きで、構造はほぼ同じ（表裏一体）。'},
+{id:'h05',u:'hatsu',tag:'発電機とモータ',q:'発電機の身近な例は？',a:'自転車のライト',d:['扇風機','電子レンジ','ドライヤー'],e:'タイヤの回転（運動）で発電して光らせる。'},
+{id:'h06',u:'hatsu',tag:'発電機とモータ',q:'磁石とコイルの仕組みが使われている身近な例は？',a:'スマホのワイヤレス充電',d:['乾電池','はんだごて','電気ストーブ'],e:'発電機・モータのほか、ワイヤレス充電にも活躍している。'},
+{id:'h07',u:'hatsu',tag:'発電とは',q:'「発電」の正しい説明は？',a:'ほかのエネルギーを電気エネルギーに変換すること',d:['電気をゼロから生み出すこと','電気をためておくこと','電気を光に変えること'],e:'発電も「エネルギー変換」。ゼロから生み出しているわけではない。'},
+{id:'h08',u:'hatsu',tag:'発電とは',q:'発電方法のちがいは、主に何のちがい？',a:'どんなエネルギーで発電機（タービン）を回すか',d:['コイルの色','電線の長さ','発電所の名前'],e:'火・風・水など、回すためのエネルギーがちがう。'},
+{id:'h09',u:'hatsu',tag:'もとのエネルギー',q:'「地下資源」を使う発電の組み合わせは？',a:'火力・原子力',d:['太陽光・風力','水力・地熱','風力・水力'],e:'石炭・石油・天然ガス・ウランなどを使う。'},
+{id:'h10',u:'hatsu',tag:'もとのエネルギー',q:'地下資源の特徴は？',a:'埋蔵量に限りがある',d:['使っても減らない','天気に左右される','どこにでもある'],e:'使えば減り、いつかはなくなる。'},
+{id:'h11',u:'hatsu',tag:'もとのエネルギー',q:'再生可能エネルギーの特徴は？',a:'自然の力で、使っても減らない',d:['埋蔵量に限りがある','地下からほり出す','二酸化炭素をたくさん出す'],e:'太陽・風・水など、自然の力を使う。'},
+{id:'h12',u:'hatsu',tag:'もとのエネルギー',q:'再生可能エネルギーではないものは？',a:'原子力',d:['太陽光','風力','水力'],e:'原子力は地下資源（ウラン）を使うので、火力と同じ「地下資源」の仲間。'},
+{id:'h13',u:'hatsu',tag:'変換効率',q:'100のエネルギーから、どれくらい電気を作れるかを表す言葉は？',a:'エネルギー変換効率',d:['エネルギー自給率','電源構成','消費電力'],e:'高いほど、無駄なく電気にできる。'},
+{id:'h14',u:'hatsu',tag:'変換効率',q:'エネルギー変換効率がいちばん高い発電方法は？（授業の資料）',a:'水力（約80%）',d:['火力（約43%）','原子力（約33%）','太陽光（約10%）'],e:'水の力で直接タービンを回すので、ロスが少ない。'},
+{id:'h15',u:'hatsu',tag:'変換効率',q:'火力（石炭・石油）の変換効率は約何%？（授業の資料）',a:'約43%',d:['約80%','約10%','約1%'],e:'燃やした熱の半分以上は、電気にならずににげる。'},
+{id:'h16',u:'hatsu',tag:'変換効率',q:'火力の中でも、変換効率が約55%と高い方式は？',a:'コンバインドサイクル（LNG複合）',d:['石炭火力','石油火力','ガスタービンだけ'],e:'ガスタービンと蒸気タービンを組み合わせて、熱を2回使う。'},
+{id:'h17',u:'hatsu',tag:'変換効率',q:'太陽光発電の変換効率は約何%？（授業の資料）',a:'約10%',d:['約80%','約55%','約43%'],e:'二酸化炭素は少ないが、変換効率は低い。'},
+{id:'h18',u:'hatsu',tag:'3つのものさし',q:'発電方法をくらべる「3つのものさし」に入らないものは？',a:'発電所の建物の大きさ',d:['エネルギー変換効率','CO₂排出量','発電にかかる費用'],e:'①変換効率（無駄なく電気にできるか）②CO₂排出量（環境にやさしいか）③費用（電気代にどう影響するか）。'},
+{id:'h19',u:'hatsu',tag:'くらべる',q:'CO₂排出量がいちばん多い発電方法は？（授業の資料）',a:'火力（石炭）',d:['原子力','水力','太陽光'],e:'石炭 943g。次が石油 738g。燃やす発電はCO₂が多い。'},
+{id:'h20',u:'hatsu',tag:'くらべる',q:'CO₂排出量がいちばん少ない発電方法は？（授業の資料）',a:'水力',d:['火力（石油）','火力（コンバインドサイクル）','太陽光'],e:'水力 11g。地熱 13g、原子力 19g も少ない。'},
+{id:'h21',u:'hatsu',tag:'くらべる',q:'発電にかかる費用がいちばん高い発電方法は？（授業の資料）',a:'火力（石油）',d:['原子力','水力','火力（石炭）'],e:'石油 30.6〜43.4円。太陽光 29.4円・バイオマス 29.7円も高め。'},
+{id:'h22',u:'hatsu',tag:'くらべる',q:'発電にかかる費用がいちばん安い発電方法は？（授業の資料）',a:'原子力',d:['太陽光','風力','火力（石油）'],e:'原子力 10.1円、水力 11円、石炭 12.3円の順に安い。'},
+{id:'h23',u:'hatsu',tag:'くらべる',q:'太陽光発電の特徴として正しいのは？',a:'CO₂は少ないが、変換効率が低く、天気に左右される',d:['変換効率がいちばん高い','CO₂排出量がいちばん多い','費用がいちばん安い'],e:'プラス面（環境にやさしい）とマイナス面（効率・天候・費用）の両方がある。'},
+{id:'h24',u:'hatsu',tag:'エネルギーミックス',q:'発電方法について正しいのは？',a:'どの発電方法にもプラス面とマイナス面がある',d:['水力がすべての面で最高','太陽光にはマイナス面がない','火力にはプラス面がない'],e:'全てが完璧な「夢の発電方法」は存在しない。'},
+{id:'h25',u:'hatsu',tag:'エネルギーミックス',q:'日本のエネルギー自給率（2022年度）は？',a:'12.6%',d:['50.3%','80%','33%'],e:'わずか12.6%。エネルギー資源の多くを輸入にたよっている。'},
+{id:'h26',u:'hatsu',tag:'エネルギーミックス',q:'発電方法を組み合わせて、弱点を補い合うことを何という？',a:'エネルギーミックス',d:['エネルギー変換効率','電磁誘導','コンバインドサイクル'],e:'バンドのように、それぞれの個性を組み合わせる。'},
+{id:'h27',u:'hatsu',tag:'エネルギーミックス',q:'バンドにたとえると「安定して鳴るベース」にあたる発電は？',a:'水力・原子力・地熱',d:['火力','太陽光・風力','バイオマスだけ'],e:'天気や時間に関係なく、安定して発電し続ける。'},
+{id:'h28',u:'hatsu',tag:'エネルギーミックス',q:'バンドにたとえると「テンポを合わせるドラム」にあたる発電は？',a:'火力',d:['水力・原子力・地熱','太陽光・風力','地熱だけ'],e:'使う量に合わせて、発電量を調節する役。'},
+{id:'h29',u:'hatsu',tag:'エネルギーミックス',q:'バンドにたとえると「天気次第のソロ」にあたる発電は？',a:'太陽光・風力',d:['火力','水力・原子力・地熱','原子力だけ'],e:'晴れ・風のあるときは活躍するが、天気に左右される。'},
+{id:'h30',u:'hatsu',tag:'2030年',q:'国が目指す2030年の電源構成で、いちばん割合が大きいのは？',a:'再生可能エネルギー（36〜38%程度）',d:['石炭（19%程度）','石油（2%程度）','原子力（20〜22%程度）'],e:'再エネ36〜38%、原子力20〜22%、LNG20%、石炭19%、石油2%、水素・アンモニア1%。'},
+{id:'h31',u:'hatsu',tag:'2030年',q:'国が目指す2030年の電源構成で、原子力の割合は？',a:'20〜22%程度',d:['36〜38%程度','2%程度','50%程度'],e:'再エネの次に大きい。LNG（20%）・石炭（19%）とほぼ同じくらい。'},
+
+/* ---------- 電気エネルギーの変換 ---------- */
+{id:'c01',u:'hen',tag:'4つの利用',q:'電気の主な利用を4つに分けると？',a:'光・熱・運動・信号',d:['光・熱・水・風','熱・音・力・磁石','電源・導線・負荷・制御'],e:'信号＝情報を表す電気・電波・光などの変化。'},
+{id:'c02',u:'hen',tag:'光',q:'白熱電球が光る仕組みは？',a:'フィラメントが電流で高温になって光る',d:['紫外線が蛍光物質に当たって光る','半導体に電流が流れて光る','マイクロ波で光る'],e:'高温で光る＝熱もたくさん出る（ロスが大きい）。'},
+{id:'c03',u:'hen',tag:'光',q:'電球形蛍光ランプが光る仕組みは？',a:'放電で出た紫外線が蛍光物質に当たって光る',d:['フィラメントが高温になって光る','半導体に電流が流れて光る','ニクロム線が赤くなって光る'],e:'放電 → 紫外線 → 蛍光物質 → 目に見える光。'},
+{id:'c04',u:'hen',tag:'光',q:'LED電球が光る仕組みは？',a:'半導体（LED）に電流が流れると光る',d:['フィラメントが高温になって光る','紫外線が蛍光物質に当たって光る','水の分子がゆれて光る'],e:'LED＝発光ダイオード。半導体でできている。'},
+{id:'c05',u:'hen',tag:'光',q:'同じ明るさ（白熱電球60W相当）で、消費電力がいちばん少ないのは？',a:'LED電球（9.4W）',d:['白熱電球（54W）','電球形蛍光ランプ（12W）','どれも同じ'],e:'白熱電球 54W ＞ 蛍光ランプ 12W ＞ LED 9.4W。'},
+{id:'c06',u:'hen',tag:'光',q:'LED電球の寿命は約何時間？（教科書の目安）',a:'40,000時間',d:['1,000時間','6,000時間','100時間'],e:'白熱電球（1,000時間）の40倍。'},
+{id:'c07',u:'hen',tag:'光',q:'白熱電球の寿命は約何時間？（教科書の目安）',a:'1,000時間',d:['40,000時間','10,000時間','6,000時間'],e:'蛍光ランプは6,000〜10,000時間、LEDは40,000時間。'},
+{id:'c08',u:'hen',tag:'LED',q:'LED電球は値段が高いのに広まった。その理由は？',a:'電気代が約6分の1、寿命が40倍で、長く使うと得だから',d:['白熱電球より安く買えるから','熱をたくさん出すから','軽くて小さいから'],e:'値段は高い（1,000〜3,000円）が、長く使えばLEDのほうが得。'},
+{id:'c09',u:'hen',tag:'LED',q:'雪国でLED式の信号機にしたら、どんなことが起きた？',a:'雪がとけず、積もって見えなくなった',d:['まぶしすぎて見えなくなった','寒さで電気が流れなくなった','すぐに切れてしまった'],e:'省エネ（熱が少ない）という長所が、雪国では短所になった。ヒーター付きなどで対策。'},
+{id:'c10',u:'hen',tag:'LED',q:'LED信号機に雪が積もりやすいのはなぜ？',a:'LEDの光は赤外線が少なく、表示面が温まりにくいから',d:['LEDは光が弱いから','LEDは雪を引きよせるから','LEDは電気を使わないから'],e:'長所と短所の両方を知り、使う場所や目的に合わせて選ぶことが大切。'},
+{id:'c11',u:'hen',tag:'熱',q:'ニクロム線などに電流を流して発熱させる方法は？',a:'抵抗加熱',d:['誘導加熱','誘電加熱','赤外線加熱'],e:'電気を通しにくい（抵抗が大きい）ものに電流を流すと熱くなる。'},
+{id:'c12',u:'hen',tag:'熱',q:'ニクロム線に電流を流したときに発生する熱を何という？',a:'ジュール熱',d:['まさつ熱','マイクロ波','うず電流'],e:'抵抗のあるものに電流が流れると出る熱。'},
+{id:'c13',u:'hen',tag:'熱',q:'抵抗加熱を使っている機器は？',a:'アイロン・はんだごて',d:['IH調理器','電子レンジ','エアコン'],e:'発熱体そのものが熱くなる。'},
+{id:'c14',u:'hen',tag:'熱',q:'発熱体から出る赤外線を受けて体が温まる「赤外線加熱」の機器は？',a:'電気ストーブ・こたつ',d:['IH調理器','電子レンジ','はんだごて'],e:'赤外線が体に当たって温まる。'},
+{id:'c15',u:'hen',tag:'熱',q:'IH調理器の加熱方法を何という？',a:'誘導加熱',d:['誘電加熱','抵抗加熱','赤外線加熱'],e:'IH＝誘導加熱。「誘電」（電子レンジ）と1字ちがいなので注意。'},
+{id:'c16',u:'hen',tag:'熱',q:'IH調理器で、なべ底に流れる電流を何という？',a:'うず電流',d:['マイクロ波','ジュール電流','冷媒'],e:'うず電流が流れ、なべの電気抵抗でなべ自体が発熱する。'},
+{id:'c17',u:'hen',tag:'熱',type:'order',q:'IH調理器でなべが熱くなるまでを順に並べよう',items:['コイルに交流の電流を流す','変化する磁力線が出る','なべ底にうず電流が流れる','なべの電気抵抗で発熱する'],e:'コイル → 磁力線 → うず電流 → 発熱。熱くなるのは「なべ自体」。'},
+{id:'c18',u:'hen',tag:'熱',q:'IH調理器で、土なべやガラスのなべが使えないのはなぜ？',a:'電気が流れないので、うず電流が流れないから',d:['重すぎるから','熱に弱いから','水を通すから'],e:'なべに電流が流れてはじめて発熱する。'},
+{id:'c19',u:'hen',tag:'熱',q:'電子レンジの加熱方法を何という？',a:'誘電加熱',d:['誘導加熱','抵抗加熱','赤外線加熱'],e:'電子レンジ＝誘電加熱。IH＝誘導加熱。'},
+{id:'c20',u:'hen',tag:'熱',q:'電子レンジで、マイクロ波を出す部品は？',a:'マグネトロン',d:['サーモスタット','ニクロム線','圧縮機'],e:'電気 → マイクロ波 → 熱。'},
+{id:'c21',u:'hen',tag:'熱',q:'電子レンジのマイクロ波は、食品の中の何をゆらす？',a:'水の分子',d:['空気','金属','油の膜'],e:'水の分子が激しくゆれ、分子どうしのまさつの熱で食品の中まで温まる。'},
+{id:'c22',u:'hen',tag:'熱',q:'アイロンで、温度を一定に保つ部品は？',a:'サーモスタット',d:['マグネトロン','圧縮機','フィラメント'],e:'熱くなりすぎると電流を切り、冷めるとまた流す。'},
+{id:'c23',u:'hen',tag:'エアコン',q:'エアコンで、室内機と室外機の間を循環して熱を運ぶ物質は？',a:'冷媒',d:['マイクロ波','うず電流','蛍光物質'],e:'冷媒が熱を受け取って運ぶ。'},
+{id:'c24',u:'hen',tag:'エアコン',q:'圧縮機で冷媒を圧縮して熱を運ぶ仕組みを何という？',a:'ヒートポンプ',d:['サーモスタット','トラッキング','コンバインドサイクル'],e:'熱を「つくる」のではなく「運ぶ」。使った電気エネルギーより多くの熱を運べる。'},
+{id:'c25',u:'hen',tag:'エアコン',q:'エアコンの冷房は、熱をどう運んでいる？',a:'部屋の熱を外へ運ぶ',d:['外の熱を部屋へ運ぶ','部屋の熱を消している','冷たい空気をつくって入れている'],e:'冷房：部屋 → 外。暖房：外 → 部屋。'},
+{id:'c26',u:'hen',tag:'運動',q:'模型やおもちゃに使われる、安くて電池で動くモータは？',a:'ブラシ付き直流モータ',d:['サーボモータ','ブラシレス直流モータ','振動モータ'],e:'安い・電池で動く。'},
+{id:'c27',u:'hen',tag:'運動',q:'ロボットや工作機械で、角度や位置を正確に制御できるモータは？',a:'サーボモータ',d:['ブラシ付き直流モータ','振動モータ','ブラシレス直流モータ'],e:'ロボットの関節など、決まった角度で止めたいときに使う。'},
+{id:'c28',u:'hen',tag:'運動',q:'パソコンのファンなどに使われる、静かで寿命が長いモータは？',a:'ブラシレス直流モータ',d:['ブラシ付き直流モータ','サーボモータ','振動モータ'],e:'こすれるブラシがないので、静かで長持ち。'},
+{id:'c29',u:'hen',tag:'運動',q:'スマートフォンがブルブルふるえる仕組み（一例）は？',a:'かたよった重り（分銅）をモータで回す',d:['スピーカが大きな音を出す','電池がふくらんだりちぢんだりする','画面を速く点めつさせる'],e:'重心がずれた分銅を回すと、全体がゆさぶられる。脱水でかたよった洗濯機がゆれるのと同じ。'},
+{id:'c30',u:'hen',tag:'信号',q:'マイクロホンの変換は？',a:'音 → 電気信号',d:['電気信号 → 音','光 → 電気信号','電気信号 → 熱'],e:'音でコイルが動き、電気信号になる。'},
+{id:'c31',u:'hen',tag:'信号',q:'スピーカの変換は？',a:'電気信号 → 音',d:['音 → 電気信号','電気信号 → 光','熱 → 電気信号'],e:'マイクとスピーカは逆向きの変換。'},
+{id:'c32',u:'hen',tag:'信号',q:'ダイナミック型のマイクとスピーカに共通する仕組みは？',a:'永久磁石のそばでコイルが動く',d:['フィラメントが高温になる','マイクロ波を出す','冷媒が循環する'],e:'発電機とモータの関係と同じ。磁石とコイルの組み合わせ。'},
+{id:'c33',u:'hen',tag:'信号',q:'光ファイバの特徴は？',a:'信号が弱まりにくく、大量のデータを遠くまで送れる',d:['電線より太くて重い','近い場所にしか届かない','電波を空中に飛ばす'],e:'細いガラスの中を光信号が進む。'},
+{id:'c34',u:'hen',tag:'信号',q:'日本と海外との通信の約99%は、何を通っている？',a:'海底の光ファイバケーブル',d:['人工衛星の電波','海底の太い銅線','飛行機'],e:'海の底に光ファイバケーブルがしかれている。'},
+{id:'c35',u:'hen',tag:'安全',q:'消費電力の大きい機器（ストーブ・ドライヤーなど）には、何が流れる？',a:'大きな電流',d:['小さな電流','マイクロ波','冷媒'],e:'だから、たこ足配線をしない・コードの傷を確かめることが大切。'},
+
+/* ---------- 電気回路の仕組み ---------- */
+{id:'r01',u:'kairo',tag:'4つの部分',q:'電気回路で「電流を送る役割を果たす部分」は？',a:'電源',d:['導線','負荷','スイッチ'],e:'電池・コンセントなど。'},
+{id:'r02',u:'kairo',tag:'4つの部分',q:'電気回路で「電流の通り道」は？',a:'導線',d:['電源','負荷','スイッチ'],e:'電源・負荷・制御する部分を、ひとつの輪につなぐ。'},
+{id:'r03',u:'kairo',tag:'4つの部分',q:'電気回路で「電流の働きで仕事をする部分」は？',a:'負荷',d:['電源','導線','スイッチ'],e:'モータ・LED・スピーカなど。電気エネルギーを変換して使う所。'},
+{id:'r04',u:'kairo',tag:'4つの部分',q:'スイッチや可変抵抗器は、電気回路のどの部分？',a:'電流を制御する部分',d:['電源','負荷','導線'],e:'流す・止める、流れる量を調節する。'},
+{id:'r05',u:'kairo',tag:'仲間分け',q:'「負荷」にあたるものは？',a:'モータ',d:['乾電池','スイッチ','電源コード'],e:'乾電池＝電源、スイッチ＝制御、電源コード＝導線。'},
+{id:'r06',u:'kairo',tag:'仲間分け',q:'コンセントは、電気回路のどの部分？',a:'電源',d:['負荷','導線','電流を制御する部分'],e:'電気が「来る」所なので電源。'},
+{id:'r07',u:'kairo',tag:'仲間分け',q:'人感センサは、電気回路のどの部分？',a:'電流を制御する部分',d:['電源','負荷','導線'],e:'人がいるかどうかで、入／切を切りかえる。センサも制御する部分。'},
+{id:'r08',u:'kairo',tag:'仲間分け',q:'スピーカやLEDは、電気回路のどの部分？',a:'負荷',d:['電源','導線','電流を制御する部分'],e:'電気を音や光に変換して仕事をする。'},
+{id:'r09',u:'kairo',tag:'制御',q:'扇風機のモデルで、可変抵抗器のつまみを回すとプロペラはどうなる？',a:'回る速さが変わる',d:['回る向きが逆になる','回ったり止まったりをくり返す','何も変わらない'],e:'スイッチ＝流す・止める。可変抵抗器＝流れる量を調節。'},
+{id:'r10',u:'kairo',tag:'制御',q:'可変抵抗器で回る速さが変わるのはなぜ？',a:'電流の流れにくさが変わり、モータに流れる電流の大きさが変わるから',d:['電池の向きが変わるから','導線の長さが変わるから','モータが別の部品になるから'],e:'流れにくくする → 電流が小さくなる → ゆっくり回る。'},
+{id:'r11',u:'kairo',tag:'輪',q:'電池の回路（直流）で、電流はどう流れる？',a:'＋極から出て、負荷を通り、－極へ戻る',d:['－極から出て、＋極へ戻る','＋極と－極の両方から出る','負荷で止まって消える'],e:'電流は、ひとつながりの輪を流れる。'},
+{id:'r12',u:'kairo',tag:'輪',q:'回路の輪が1か所でもとぎれると？',a:'電流は流れない',d:['電流が大きくなる','電流の向きが逆になる','半分だけ流れる'],e:'スイッチは、この輪を切ったりつないだりする「門」。'},
+{id:'r13',u:'kairo',tag:'4つの部分',q:'電気回路は、負荷で何をして目的の動作をさせている？',a:'電気エネルギーを変換する',d:['電気エネルギーをつくる','電気エネルギーをためる','電気エネルギーを消す'],e:'モータ→運動、LED→光、ヒーター→熱、スピーカ→音。'},
+{id:'r14',u:'kairo',tag:'制御',q:'「倒れると自動で切れる電気ストーブ」は、どの視点の工夫？',a:'安全性',d:['見た目','大きさ','音の良さ'],e:'人感センサの照明＝環境・経済（省エネ）、エアコンの温度センサ＝快適・省エネ。'},
+{id:'r15',u:'kairo',tag:'回路図',q:'回路図をかくときに使う記号を何という？',a:'電気用図記号',d:['警告図記号','地図記号','PSEマーク'],e:'回路図は、ものづくりの共通語。'},
+{id:'r16',u:'kairo',tag:'回路図',q:'電気用図記号の形を決めている日本の規格は？',a:'JIS（日本産業規格）',d:['PSE','IH','LNG'],e:'JIS C 0617。国際規格（IEC）に合わせているので、世界でも共通。'},
+{id:'r17',u:'kairo',tag:'回路図',q:'絵（実体配線図）ではなく、回路図（記号）でかく良さは？',a:'すばやくかけて、だれがかいても同じ形になり、つながりがひと目でわかる',d:['本物そっくりで楽しい','色がきれいにぬれる','かくのに時間がかかる'],e:'設計する人と作る人がちがっても、同じ回路を組み立てられる。'},
+{id:'r18',u:'kairo',tag:'図記号',fig:'bat',q:'この電気用図記号は何？',a:'電池・直流電源',d:['コンデンサ','スイッチ','抵抗器'],e:'長い線が＋極、短くて太い線が－極。コンデンサは同じ長さの2本線。'},
+{id:'r19',u:'kairo',tag:'図記号',fig:'sw',q:'この電気用図記号は何？',a:'スイッチ',d:['導線の接続','電池・直流電源','抵抗器'],e:'線がはね上がって、輪を切っている形。'},
+{id:'r20',u:'kairo',tag:'図記号',fig:'res',q:'この電気用図記号は何？',a:'抵抗器',d:['可変抵抗器','コンデンサ','ランプ（電球）'],e:'長方形だけ。矢印がななめに入ると可変抵抗器。'},
+{id:'r21',u:'kairo',tag:'図記号',fig:'vres',q:'この電気用図記号は何？',a:'可変抵抗器',d:['抵抗器','光導電セル（CdS）','スイッチ'],e:'抵抗器（長方形）＋ななめの矢印＝「変えられる」。'},
+{id:'r22',u:'kairo',tag:'図記号',fig:'lamp',q:'この電気用図記号は何？',a:'ランプ（電球）',d:['モータ','発光ダイオード（LED）','ブザー'],e:'丸の中に×。丸の中にMならモータ。'},
+{id:'r23',u:'kairo',tag:'図記号',fig:'led',q:'この電気用図記号は何？',a:'発光ダイオード（LED）',d:['ダイオード','ランプ（電球）','光導電セル（CdS）'],e:'三角＋棒（ダイオード）に、外へ出ていく矢印＝光を出す。'},
+{id:'r24',u:'kairo',tag:'図記号',fig:'motor',q:'この電気用図記号は何？',a:'モータ',d:['ランプ（電球）','ブザー','電池・直流電源'],e:'丸の中にM（Motor）。'},
+{id:'r25',u:'kairo',tag:'図記号',fig:'buzzer',q:'この電気用図記号は何？',a:'ブザー',d:['モータ','ランプ（電球）','コンデンサ'],e:'半円（おわん）の形。'},
+{id:'r26',u:'kairo',tag:'図記号',fig:'cds',q:'この電気用図記号は何？',a:'光導電セル（CdS）',d:['発光ダイオード（LED）','可変抵抗器','抵抗器'],e:'抵抗器に、外から入ってくる矢印＝光を受ける。LEDは矢印が外向き。'},
+{id:'r27',u:'kairo',tag:'図記号',fig:'cap',q:'この電気用図記号は何？',a:'コンデンサ',d:['電池・直流電源','スイッチ','抵抗器'],e:'同じ長さの線が2本。長さがちがえば電池。'},
+{id:'r28',u:'kairo',tag:'図記号',fig:'diode',q:'この電気用図記号は何？',a:'ダイオード',d:['発光ダイオード（LED）','スイッチ','可変抵抗器'],e:'三角＋棒。矢印がついていれば発光ダイオード（LED）。'},
+{id:'r29',u:'kairo',tag:'図記号',q:'電池の図記号で、長い線はどちらの極？',a:'＋極',d:['－極','どちらでもない','長さは関係ない'],e:'長い線が＋極。向きをまちがえるとLEDは光らない。'},
+{id:'r30',u:'kairo',tag:'かき方',q:'回路図で、導線がつながっている所はどう表す？',a:'●（黒丸）をかく',d:['×をかく','何もかかない','線を太くする'],e:'つながる所は●。つながらない交差は●なし。'},
+{id:'r31',u:'kairo',tag:'かき方',q:'回路図の線のかき方として正しいのは？',a:'定規でまっすぐ、曲がり角は直角',d:['フリーハンドでなめらかに','ななめの線でできるだけ短く','丸い輪になるように'],e:'長方形の輪にまとめ、記号は辺の途中に置く。'},
+{id:'r32',u:'kairo',tag:'かき方',q:'扇風機のモデルの回路図に使う記号4つは？',a:'電池・スイッチ・可変抵抗器・モータ',d:['電池・ランプ・ブザー・LED','コンデンサ・抵抗器・ダイオード・モータ','スイッチ・ランプ・抵抗器・ブザー'],e:'電源＝電池、制御＝スイッチ・可変抵抗器、負荷＝モータ。'},
+{id:'r33',u:'kairo',tag:'LEDと抵抗',q:'LEDに抵抗器をつなぐのはなぜ？',a:'流れる電流が大きすぎると壊れるので、電流をおさえるため',d:['LEDを明るくするため','電池を長持ちさせないため','電流の向きを逆にするため'],e:'この抵抗を「電流制限抵抗」という。'},
+{id:'r34',u:'kairo',tag:'LEDと抵抗',q:'電源4.5V、LEDは3.5Vで光る。抵抗器にかかる電圧は？',a:'1.0V',d:['8.0V','3.5V','4.5V'],e:'4.5 − 3.5 ＝ 1.0V。'},
+{id:'r35',u:'kairo',tag:'LEDと抵抗',q:'抵抗器にかかる電圧が1.0V、流したい電流が0.02Aのとき、抵抗の大きさは？',a:'50Ω',d:['0.02Ω','5Ω','500Ω'],e:'オームの法則 V＝R×I より R＝V÷I＝1.0÷0.02＝50Ω。近い値の51Ωなどを選ぶ。'},
+
+/* ---------- 電気機器を安全に使う技術 ---------- */
+{id:'z01',u:'anzen',tag:'事故の原因',q:'家庭用電気製品の火災で、上位に多いのは？（教科書の表）',a:'プラグ・テーブルタップ・コードなど「電気の通り道」',d:['テレビの画面','リモコン','照明のかさ'],e:'毎日さわる「電気の通り道」が上位。電池は充電のしかたに注意。'},
+{id:'z02',u:'anzen',tag:'用語',q:'決められた通り道以外に、電流が漏れることを何という？',a:'漏電',d:['感電','ショート（短絡）','放電'],e:'漏電＝電流が「漏れる」。'},
+{id:'z03',u:'anzen',tag:'用語',q:'人体に電流が流れて、ショックを受けることを何という？',a:'感電',d:['漏電','ショート（短絡）','トラッキング現象'],e:'感電＝体で「感じる」。'},
+{id:'z04',u:'anzen',tag:'用語',q:'誤った回路で、非常に大きな電流が流れることを何という？',a:'ショート（短絡）',d:['漏電','感電','誘導加熱'],e:'負荷を通らない「近道」ができて、大電流 → 発熱。'},
+{id:'z05',u:'anzen',tag:'用語',q:'ショート（短絡）が起こるのは、どんなとき？',a:'コードの被覆が傷み、2本の導線が直接ふれたとき',d:['スイッチを切ったとき','電球が切れたとき','プラグを抜いたとき'],e:'だから、コードの傷を確かめることが大切。'},
+{id:'z06',u:'anzen',tag:'ブレーカ',q:'家全体で電気を使いすぎると切れるのは？',a:'アンペアブレーカ',d:['漏電遮断器','配線用遮断器','アース線'],e:'契約や地域によっては、ない家もある。'},
+{id:'z07',u:'anzen',tag:'ブレーカ',q:'漏電を感じとると切れるのは？',a:'漏電遮断器',d:['アンペアブレーカ','配線用遮断器','サーモスタット'],e:'名前のとおり、漏電のとき電気を遮断する。'},
+{id:'z08',u:'anzen',tag:'ブレーカ',q:'部屋ごとの回路で、ショートや大きすぎる電流が流れると切れるのは？',a:'配線用遮断器（安全ブレーカ）',d:['アンペアブレーカ','漏電遮断器','PSEマーク'],e:'分電盤にいくつも並んでいる小さなブレーカ。'},
+{id:'z09',u:'anzen',tag:'切れたら',type:'order',q:'使いすぎで配線用遮断器が切れたときの手順を順に並べよう',items:['機器のスイッチを切り、プラグを抜く','同時に使う機器を減らす','乾いた手でレバーを上げる'],e:'原因（使いすぎ）を直してから、レバーを上げる。ブレーカは事故を知らせるサイン。'},
+{id:'z10',u:'anzen',tag:'切れたら',q:'漏電遮断器が切れた・何度も切れる・原因がわからないときは？',a:'さわらずに大人に知らせ、電気工事店などに点検してもらう',d:['何度でもレバーを上げ直す','ぬれた手でレバーを上げる','テープでレバーを固定する'],e:'漏電しているかもしれない。自分で直そうとしない。'},
+{id:'z11',u:'anzen',tag:'アース線',q:'アース線の役割は？',a:'漏れた電流を地面へ逃がし、体に流れる電流を小さくする',d:['電気代を安くする','機器を速く動かす','ほこりを集める'],e:'アース線＋漏電遮断器の二重の守りで、感電の危険を小さくする。'},
+{id:'z12',u:'anzen',tag:'アース線',q:'アース線を必ずつなぎたい機器は？',a:'洗濯機',d:['スマートフォンの充電器','卓上のLEDライト','電池式の時計'],e:'水や湿気のある所で使う機器（洗濯機・冷蔵庫・電子レンジなど）に必要。'},
+{id:'z13',u:'anzen',tag:'アース線',q:'洗濯機にアース線が必要なのはなぜ？',a:'水を使うので、漏電・感電の危険が大きいから',d:['モータが大きいから','重いから','音が大きいから'],e:'水は電気を通しやすい。'},
+{id:'z14',u:'anzen',tag:'トラッキング',q:'差しっぱなしのプラグにたまったほこりが湿気を吸い、発火する現象は？',a:'トラッキング現象',d:['ショート（短絡）','電磁誘導','ヒートポンプ'],e:'ほこり＋湿気がキーワード。'},
+{id:'z15',u:'anzen',tag:'トラッキング',type:'order',q:'トラッキング現象が起こるまでを順に並べよう',items:['プラグのすき間にほこりがたまる','ほこりが湿気を吸う','刃と刃の間で小さな放電がくり返される','表面がこげて電気の通り道ができ、発火'],e:'ほこり → 湿気 → 放電 → 発火。'},
+{id:'z16',u:'anzen',tag:'トラッキング',q:'トラッキング現象を防ぐ方法は？',a:'ときどきプラグを抜いて、ほこりをふく',d:['プラグを差しっぱなしにする','プラグを水でぬらす','コードを束ねる'],e:'家具の後ろなど、差しっぱなしのプラグに注意。'},
+{id:'z17',u:'anzen',tag:'トラッキング',q:'トラッキング対策プラグの、刃の根元にカバーがついているのはなぜ？',a:'ほこりがたまる根元を絶縁して、電気の通り道をできにくくするため',d:['抜けにくくするため','見た目をよくするため','電気を多く流すため'],e:'絶縁＝電気を通さないようにすること。'},
+{id:'z18',u:'anzen',tag:'コード',q:'コードを束ねたまま使うと、どうなる？',a:'熱が逃げにくく、発熱してコードが劣化・発火する',d:['電気代が安くなる','電流が流れなくなる','明るさが増す'],e:'コードはほどいて使う。家具の下じきにもしない。'},
+{id:'z19',u:'anzen',tag:'コード',q:'プラグを抜くときの正しいやり方は？',a:'プラグを持って抜く',d:['コードを引っぱって抜く','ぬれた手で抜く','足で引っかけて抜く'],e:'コードを引っぱると中の導線が傷み、ショートの原因になる。'},
+{id:'z20',u:'anzen',tag:'定格',q:'電気部品を安全に使用できる「限度の値」を何という？',a:'定格',d:['効率','負荷','抵抗'],e:'定格をこえると、発熱・破損して事故の原因になる。'},
+{id:'z21',u:'anzen',tag:'定格',q:'「流してもよい電流」を表す言葉は？',a:'定格電流',d:['定格電圧','許容電圧','消費電力'],e:'定格電圧＝加えてもよい電圧。定格電流＝流してもよい電流。'},
+{id:'z22',u:'anzen',tag:'定格',q:'テーブルタップに「15A 125V」と表示されている。合計何Wまで使える？',a:'1500W',d:['125W','1875W','15W'],e:'家庭のコンセントは100V。15A×100V＝1500W。125Vは「加えてもよい電圧」の限度。'},
+{id:'z23',u:'anzen',tag:'PSE',q:'国の安全基準（電気用品安全法）を満たした電気用品につけられるマークは？',a:'PSEマーク',d:['JISマーク','LEDマーク','CDSマーク'],e:'PS＝Product Safety（製品の安全）、E＝電気用品。'},
+{id:'z24',u:'anzen',tag:'PSE',q:'危険が大きい「特定電気用品」（ひし形のPSEマーク）の例は？',a:'延長コードセット（延長コード・テーブルタップ）',d:['電気ストーブ','テレビ','電池式のリモコン'],e:'電気ストーブ・テレビは「特定電気用品以外」（丸形のPSEマーク）。'},
+{id:'z25',u:'anzen',tag:'定格',q:'コード（導線）の太さと、流せる電流の関係は？',a:'太いほど、たくさんの電流を流せる',d:['細いほど、たくさんの電流を流せる','太さは関係ない','長いほど、たくさんの電流を流せる'],e:'だから、ストーブのように大きな電流が流れる機器には太いコードが使われる。'},
+{id:'z26',u:'anzen',tag:'定格',q:'断面積0.75mm²のビニルコードの許容電流は？（教科書の表）',a:'7A',d:['12A','17A','15A'],e:'0.75mm²→7A、1.25mm²→12A、2.00mm²→17A。'},
+{id:'z27',u:'anzen',tag:'計算',q:'電流〔A〕を求める式は？',a:'電力〔W〕÷ 電圧〔V〕',d:['電力〔W〕× 電圧〔V〕','電圧〔V〕÷ 電力〔W〕','電力〔W〕＋ 電圧〔V〕'],e:'電力＝電流×電圧 だから、電流＝電力÷電圧。'},
+{id:'z28',u:'anzen',tag:'計算',q:'家庭のコンセントの電圧は？',a:'100V',d:['125V','15V','1500V'],e:'計算には100Vを使う（タップの表示の125Vではない）。'},
+{id:'z29',u:'anzen',tag:'計算',q:'800Wの電気ストーブを100Vで使うと、流れる電流は？',a:'8A',d:['0.8A','80A','800A'],e:'800 ÷ 100 ＝ 8A。'},
+{id:'z30',u:'anzen',tag:'計算',q:'定格15Aのテーブルタップで、電気ストーブ800Wとノートパソコン22Wを同時に使う。流れる電流と判定は？',a:'8.22A で定格以内',d:['82.2A で危険','22.5A で危険','0.22A で定格以内'],e:'8.0 ＋ 0.22 ＝ 8.22A ＜ 15A。'},
+{id:'z31',u:'anzen',tag:'計算',q:'定格15Aのテーブルタップで、オーブントースタ1000Wと電気ケトル1250Wを同時に使う。流れる電流と判定は？',a:'22.5A で危険',d:['8.22A で定格以内','2.25A で定格以内','12.5A で定格以内'],e:'10.0 ＋ 12.5 ＝ 22.5A ＞ 15A。タップやコードが発熱し、火災のおそれ。'},
+{id:'z32',u:'anzen',tag:'計算',q:'合計が定格をこえそうなときは、どうする？',a:'同時に使わず、時間をずらす',d:['コードを束ねて使う','タップをもう1つつなぐ（たこ足配線）','そのまま短い時間だけ使う'],e:'ワット数を見て、合計1500W（15A）以内に。'},
+{id:'z33',u:'anzen',tag:'警告図記号',q:'警告図記号で「丸に斜線」が表す意味は？',a:'禁止（してはいけない）',d:['注意（気をつける）','指示（必ずする）','安全（してもよい）'],e:'丸に斜線＝禁止、△＝注意、●塗りつぶし＝指示。'},
+{id:'z34',u:'anzen',tag:'警告図記号',q:'警告図記号で「△（三角）」が表す意味は？',a:'注意（気をつける）',d:['禁止（してはいけない）','指示（必ずする）','故障'],e:'△＝注意。例：感電注意。'},
+{id:'z35',u:'anzen',tag:'警告図記号',q:'警告図記号で「●（塗りつぶした丸）」が表す意味は？',a:'指示（必ずする）',d:['禁止（してはいけない）','注意（気をつける）','電源'],e:'例：電源プラグを抜く。'},
+{id:'z36',u:'anzen',tag:'災害',q:'停電から電気が戻ったとき、倒れたストーブなどから出火することを何という？',a:'通電火災',d:['トラッキング現象','漏電','ショート（短絡）'],e:'避難するときは、できればブレーカを切る。'},
+{id:'z37',u:'anzen',tag:'災害',q:'切れて垂れ下がった電線を見つけたら？',a:'近づかない・さわらない',d:['手でどかす','棒でつついて確かめる','水をかける'],e:'電気が流れているかもしれない。感電の危険。'}
+];
+
+/* ===================== まとめ ===================== */
+const SUM = {
+ene:`
+<div class="point"><h3>⚡ まず、ここだけ</h3><ul>
+<li>機器は、入力されたエネルギーを<b>目的に合った形</b>へ変換している</li>
+<li>型は <b>入力 → 変換 → 出力</b>（入力は多くの場合「電気」）</li>
+<li>そのとき、目的以外のエネルギー（<b>熱・音</b>）＝<b>ロス</b>も出る</li>
+<li>ロスは<b>ゼロにできないが、減らせる</b>（白熱電球 → LED）</li></ul></div>
+
+<div class="sum"><h3>① 電気は、何になって役立っている？</h3>
+<div class="row3"><div><b>💡 光</b>照明</div><div><b>🔥 熱</b>エアコン</div><div><b>⚙️ 運動</b>時計・扇風機</div><div><b>🔊 音</b>テレビの音</div></div>
+<p>光も、熱も、運動も、もとをたどると全部 <span class="k">電気エネルギー</span>（コンセント）。</p>
+<p class="mini">入り口はぜんぶ同じ「電気」なのに、出口がいくつにも分かれている。</p></div>
+
+<div class="sum"><h3>② エネルギー変換とは</h3>
+<p>電気そのものは <b>見えない・さわれない・そのままでは使えない</b>。</p>
+<p>だから、目的（明るくしたい・暖めたい・動かしたい）に合わせて使いやすい形に変える。このはたらきを <span class="k">エネルギー変換</span> という。</p>
+<div class="tip">たとえ：電気は「料理する前の材料」。調理（＝変換）して、はじめて食べられる形になる。</div></div>
+
+<div class="sum"><h3>③ 入力 → 変換 → 出力</h3>
+<div class="fig"><svg viewBox="0 0 340 132" width="340" font-size="12">
+<g fill="#fff" stroke="#c8641e" stroke-width="2"><rect x="8" y="14" width="90" height="50" rx="8"/><rect x="125" y="14" width="90" height="50" rx="8"/><rect x="242" y="14" width="90" height="50" rx="8"/></g>
+<g text-anchor="middle"><text x="53" y="36" font-weight="bold" font-size="14">入力</text><text x="53" y="54" fill="#666" font-size="10">もとのエネルギー</text>
+<text x="170" y="36" font-weight="bold" font-size="14">変換</text><text x="170" y="54" fill="#666">中の仕組み</text>
+<text x="287" y="36" font-weight="bold" font-size="14">出力</text><text x="287" y="54" fill="#666" font-size="10">目的のエネルギー</text>
+<text x="53" y="82" fill="#c8641e">電気</text><text x="287" y="82" fill="#c8641e">光・熱・運動・音</text>
+<text x="170" y="124" fill="#c0392b" font-weight="bold">熱・音（ロス）</text></g>
+<g stroke="#c8641e" stroke-width="2.5" fill="#c8641e"><path d="M100 39h18"/><path d="M118 34l8 5l-8 5z"/><path d="M217 39h18"/><path d="M235 34l8 5l-8 5z"/></g>
+<g stroke="#c0392b" stroke-width="2.5" fill="#c0392b"><path d="M170 66v34" stroke-dasharray="5 3"/><path d="M165 100l5 9l5-9z"/></g>
+</svg></div>
+<table class="t"><tr><th>入力</th><td class="l"><span class="k">もとのエネルギー</span>（多くは電気）</td></tr>
+<tr><th>変換</th><td class="l">中の仕組み（モータ・電熱線・LED など）</td></tr>
+<tr><th>出力</th><td class="l"><span class="k">目的のエネルギー</span>（光・熱・運動・音）</td></tr></table>
+<p class="mini">中身がわからなくても、「何を入れたら／何が出てくるか」を見れば、はたらきを説明できる。</p></div>
+
+<div class="sum"><h3>④ 身近な製品を「入力 → 出力」で表す</h3>
+<div class="fig"><svg viewBox="0 0 340 112" width="340" font-size="12">
+<text x="170" y="12" text-anchor="middle" font-weight="bold">ドライヤーの中では、2つの変換が同時に起きている</text>
+<rect x="6" y="46" width="60" height="30" rx="6" fill="#fff" stroke="#c8641e" stroke-width="2"/><text x="36" y="66" text-anchor="middle" font-weight="bold">電気</text>
+<path d="M66 61h20M86 61L112 38M86 61L112 86" stroke="#c8641e" stroke-width="2.5" fill="none"/>
+<rect x="114" y="22" width="104" height="30" rx="6" fill="#fdece0" stroke="#c8641e"/><text x="166" y="42" text-anchor="middle">電熱線</text>
+<rect x="114" y="72" width="104" height="30" rx="6" fill="#fdece0" stroke="#c8641e"/><text x="166" y="92" text-anchor="middle">モータとファン</text>
+<path d="M218 37h24M218 87h24" stroke="#c8641e" stroke-width="2.5"/><path d="M242 32l8 5l-8 5zM242 82l8 5l-8 5z" fill="#c8641e"/>
+<text x="256" y="42" font-weight="bold" fill="#c0392b">熱エネルギー</text><text x="256" y="92" font-weight="bold" fill="#2f6fb5">運動エネルギー</text><text x="256" y="106" fill="#666" font-size="11">（風）</text>
+</svg></div>
+<table class="t"><tr><th>製品</th><th>入力</th><th>出力</th></tr>
+<tr><td>ドライヤー</td><td>電気</td><td><span class="k">熱 ＋ 運動</span></td></tr>
+<tr><td>テレビ</td><td>電気</td><td><span class="k">光 ＋ 音</span></td></tr>
+<tr><td>洗濯機</td><td>電気</td><td><span class="k">運動</span></td></tr>
+<tr><td>照明</td><td>電気</td><td><span class="k">光</span></td></tr>
+<tr><td>扇風機</td><td>電気</td><td>運動（風）</td></tr></table>
+<p>入力は同じ「電気」なのに出力がちがうのは、<span class="k">目的がちがい、変換する仕組み（中の部品）がちがう</span>から。</p>
+<div class="tip">書き方のコツ：「風が出る」「回る」ではなく、<b>エネルギーの名前</b>で答える。出力は1つとは限らない。<br>洗濯機の「きれいになる」は結果。動いているのはドラムの回転＝運動。</div></div>
+
+<div class="sum"><h3>⑤ ロス（損失）</h3>
+<p>変換のとき、入れたエネルギーの全部が目的の形になるわけではない。一部は必ず、目的以外のエネルギー（主に <span class="k">熱</span>、ときに <span class="k">音</span>）としてにげていく。これを <span class="k">ロス（損失）</span> という。</p>
+<div class="fig"><svg viewBox="0 0 340 78" width="340" font-size="12">
+<text x="10" y="14">LED照明に入力した電気を 100 とすると…（授業の例）</text>
+<rect x="10" y="24" width="256" height="30" fill="#ffd96b"/><rect x="266" y="24" width="64" height="30" fill="#e98b7d"/>
+<text x="138" y="44" text-anchor="middle" font-weight="bold">光　約80（目的）</text><text x="298" y="44" text-anchor="middle" font-weight="bold">熱 約20</text>
+<text x="298" y="70" text-anchor="middle" fill="#c0392b">ロス</text></svg></div>
+<ul><li>スマホが熱くなる → 目的ではない熱（ロス）が出ているから。<b>故障ではない</b></li>
+<li>洗濯機の音・モータの熱、扇風機の音 → これもロス</li>
+<li>ロスは <span class="k">ゼロにはできないが、減らすことはできる</span></li>
+<li>白熱電球 → LED は、ロスを減らす工夫</li></ul>
+<div class="tip">ロスを減らすと：<b>電気代が減る</b>・<b>環境にやさしい</b>（CO₂が減る）・<b>機器が長持ちする</b></div></div>
+
+<div class="sum"><h3>⑥ これから学ぶこと</h3>
+<div class="row3"><div><b>効率化</b>ロスを減らす技術<br><span class="mini">LED・省エネ家電</span></div><div><b>回路と安全</b>電気を安全に使う<br><span class="mini">回路・定格・感電や漏電の防止</span></div><div><b>動力の伝達</b>運動を伝える部品<br><span class="mini">歯車・プーリ・リンク</span></div></div>
+<p class="mini">「入力 → 変換 → 出力 ＋ ロス」が、この先ずっと土台になる。</p></div>`,
+
+hatsu:`
+<div class="point"><h3>⚡ まず、ここだけ</h3><ul>
+<li>発電の基本は<b>コイルと磁石</b>。磁石を動かすと電流が発生＝<b>電磁誘導</b></li>
+<li>発電＝ほかのエネルギーを<b>電気エネルギーに変換</b>すること</li>
+<li>くらべるものさしは3つ：<b>変換効率・CO₂排出量・費用</b></li>
+<li>完璧な発電方法はない → 弱点を補い合う<b>エネルギーミックス</b></li></ul></div>
+
+<div class="sum"><h3>① 発電の基本は「コイル」と「磁石」</h3>
+<div class="fig"><svg viewBox="0 0 340 130" width="340" font-size="12">
+<g fill="none" stroke="#c8641e" stroke-width="3"><ellipse cx="110" cy="50" rx="48" ry="10"/><ellipse cx="110" cy="62" rx="48" ry="10"/><ellipse cx="110" cy="74" rx="48" ry="10"/><ellipse cx="110" cy="86" rx="48" ry="10"/><ellipse cx="110" cy="98" rx="48" ry="10"/></g>
+<rect x="96" y="14" width="28" height="48" fill="#e05252"/><rect x="96" y="62" width="28" height="48" fill="#3f7fd0"/>
+<text x="110" y="44" text-anchor="middle" fill="#fff" font-weight="bold" font-size="16">N</text><text x="110" y="94" text-anchor="middle" fill="#fff" font-weight="bold" font-size="16">S</text>
+<path d="M30 30v64" stroke="#333" stroke-width="2.5"/><path d="M25 32l5-10l5 10zM25 92l5 10l5-10z" fill="#333"/>
+<text x="2" y="122">磁石を動かす</text><text x="110" y="126" text-anchor="middle" fill="#c8641e">コイル</text>
+<path d="M158 74h52" stroke="#e0a400" stroke-width="3"/><path d="M210 68l10 6l-10 6z" fill="#e0a400"/>
+<text x="232" y="64" font-weight="bold" font-size="14" fill="#b58500">電流が発生！</text><text x="232" y="84" font-weight="bold" font-size="15">＝ 電磁誘導</text>
+</svg></div>
+<p>磁石を動かすと、コイルに電流が発生する。この現象を <span class="k">電磁誘導</span> という。</p></div>
+
+<div class="sum"><h3>② 発電機とモータは「表裏一体」</h3>
+<div class="row3"><div><b>発電機</b>運動 → 電気<br><span class="mini">例：自転車のライト</span></div><i>⇄</i><div><b>モータ</b>電気 → 運動<br><span class="mini">例：扇風機</span></div></div>
+<p>発電機とモータの <span class="k">構造はほぼ同じ</span>。変換の向きが逆なだけ。</p>
+<p class="mini">磁石とコイルの仕組みは、スマホの <b>ワイヤレス充電</b> にも活躍している。</p></div>
+
+<div class="sum"><h3>③ 「発電」とは</h3>
+<p>発電とは、電気をゼロから生み出すことではない。<span class="k">ほかのエネルギーを電気エネルギーに変換すること</span>。</p>
+<div class="row3"><div><b>火・風・水 など</b>もとのエネルギー</div><i>▶</i><div><b>発電機（タービン）</b>を回す</div><i>▶</i><div><b>電気</b>エネルギー</div></div>
+<p>カギは、<span class="k">どんなエネルギーで発電機（タービン）を回すか</span>。</p></div>
+
+<div class="sum"><h3>④ もとになるエネルギーは大きく2つ</h3>
+<table class="t"><tr><th>地下資源</th><th>再生可能エネルギー</th></tr>
+<tr><td><span class="k">埋蔵量に限りがある</span></td><td><span class="k">自然の力で、使っても減らない</span></td></tr>
+<tr><td>火力・原子力</td><td>太陽光・風力・水力 など</td></tr></table>
+<div class="tip">まちがえやすい：<b>原子力</b>は地下資源（ウラン）を使うので、再生可能エネルギーではない。</div></div>
+
+<div class="sum"><h3>⑤ エネルギー変換効率</h3>
+<p>100のエネルギーから、どれくらい電気を作れるか ＝ <span class="k">エネルギー変換効率</span></p>
+<div class="fig"><svg viewBox="0 0 340 176" width="340" font-size="12">
+<g text-anchor="end"><text x="92" y="16">水力</text><text x="92" y="33">LNG複合</text><text x="92" y="50">火力（蒸気）</text><text x="92" y="67">ガスタービン</text><text x="92" y="84">原子力</text><text x="92" y="101">風力</text><text x="92" y="118">太陽光</text><text x="92" y="135">地熱</text><text x="92" y="152">海洋温度差</text><text x="92" y="169">バイオマス</text></g>
+<g fill="#eee"><rect x="98" y="5" width="200" height="13"/><rect x="98" y="22" width="200" height="13"/><rect x="98" y="39" width="200" height="13"/><rect x="98" y="56" width="200" height="13"/><rect x="98" y="73" width="200" height="13"/><rect x="98" y="90" width="200" height="13"/><rect x="98" y="107" width="200" height="13"/><rect x="98" y="124" width="200" height="13"/><rect x="98" y="141" width="200" height="13"/><rect x="98" y="158" width="200" height="13"/></g>
+<g fill="#2f6fb5"><rect x="98" y="5" width="160" height="13"/><rect x="98" y="22" width="110" height="13"/><rect x="98" y="39" width="86" height="13"/><rect x="98" y="56" width="70" height="13"/><rect x="98" y="73" width="66" height="13"/><rect x="98" y="90" width="50" height="13"/><rect x="98" y="107" width="20" height="13"/><rect x="98" y="124" width="16" height="13"/><rect x="98" y="141" width="6" height="13"/><rect x="98" y="158" width="2" height="13"/></g>
+<g font-weight="bold"><text x="303" y="16">80%</text><text x="303" y="33">55%</text><text x="303" y="50">43%</text><text x="303" y="67">35%</text><text x="303" y="84">33%</text><text x="303" y="101">25%</text><text x="303" y="118">10%</text><text x="303" y="135">8%</text><text x="303" y="152">3%</text><text x="303" y="169">1%</text></g>
+</svg></div>
+<p>いちばん高いのは <span class="k">水力（約80%）</span>。火力は <span class="k">約43%</span>、原子力は約33%、太陽光は <span class="k">約10%</span>。</p>
+<p class="mini">LNG複合＝コンバインドサイクル（約55%）。ガスタービンと蒸気タービンを組み合わせて、熱を2回使う。</p></div>
+
+<div class="sum"><h3>⑥ 発電方法をくらべる「3つのものさし」</h3>
+<div class="row3"><div><b>① 変換効率</b>無駄なく電気にできるか</div><div><b>② CO₂排出量</b>地球環境にやさしいか</div><div><b>③ 費用</b>電気代にどう影響するか</div></div>
+<table class="t"><tr><th>発電方法</th><th>変換効率</th><th>CO₂排出量<br><span class="mini">g-CO₂/kWh</span></th><th>費用<br><span class="mini">円</span></th></tr>
+<tr><td>火力（石炭）</td><td>43%</td><td><b style="color:#c0392b">943g</b></td><td>12.3</td></tr>
+<tr><td>火力（石油）</td><td>43%</td><td><b style="color:#c0392b">738g</b></td><td><b style="color:#c0392b">30.6〜43.4</b></td></tr>
+<tr><td>火力（コンバインドサイクル）</td><td>55%</td><td>474g</td><td>13.7</td></tr>
+<tr><td>原子力</td><td>33%</td><td>19g</td><td><b style="color:#1f8a4c">10.1</b></td></tr>
+<tr><td>水力</td><td><b style="color:#1f8a4c">80%</b></td><td><b style="color:#1f8a4c">11g</b></td><td>11</td></tr>
+<tr><td>地熱</td><td>8%</td><td>13g</td><td>16.9</td></tr>
+<tr><td>風力</td><td>25%</td><td>26g</td><td>21.6</td></tr>
+<tr><td>太陽光</td><td>10%</td><td>38g</td><td>29.4</td></tr>
+<tr><td>バイオマス</td><td>1%</td><td>―</td><td>29.7</td></tr></table>
+<p class="mini">数値は授業スライドの表のもの。赤＝目立って多い・高い、緑＝いちばん良い値。</p>
+<div class="tip">読み取りのポイント：<br>・<b>燃やす発電（火力）</b>は CO₂ が多い。石炭がいちばん多い<br>・<b>水力</b>は効率が高く CO₂ も少ない<br>・<b>太陽光・風力</b>は CO₂ は少ないが、効率が低めで費用が高め</div></div>
+
+<div class="sum"><h3>⑦ 完璧な発電方法はない → エネルギーミックス</h3>
+<ul><li>どの発電方法にも <span class="k">プラス面とマイナス面</span> がある</li>
+<li>環境にやさしくても、天候に左右されたり、費用が高かったりする</li>
+<li>全てが完璧な「夢の発電方法」は存在しない</li></ul>
+<p>日本のエネルギー自給率は、わずか <span class="k">12.6%</span>（2022年度）。だからこそ、弱点を補い合う <span class="k">エネルギーミックス</span> が必要。</p>
+<p class="mini">バンドにたとえると…</p>
+<div class="row3"><div><b>🎸 ベース</b>安定して鳴る<br><span class="k">水力・原子力・地熱</span></div><div><b>🥁 ドラム</b>テンポを合わせる<br><span class="k">火力</span></div><div><b>🎸 ソロ</b>天気次第<br><span class="k">太陽光・風力</span></div></div></div>
+
+<div class="sum"><h3>⑧ 国が目指す 2030年の電源構成</h3>
+<div class="fig"><svg viewBox="0 0 340 74" width="340" font-size="11">
+<rect x="10" y="8" width="118" height="30" fill="#4caf7a"/><rect x="128" y="8" width="67" height="30" fill="#f0a23c"/><rect x="195" y="8" width="64" height="30" fill="#f2d24b"/><rect x="259" y="8" width="61" height="30" fill="#8a6d5a"/><rect x="320" y="8" width="7" height="30" fill="#c0392b"/><rect x="327" y="8" width="3" height="30" fill="#5fb7d4"/>
+<g text-anchor="middle" font-weight="bold"><text x="69" y="27">再エネ</text><text x="161" y="27">原子力</text><text x="227" y="27">LNG</text><text x="289" y="27" fill="#fff">石炭</text></g>
+<g text-anchor="middle"><text x="69" y="52">36〜38%</text><text x="161" y="52">20〜22%</text><text x="227" y="52">20%</text><text x="289" y="52">19%</text></g>
+<text x="330" y="68" text-anchor="end" font-size="10">右はし：石油2%・水素・アンモニア1%</text>
+</svg></div>
+<p>いちばん大きいのは <span class="k">再生可能エネルギー（36〜38%程度）</span>。次が <span class="k">原子力（20〜22%程度）</span>。</p>
+<div class="tip">記述で聞かれたら：環境を優先？ 安さを優先？ 安定を優先？ ── 完璧な答えはない。<b>3つのものさしの数値を使って「理由」を書く</b>ことが大切。</div></div>`,
+
+hen:`
+<div class="point"><h3>⚡ まず、ここだけ</h3><ul>
+<li>電気は <b>光・熱・運動</b> に変換され、<b>信号</b>として情報も伝える</li>
+<li>電球は3種類：白熱電球（フィラメント）・蛍光ランプ（紫外線）・LED（半導体）</li>
+<li>加熱は4種類：<b>抵抗・赤外線・誘導（IH）・誘電（電子レンジ）</b></li>
+<li>同じ「光」「熱」でも、仕組みがちがえば<b>長所・短所</b>もちがう</li></ul></div>
+
+<div class="sum"><h3>① 電気の主な利用は4つ</h3>
+<div class="row3"><div><b>💡 光</b>照明・信号機</div><div><b>🔥 熱</b>アイロン・IH・電子レンジ</div><div><b>⚙️ 運動</b>扇風機・洗濯機</div><div><b>📡 信号</b>スピーカ・スマホ</div></div>
+<p><span class="k">信号</span> ＝ 情報を表す電気・電波・光などの変化。</p></div>
+
+<div class="sum"><h3>② 光への変換 ── 3つの電球</h3>
+<table class="t"><tr><th></th><th>白熱電球</th><th>電球形蛍光ランプ</th><th>LED電球</th></tr>
+<tr><th>光る仕組み</th><td><span class="k">フィラメント</span>が電流で高温になって光る</td><td>放電で出た<span class="k">紫外線</span>が<span class="k">蛍光物質</span>に当たって光る</td><td><span class="k">半導体</span>に電流が流れると光る</td></tr>
+<tr><th>消費電力</th><td>54W</td><td>12W</td><td><span class="k">9.4W</span></td></tr>
+<tr><th>寿命</th><td><span class="k">1,000時間</span></td><td>6,000〜10,000時間</td><td><span class="k">40,000時間</span></td></tr>
+<tr><th>値段</th><td>100円ほど</td><td>700〜1,200円</td><td>1,000〜3,000円</td></tr></table>
+<div class="fig"><svg viewBox="0 0 340 72" width="340" font-size="12">
+<text x="10" y="12" fill="#666">同じ明るさ（白熱電球60W相当）での消費電力</text>
+<g text-anchor="end"><text x="78" y="30">白熱電球</text><text x="78" y="48">蛍光ランプ</text><text x="78" y="66">LED電球</text></g>
+<rect x="84" y="19" width="216" height="13" fill="#e98b7d"/><rect x="84" y="37" width="48" height="13" fill="#f2d24b"/><rect x="84" y="55" width="38" height="13" fill="#4caf7a"/>
+<g font-weight="bold"><text x="304" y="30">54W</text><text x="136" y="48">12W</text><text x="126" y="66">9.4W</text></g></svg></div>
+<p class="mini">数値は教科書 p.146 による目安。</p></div>
+
+<div class="sum"><h3>③ LEDの長所と短所</h3>
+<p><b>長所</b>：白熱電球とくらべて電気代は <span class="k">約6分の1</span>、寿命は <span class="k">40倍</span>。値段は高いが、長く使えば得。</p>
+<p><b>短所</b>：雪国のLED信号機は、<span class="k">雪がとけず、積もって見えなくなる</span>ことがある。</p>
+<p class="mini">なぜ？ → LEDの光は <b>赤外線が少なく</b>、表示面が温まりにくいから。対策：ヒーター付きなど。</p>
+<div class="tip">長所と短所の両方を知り、<b>使う場所や目的に合わせて選ぶ</b>ことが大切。</div></div>
+
+<div class="sum"><h3>④ 熱への変換 ── 4つの加熱方法</h3>
+<table class="t"><tr><th>方法</th><th>仕組み</th><th>機器の例</th></tr>
+<tr><td><span class="k">抵抗加熱</span></td><td class="l"><span class="k">ニクロム線</span>などに電流を流して発熱（<span class="k">ジュール熱</span>）</td><td>アイロン・はんだごて</td></tr>
+<tr><td><span class="k">赤外線加熱</span></td><td class="l">発熱体から出る赤外線を受けて温まる</td><td>電気ストーブ・こたつ</td></tr>
+<tr><td><span class="k">誘導加熱</span></td><td class="l">なべに<span class="k">うず電流</span>を流し、なべの電気抵抗で発熱</td><td><b>IH調理器</b></td></tr>
+<tr><td><span class="k">誘電加熱</span></td><td class="l"><span class="k">マイクロ波</span>で<span class="k">水の分子</span>をゆらす</td><td><b>電子レンジ</b></td></tr></table>
+<div class="fig"><svg viewBox="0 0 340 140" width="340" font-size="12">
+<text x="170" y="13" text-anchor="middle" font-weight="bold">IH調理器（誘導加熱）：なべ自体が熱くなる</text>
+<path d="M92 30V72H228V30" fill="none" stroke="#555" stroke-width="4"/>
+<rect x="94" y="62" width="132" height="8" fill="#e98b7d"/>
+<ellipse cx="160" cy="66" rx="34" ry="3" fill="none" stroke="#c0392b" stroke-width="2"/>
+<text x="238" y="62" fill="#c0392b" font-weight="bold">③ うず電流</text><text x="238" y="77" fill="#c0392b">→ なべが発熱</text>
+<rect x="60" y="78" width="200" height="5" fill="#999"/>
+<g fill="#c8641e"><circle cx="112" cy="100" r="6"/><circle cx="128" cy="100" r="6"/><circle cx="144" cy="100" r="6"/><circle cx="176" cy="100" r="6"/><circle cx="192" cy="100" r="6"/><circle cx="208" cy="100" r="6"/></g>
+<g fill="none" stroke="#2f6fb5" stroke-width="2" stroke-dasharray="5 3"><path d="M160 122C120 122 100 90 100 56C100 40 130 36 160 36"/><path d="M160 122C200 122 220 90 220 56C220 40 190 36 160 36"/></g>
+<text x="6" y="104" fill="#c8641e" font-weight="bold">① コイル</text><text x="6" y="119" fill="#c8641e" font-size="11">交流の電流</text>
+<text x="238" y="112" fill="#2f6fb5" font-weight="bold">② 磁力線</text><text x="238" y="127" fill="#2f6fb5" font-size="11">（変化する）</text>
+</svg></div>
+<p class="mini">土なべ・ガラスのなべは電気が流れない → うず電流が流れず、加熱できない。</p>
+<p><b>電子レンジ（誘電加熱）</b></p>
+<div class="flow arrow"><div><b><span class="k">マグネトロン</span></b> が <b>マイクロ波</b> を出す</div><div>食品中の <b>水の分子</b> が激しくゆれる</div><div>分子どうしの <b>まさつの熱</b> で、食品の<b>中も</b>温まる</div></div>
+<p>アイロンは <span class="k">サーモスタット</span> で、温度を一定に保っている。</p>
+<div class="tip">まぎらわしい言葉：<b>誘導</b>加熱＝IH調理器（うず電流）／<b>誘電</b>加熱＝電子レンジ（マイクロ波）。<br>覚え方：電子レンジの「電」→ 誘「電」。</div></div>
+
+<div class="sum"><h3>⑤ エアコンは、熱を「運ぶ」</h3>
+<div class="fig"><svg viewBox="0 0 340 112" width="340" font-size="12">
+<text x="170" y="13" text-anchor="middle" font-weight="bold">冷房のとき</text>
+<rect x="6" y="30" width="112" height="50" rx="8" fill="#e6f1fb" stroke="#2f6fb5" stroke-width="2"/><text x="62" y="52" text-anchor="middle" font-weight="bold">室内機</text><text x="62" y="68" text-anchor="middle" font-size="11">部屋の熱を受け取る</text>
+<rect x="222" y="30" width="112" height="50" rx="8" fill="#fdece0" stroke="#c8641e" stroke-width="2"/><text x="278" y="52" text-anchor="middle" font-weight="bold">室外機</text><text x="278" y="68" text-anchor="middle" font-size="11">圧縮機・熱を外へ</text>
+<g fill="none" stroke="#178a7e" stroke-width="2.5"><path d="M118 42H212"/><path d="M222 70H128"/></g><path d="M212 37l8 5l-8 5zM128 65l-8 5l8 5z" fill="#178a7e"/>
+<text x="170" y="36" text-anchor="middle" fill="#178a7e" font-weight="bold">冷媒が循環</text>
+<text x="170" y="100" text-anchor="middle" fill="#c0392b" font-weight="bold">部屋の熱 ━━▶ 外へ</text>
+</svg></div>
+<ul><li>室内機と室外機の間で、<span class="k">冷媒</span> という物質を循環させる</li>
+<li>冷房：部屋の熱を<b>外へ</b>／暖房：外の熱を<b>部屋へ</b></li>
+<li>電気でモータを回し、<span class="k">圧縮機</span>で冷媒を圧縮して熱を運ぶ ＝ <span class="k">ヒートポンプ</span></li>
+<li>使った電気エネルギーより <b>多くの熱</b> を運べる</li></ul></div>
+
+<div class="sum"><h3>⑥ 運動への変換 ── モータ</h3>
+<table class="t"><tr><th>モータ</th><th>使われている所</th><th>特徴</th></tr>
+<tr><td><span class="k">ブラシ付き直流モータ</span></td><td>模型・おもちゃ</td><td>安い・電池で動く</td></tr>
+<tr><td><span class="k">振動モータ</span></td><td>スマートフォン</td><td>小さい・ふるえる</td></tr>
+<tr><td><span class="k">ブラシレス直流モータ</span></td><td>パソコンのファン</td><td>静か・寿命が長い</td></tr>
+<tr><td><span class="k">サーボモータ</span></td><td>ロボット・工作機械</td><td>角度や位置を正確に制御</td></tr></table>
+<p>スマホがふるえる仕組み（一例）：重心がずれた <span class="k">分銅（かたよった重り）</span> をモータで回す。</p>
+<p class="mini">洗濯機の脱水で、洗濯物がかたよるとゆれるのと同じ。</p></div>
+
+<div class="sum"><h3>⑦ 信号への変換</h3>
+<div class="row3"><div><b>🎤 マイクロホン</b><span class="k">音 → 電気信号</span></div><i>⇄</i><div><b>🔊 スピーカ</b><span class="k">電気信号 → 音</span></div></div>
+<p>マイクとスピーカは <b>逆向きの変換</b>。ダイナミック型は、どちらも <span class="k">永久磁石</span> のそばで <span class="k">コイル</span> が動く。</p>
+<p>電気信号は、電波や光にも変えて送る。</p>
+<ul><li><b>電波</b>：ラジオ・テレビ・スマートフォン（電線なしで届く）</li>
+<li><b><span class="k">光ファイバ</span></b>：細いガラスの中を光信号が進む。<span class="k">弱まりにくく、大量のデータを遠くまで</span>送れる</li>
+<li>日本と海外との通信の <span class="k">約99%</span> は、海底の光ファイバケーブルを通っている</li></ul></div>
+
+<div class="sum"><h3>⑧ 安全に使う</h3>
+<p>ストーブやドライヤーなど <span class="k">消費電力の大きい機器</span> は、<span class="k">大きな電流</span> が流れる。</p>
+<ul><li>たこ足配線をしない（上限をこえると発熱・発火）</li>
+<li>コードやプラグの傷を確かめる（束ねたまま・家具の下じきも危険）</li>
+<li>プラグを抜いて、ほこりをふき取る（ほこり＋湿気で発火）</li>
+<li>モータで動く部分に、指や髪を近づけない</li></ul></div>`,
+
+kairo:`
+<div class="point"><h3>⚡ まず、ここだけ</h3><ul>
+<li>電気回路は4つ：<b>電源・導線・負荷・電流を制御する部分</b></li>
+<li>電流は<b>ひとつながりの輪</b>を流れる（＋極 → 負荷 → －極）</li>
+<li>回路図は<b>電気用図記号</b>（JIS）でかく。世界共通の「ものづくりの共通語」</li>
+<li>図記号は<b>形と名前</b>をセットで覚える</li></ul></div>
+
+<div class="sum"><h3>① 電気回路は4つの部分でできている</h3>
+<div class="fig"><svg viewBox="0 0 340 150" width="340" font-size="12">
+<rect x="50" y="30" width="240" height="92" fill="none" stroke="#178a7e" stroke-width="3"/>
+<g stroke-width="2"><rect x="10" y="56" width="80" height="40" rx="8" fill="#fdece0" stroke="#c8641e"/><rect x="108" y="10" width="124" height="40" rx="8" fill="#e6f1fb" stroke="#2f6fb5"/><rect x="250" y="56" width="80" height="40" rx="8" fill="#fff6d6" stroke="#b58500"/></g>
+<g text-anchor="middle"><text x="50" y="73" font-weight="bold" font-size="14">電源</text><text x="50" y="89" font-size="10">電池・コンセント</text>
+<text x="170" y="27" font-weight="bold" font-size="14">制御する部分</text><text x="170" y="43" font-size="10">スイッチ・可変抵抗器</text>
+<text x="290" y="73" font-weight="bold" font-size="14">負荷</text><text x="290" y="89" font-size="10">モータ・LED</text>
+<text x="170" y="140" font-weight="bold" font-size="14" fill="#178a7e">導線（電流の通り道）</text></g>
+<g fill="#178a7e"><path d="M92 25l10 5l-10 5z"/><path d="M238 25l10 5l-10 5z"/><path d="M180 117l-10 5l10 5z"/></g>
+</svg></div>
+<table class="t nw"><tr><th>部分</th><th>役割</th><th>例</th></tr>
+<tr><td><span class="k">電源</span></td><td class="l">電流を<span class="k">送る</span>役割を果たす部分</td><td class="l">電池・コンセント</td></tr>
+<tr><td><span class="k">導線</span></td><td class="l">電流の<span class="k">通り道</span></td><td class="l">導線・電源コード</td></tr>
+<tr><td><span class="k">負荷</span></td><td class="l">電流の働きで<span class="k">仕事をする</span>部分</td><td class="l">モータ・LED・スピーカ</td></tr>
+<tr><td>スイッチなど</td><td class="l">電流を<span class="k">制御する</span>部分</td><td class="l">スイッチ・可変抵抗器・センサ</td></tr></table>
+<p>電気回路は、<span class="k">負荷で電気エネルギーを変換</span>して、目的の動作をさせている。</p>
+<p class="mini">モータ → 運動／LED → 光／ヒーター → 熱／スピーカ → 音</p>
+<div class="tip">扇風機でいうと：プラグ・コンセント＝電源／コード＝導線／スイッチ＝制御／モータ＝負荷</div></div>
+
+<div class="sum"><h3>② 電流は「ひとつながりの輪」を流れる</h3>
+<div class="fig"><svg viewBox="0 0 320 124" width="320" font-size="12">
+<text x="75" y="12" text-anchor="middle" font-weight="bold" fill="#1f8a4c">つながっている → 点く</text>
+<path class="w" d="M45 36H15V96M105 36H135V96"/>${at('lampon',75,36)}${at('bat',45,96)}${at('swon',105,96)}
+<text x="18" y="116" font-size="11">＋</text>
+<text x="245" y="12" text-anchor="middle" font-weight="bold" fill="#c0392b">とぎれている → 点かない</text>
+<path class="w" d="M215 36H185V96M275 36H305V96"/>${at('lamp',245,36)}${at('bat',215,96)}${at('sw',275,96)}
+<text x="188" y="116" font-size="11">＋</text>
+</svg></div>
+<p>電池の回路（直流）では、電流は <span class="k">＋極</span> から出て、負荷を通り、<span class="k">－極</span> へ戻る。</p>
+<p>スイッチは、この輪を <b>切ったりつないだりする「門」</b>。</p></div>
+
+<div class="sum"><h3>③ 電流を制御する部分</h3>
+<table class="t"><tr><th>スイッチ</th><th>可変抵抗器</th></tr>
+<tr><td>電流を <span class="k">流す・止める</span></td><td>電流の <span class="k">流れる量を調節</span></td></tr></table>
+<p>可変抵抗器のつまみを回す → <span class="k">電流の流れにくさ</span>が変わる → モータに流れる電流の大きさが変わる → <span class="k">回る速さが変わる</span></p>
+<p class="mini">センサやコンピュータで「ちょうどよい動き」をさせる機器が増えている。</p>
+<table class="t"><tr><th>機器</th><th>工夫</th><th>視点</th></tr>
+<tr><td>人感センサの照明</td><td>人がいないと消える</td><td>環境・経済（省エネ）</td></tr>
+<tr><td>電気ストーブ</td><td>倒れると自動で切れる</td><td><span class="k">安全性</span></td></tr>
+<tr><td>エアコン</td><td>温度センサで強さを自動調節</td><td>快適・省エネ</td></tr></table></div>
+
+<div class="sum"><h3>④ 回路図は、ものづくりの共通語</h3>
+<p>回路図は <span class="k">電気用図記号</span> で表す。形は <span class="k">JIS（日本産業規格）</span> で決められている。</p>
+<p class="mini">JIS C 0617。国際規格（IEC）に合わせた記号なので、世界でも共通。</p>
+<table class="t"><tr><th>絵（実体配線図）</th><th>回路図（記号）</th></tr>
+<tr><td class="l">・かくのに時間がかかる<br>・人によってかき方がバラバラ<br>・線のつながりが見えにくい</td><td class="l">・<b>すばやく、すっきり</b>かける<br>・<b>だれがかいても同じ形</b><br>・<b>つながりがひと目でわかる</b></td></tr></table></div>
+
+<div class="sum"><h3>⑤ おもな電気用図記号</h3>
+<p class="mini">わくの色：<b style="color:#c8641e">電源</b>・<b style="color:#2f6fb5">制御</b>・<b style="color:#b58500">負荷</b>・<b style="color:#178a7e">導線</b>／灰色＝そのほかの部品</p>
+<div class="symg">${symCell('bat','<span class="k">電池・直流電源</span>','p')}${symCell('sw','<span class="k">スイッチ</span>','c')}${symCell('vres','<span class="k">可変抵抗器</span>','c')}${symCell('cds','<span class="k">光導電セル（CdS）</span>','c')}${symCell('lamp','<span class="k">ランプ（電球）</span>','l')}${symCell('led','<span class="k">発光ダイオード（LED）</span>','l')}${symCell('motor','<span class="k">モータ</span>','l')}${symCell('buzzer','<span class="k">ブザー</span>','l')}${symCell('res','<span class="k">抵抗器</span>')}${symCell('diode','<span class="k">ダイオード</span>')}${symCell('cap','<span class="k">コンデンサ</span>')}${symCell('join','<span class="k">導線の接続</span>','w')}${symCell('cross','<span class="k">導線の交差</span><br><span class="mini">（接続しない）</span>','w')}</div>
+<div class="tip">見分け方：<br>・<b>電池</b>は線の長さがちがう（<b>長い線が＋極</b>）／<b>コンデンサ</b>は同じ長さ<br>・<b>抵抗器</b>＋ななめの矢印＝<b>可変抵抗器</b>／＋入ってくる矢印＝<b>CdS</b>（光を受ける）<br>・<b>ダイオード</b>＋出ていく矢印＝<b>LED</b>（光を出す）<br>・丸に×＝<b>ランプ</b>／丸にM＝<b>モータ</b></div></div>
+
+<div class="sum"><h3>⑥ 回路図のかき方 5つのルール</h3>
+<div class="flow"><div><b>1</b>　線は <span class="k">定規でまっすぐ</span>、曲がり角は <span class="k">直角</span></div><div><b>2</b>　<span class="k">長方形の輪</span> にまとめると見やすい</div><div><b>3</b>　記号は <b>辺の途中</b> に置き、線とつなぐ</div><div><b>4</b>　つながる所は <span class="k">●</span>、つながらない交差は●なし</div><div><b>5</b>　記号の <b>向き</b>（電池の＋、LEDの向き）に注意</div></div>
+<div class="fig"><svg viewBox="0 0 300 168" width="300" font-size="12">
+<text x="150" y="12" text-anchor="middle" font-weight="bold">扇風機のモデルの回路図</text>
+<path class="w" d="M60 40H30V140H60M120 40H180M240 40H270V140H240M180 140H120"/>
+${at('bat',90,40)}${at('sw',210,40)}${at('vres',90,140)}${at('motor',210,140)}
+<text x="90" y="72" text-anchor="middle" fill="#c8641e">電池</text><text x="62" y="30" font-size="11">＋</text>
+<text x="210" y="62" text-anchor="middle" fill="#2f6fb5">スイッチ</text>
+<text x="90" y="124" text-anchor="middle" fill="#2f6fb5">可変抵抗器</text>
+<text x="210" y="120" text-anchor="middle" fill="#b58500">モータ</text>
+</svg></div>
+<p class="mini">同じ部品を同じ向き（極性）のまま1つの輪につなげば、並ぶ順番が入れかわっても同じ働きをする。</p></div>
+
+<div class="sum"><h3>⑦ LEDを点灯させる ── なぜ抵抗器が要る？</h3>
+<div class="fig"><svg viewBox="0 0 300 150" width="300" font-size="12">
+<path class="w" d="M60 30H30V120H120M180 120H270V30H240M120 30H180"/>
+${at('res',90,30)}${at('led',210,30)}${at('bat',150,120)}
+<text x="90" y="56" text-anchor="middle">抵抗器 50Ω</text><text x="210" y="56" text-anchor="middle">LED 3.5V</text>
+<text x="150" y="146" text-anchor="middle">電源 4.5V（電池3本）</text><text x="122" y="110" font-size="11">＋</text>
+</svg></div>
+<p>LEDは、流れる電流が大きすぎると <span class="k">壊れる</span> → <span class="k">電流制限抵抗</span> で電流をおさえる。</p>
+<div class="tip">計算（電源4.5V、LEDは 3.5V・0.02A で光る）<br>① 抵抗器にかかる電圧 ＝ 4.5 − 3.5 ＝ <b>1.0V</b><br>② オームの法則 <b>電圧V ＝ 抵抗R × 電流I</b> より　R ＝ 1.0 ÷ 0.02 ＝ <b>50Ω</b><br>→ 50Ωに近い抵抗器（例：51Ω）を選ぶ</div></div>`,
+
+anzen:`
+<div class="point"><h3>⚡ まず、ここだけ</h3><ul>
+<li>3つの言葉：<b>漏電</b>（漏れる）・<b>感電</b>（体に流れる）・<b>ショート</b>（大電流）</li>
+<li>分電盤のブレーカは3種類。<b>アース線</b>は漏れた電流を地面へ</li>
+<li><b>トラッキング現象</b>＝プラグのほこり＋湿気で発火</li>
+<li>計算：<b>電流 ＝ 電力 ÷ 電圧（100V）</b>。タップは<b>15A（1500W）</b>以内</li></ul></div>
+
+<div class="sum"><h3>① 電気による事故</h3>
+<p>家庭用電気製品の火災は、<span class="k">プラグ・テーブルタップ・コード</span> など、毎日さわる「電気の通り道」が上位。</p>
+<p class="mini">事故の原因を3つに仲間分け</p>
+<div class="row3"><div><b>使い方</b>使いすぎ・ぬれた手・束ねたコード</div><div><b>劣化</b>古いコード・傷</div><div><b>接続・配線</b>ゆるい差しこみ</div></div>
+<div class="row3"><div>機器の故障・配線の不良・ショート</div><i>▶</i><div><b>漏電・感電・火災</b></div></div></div>
+
+<div class="sum"><h3>② 漏電・感電・ショート</h3>
+<table class="t nw"><tr><td><span class="k">漏電</span></td><td class="l">決められた通り道以外に、電流が<b>漏れる</b>こと</td></tr>
+<tr><td><span class="k">感電</span></td><td class="l"><b>人体に</b>電流が流れて、ショックを受けること</td></tr>
+<tr><td><span class="k">ショート（短絡）</span></td><td class="l">誤った回路で、<b>非常に大きな電流</b>が流れること</td></tr></table>
+<div class="fig"><svg viewBox="0 0 320 128" width="320" font-size="12">
+<text x="75" y="12" text-anchor="middle" font-weight="bold" fill="#1f8a4c">ふつうの回路</text>
+<path class="w" d="M45 34H15V100H45M105 34H135V100H105"/>${at('lampon',75,34)}${at('bat',75,100)}
+<text x="75" y="122" text-anchor="middle" font-size="11">電球を通る＝ちょうどよい電流</text>
+<text x="245" y="12" text-anchor="middle" font-weight="bold" fill="#c0392b">ショート（短絡）</text>
+<path class="w" d="M215 34H185V100H215M275 34H305V100H275"/>${at('lamp',245,34)}${at('bat',245,100)}
+<path d="M195 66H295" stroke="#c0392b" stroke-width="4"/><circle cx="195" cy="66" r="4" fill="#c0392b"/><circle cx="295" cy="66" r="4" fill="#c0392b"/>
+<text x="245" y="60" text-anchor="middle" fill="#c0392b" font-weight="bold">近道</text>
+<text x="245" y="122" text-anchor="middle" font-size="11" fill="#c0392b">近道 → 大電流 → 発熱！</text>
+</svg></div>
+<p>コードの被覆が傷み、<span class="k">2本の導線が直接ふれる</span> と起こる。</p></div>
+
+<div class="sum"><h3>③ 分電盤のブレーカ（家の「見張り役」）</h3>
+<div class="fig"><svg viewBox="0 0 340 96" width="340" font-size="11">
+<rect x="4" y="6" width="332" height="62" rx="6" fill="#f3efe5" stroke="#888"/>
+<rect x="14" y="16" width="70" height="42" rx="4" fill="#fff" stroke="#c8641e" stroke-width="2"/><rect x="42" y="24" width="14" height="26" fill="#c8641e"/>
+<rect x="98" y="16" width="70" height="42" rx="4" fill="#fff" stroke="#2f6fb5" stroke-width="2"/><rect x="126" y="24" width="14" height="26" fill="#2f6fb5"/>
+<g fill="#fff" stroke="#178a7e" stroke-width="2"><rect x="182" y="16" width="20" height="42" rx="3"/><rect x="207" y="16" width="20" height="42" rx="3"/><rect x="232" y="16" width="20" height="42" rx="3"/><rect x="257" y="16" width="20" height="42" rx="3"/><rect x="282" y="16" width="20" height="42" rx="3"/><rect x="307" y="16" width="20" height="42" rx="3"/></g>
+<g fill="#178a7e"><rect x="188" y="26" width="8" height="18"/><rect x="213" y="26" width="8" height="18"/><rect x="238" y="26" width="8" height="18"/><rect x="263" y="26" width="8" height="18"/><rect x="288" y="26" width="8" height="18"/><rect x="313" y="26" width="8" height="18"/></g>
+<g text-anchor="middle" font-weight="bold"><text x="49" y="84" fill="#c8641e">アンペアブレーカ</text><text x="133" y="84" fill="#2f6fb5">漏電遮断器</text><text x="255" y="84" fill="#178a7e">配線用遮断器（部屋ごと）</text></g>
+</svg></div>
+<table class="t nw"><tr><th>名前</th><th>どんなとき切れる？</th></tr>
+<tr><td><span class="k">アンペアブレーカ</span></td><td class="l"><b>家全体</b>で使いすぎたとき</td></tr>
+<tr><td><span class="k">漏電遮断器</span></td><td class="l"><b>漏電</b>を感じとったとき</td></tr>
+<tr><td><span class="k">配線用遮断器</span><br><span class="mini">（安全ブレーカ）</span></td><td class="l"><b>部屋ごとの回路</b>で、ショートや大きすぎる電流が流れたとき</td></tr></table>
+<p class="mini">契約や地域によって、アンペアブレーカがない家もある。遮断＝電気の流れを断ち切ること。</p></div>
+
+<div class="sum"><h3>④ ブレーカが切れたら</h3>
+<p>使いすぎで配線用遮断器が切れたとき（ブレーカは <b>事故を知らせるサイン</b>）</p>
+<div class="flow arrow"><div><b>1</b>　使っていた機器のスイッチを切り、<span class="k">プラグを抜く</span></div><div><b>2</b>　<span class="k">同時に使う機器を減らす</span>（使いすぎを直す）</div><div><b>3</b>　<span class="k">乾いた手</span>で、レバーを上げる</div></div>
+<div class="tip">⚠ <b>漏電遮断器</b>が切れた・何度も切れる・原因がわからない → さわらずに <b>大人に知らせ</b>、電気工事店などに点検してもらう。</div></div>
+
+<div class="sum"><h3>⑤ アース線</h3>
+<div class="fig"><svg viewBox="0 0 340 112" width="340" font-size="12">
+<rect x="40" y="14" width="70" height="66" rx="6" fill="#e6f1fb" stroke="#2f6fb5" stroke-width="2"/><circle cx="75" cy="50" r="18" fill="#fff" stroke="#2f6fb5" stroke-width="2"/><text x="75" y="96" text-anchor="middle" font-size="11">洗濯機</text>
+<path d="M4 82H336" stroke="#8a6d5a" stroke-width="3"/><text x="300" y="100" fill="#8a6d5a">地面</text>
+<path d="M110 60H160V82" fill="none" stroke="#1f8a4c" stroke-width="3"/><path d="M155 82l5 10l5-10z" fill="#1f8a4c"/>
+<path d="M150 84h20M154 89h12M158 94h4" stroke="#1f8a4c" stroke-width="2"/>
+<text x="172" y="50" fill="#1f8a4c" font-weight="bold">アース線</text><text x="172" y="66" fill="#1f8a4c">漏れた電流を地面へ逃がす</text>
+<text x="172" y="26" fill="#c0392b">機器の中で漏電しても…</text>
+</svg></div>
+<ul><li>機器の中で漏電すると、さわった人の体に電流が流れる（感電）</li>
+<li><span class="k">アース線</span> があると、漏れた電流が <span class="k">地面へ逃げ</span>、体に流れる電流が小さくなる → 漏電遮断器が電気を止める</li>
+<li><span class="k">水や湿気のある所</span> で使う機器に必要：<b>洗濯機・冷蔵庫・電子レンジ</b> など</li></ul>
+<p class="mini">アース線＋漏電遮断器の「二重の守り」。</p></div>
+
+<div class="sum"><h3>⑥ トラッキング現象・コードの使い方</h3>
+<p>差しっぱなしのプラグが危ない ── <span class="k">トラッキング現象</span></p>
+<div class="flow arrow"><div><b>①</b>　プラグのすき間に <span class="k">ほこり</span> がたまる</div><div><b>②</b>　ほこりが <span class="k">湿気</span> を吸う</div><div><b>③</b>　刃と刃の間で <b>小さな放電</b> がくり返される</div><div><b>④</b>　表面がこげて電気の通り道ができ、<span class="k">発火</span></div></div>
+<p>対策：<span class="k">ときどきプラグを抜いて、ほこりをふく</span>。</p>
+<p class="mini">トラッキング対策プラグ：ほこりがたまる刃の <b>根元を絶縁</b>（カバー）して、電気の通り道をできにくくしている。</p>
+<p><b>コードを束ねたまま使うと</b>：熱が <span class="k">逃げにくい</span> → 発熱 → コードの劣化 → 発火</p>
+<div class="grid2"><div>✅ コードはほどいて使う</div><div>✅ 家具の下じきにしない</div><div>✅ <b>プラグを持って</b>抜く</div><div>✅ ぬれた手でさわらない</div></div></div>
+
+<div class="sum"><h3>⑦ 定格・PSEマーク・コードの許容電流</h3>
+<p><span class="k">定格</span> ＝ 安全に使用できる <b>限度の値</b>。こえると発熱・破損し、事故の原因になる。</p>
+<table class="t"><tr><td><span class="k">定格電圧</span></td><td class="l">加えてもよい電圧</td></tr><tr><td><span class="k">定格電流</span></td><td class="l">流してもよい電流</td></tr></table>
+<p>テーブルタップの表示の例：<b>定格 15A 125V</b> → 合計 <span class="k">1500W</span> まで</p>
+<p><span class="k">PSEマーク</span> ＝ 国の安全基準（電気用品安全法）を満たした電気用品につけられるマーク。</p>
+<div class="fig"><svg viewBox="0 0 340 78" width="340" font-size="12">
+<path d="M50 6L88 38L50 70L12 38Z" fill="none" stroke="#222" stroke-width="3"/><text x="50" y="35" text-anchor="middle" font-weight="bold" font-size="13">PS</text><text x="50" y="50" text-anchor="middle" font-weight="bold" font-size="13">E</text>
+<text x="98" y="30" font-weight="bold">特定電気用品（ひし形）</text><text x="98" y="47" font-size="11">危険が大きいもの</text><text x="98" y="62" font-size="11">例：延長コードセット</text>
+<circle cx="252" cy="38" r="26" fill="none" stroke="#222" stroke-width="3"/><text x="252" y="35" text-anchor="middle" font-weight="bold" font-size="13">PS</text><text x="252" y="50" text-anchor="middle" font-weight="bold" font-size="13">E</text>
+<text x="284" y="30" font-weight="bold" font-size="11">それ以外</text><text x="284" y="45" font-size="10">（丸形）</text><text x="284" y="60" font-size="10">ストーブ等</text>
+</svg></div>
+<table class="t"><tr><th>導線の断面積</th><th>許容電流</th></tr>
+<tr><td>0.75 mm²</td><td><span class="k">7A</span></td></tr><tr><td>1.25 mm²</td><td><span class="k">12A</span></td></tr><tr><td>2.00 mm²</td><td><span class="k">17A</span></td></tr></table>
+<p>導線が <span class="k">太い</span> ほど、たくさんの電流を流せる。</p>
+<p class="mini">ビニルコードの許容電流（教科書 p.152 表2）。ストーブなど大きな電流が流れる機器には、太いコードが使われる。</p></div>
+
+<div class="sum"><h3>⑧ テーブルタップに流れる電流の計算</h3>
+<div class="tip" style="margin:0 0 8px"><b>電力〔W〕＝ 電流〔A〕× 電圧〔V〕</b>　→　<b>電流 ＝ 電力 ÷ 電圧</b><br>家庭のコンセントは <b>100V</b>（タップの表示の125Vで計算しない）</div>
+<table class="t"><tr><th></th><th>例1</th><th>例2</th></tr>
+<tr><th>機器①</th><td>電気ストーブ 800W<br>800 ÷ 100 ＝ <b>8.0A</b></td><td>オーブントースタ 1000W<br>1000 ÷ 100 ＝ <b>10.0A</b></td></tr>
+<tr><th>機器②</th><td>ノートパソコン 22W<br>22 ÷ 100 ＝ <b>0.22A</b></td><td>電気ケトル 1250W<br>1250 ÷ 100 ＝ <b>12.5A</b></td></tr>
+<tr><th>合計</th><td><span class="k">8.22A</span></td><td><span class="k">22.5A</span></td></tr>
+<tr><th>判定</th><td>8.22A ＜ 15A<br><b style="color:#1f8a4c">定格以内 ⭕</b></td><td>22.5A ＞ 15A<br><b style="color:#c0392b">危険 ✕</b></td></tr></table>
+<div class="fig"><svg viewBox="0 0 340 74" width="340" font-size="11">
+<text x="6" y="22">例1</text><rect x="36" y="12" width="250" height="13" fill="#eee"/><rect x="36" y="12" width="82" height="13" fill="#4caf7a"/><text x="122" y="23" font-weight="bold">8.22A</text>
+<text x="6" y="44">例2</text><rect x="36" y="34" width="250" height="13" fill="#eee"/><rect x="36" y="34" width="225" height="13" fill="#e05252"/><text x="265" y="45" font-weight="bold">22.5A</text>
+<path d="M186 6V54" stroke="#222" stroke-width="2" stroke-dasharray="4 3"/><text x="186" y="68" text-anchor="middle" font-weight="bold">定格 15A</text>
+<text x="36" y="68" text-anchor="middle">0A</text><text x="286" y="68" text-anchor="middle">25A</text>
+</svg></div>
+<p>定格をこえた電流 → タップやコードが <b>発熱</b> → <b>火災</b> のおそれ。</p>
+<p>ワット数を見て <span class="k">合計1500W（15A）以内</span> に。多いときは <span class="k">同時に使わず、時間をずらす</span>。</p>
+<p class="mini">定格以内でも、コードの傷・ほこり・束ねた使い方には注意。</p></div>
+
+<div class="sum"><h3>⑨ 警告図記号・災害のとき</h3>
+<div class="fig"><svg viewBox="0 0 340 84" width="340" font-size="12">
+<circle cx="56" cy="32" r="24" fill="#fff" stroke="#d93025" stroke-width="5"/><path d="M39 15L73 49" stroke="#d93025" stroke-width="5"/>
+<path d="M170 8L198 56H142Z" fill="#ffd400" stroke="#222" stroke-width="3" stroke-linejoin="round"/><text x="170" y="48" text-anchor="middle" font-weight="bold" font-size="22">!</text>
+<circle cx="284" cy="32" r="24" fill="#1a5fb4"/><text x="284" y="41" text-anchor="middle" font-weight="bold" font-size="24" fill="#fff">!</text>
+<g text-anchor="middle" font-weight="bold"><text x="56" y="76">禁止</text><text x="170" y="76">注意</text><text x="284" y="76">指示</text></g>
+</svg></div>
+<table class="t"><tr><td>丸に斜線</td><td><span class="k">禁止</span>（してはいけない）</td><td class="l mini">分解禁止・接触禁止</td></tr>
+<tr><td>△（三角）</td><td><span class="k">注意</span>（気をつける）</td><td class="l mini">感電注意</td></tr>
+<tr><td>●（塗りつぶし）</td><td><span class="k">指示</span>（必ずする）</td><td class="l mini">電源プラグを抜く</td></tr></table>
+<p><b>災害のとき</b></p>
+<ul><li>避難するときは、身の安全を確保。できれば <span class="k">ブレーカを切る</span></li>
+<li>停電から電気が戻ったとき、倒れたストーブなどから出火 ＝ <span class="k">通電火災</span></li>
+<li>切れて垂れ下がった電線には <span class="k">近づかない・さわらない</span></li></ul></div>`
+};
+
+/* ===================== 保存 ===================== */
+const KEY='gijutsu2-test-v1';
+let ST={};
+try{ST=JSON.parse(localStorage.getItem(KEY))||{};}catch(e){ST={};}
+ST.q=ST.q||{}; ST.n=ST.n||10;
+function save(){try{localStorage.setItem(KEY,JSON.stringify(ST));}catch(e){}}
+function record(id,ok){const r=ST.q[id]||{ok:0,ng:0,last:null};ok?r.ok++:r.ng++;r.last=ok;ST.q[id]=r;save();}
+const isWeak=id=>ST.q[id]&&ST.q[id].last===false;
+
+/* ===================== 道具 ===================== */
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function pickOne(a){return a[Math.floor(Math.random()*a.length)];}
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function unitColor(u){return u==='mix'||u==='weak'?'var(--mix)':UNITS[u].c;}
+function build(q){ // 生成問題を実体化
+  const base=Object.assign({},q);
+  if(q.gen){Object.assign(base,q.gen.call(base));}
+  return base;
+}
+
+/* ===================== 画面 ===================== */
+let S=null; // クイズ状態
+function go(view,arg){
+  window.scrollTo(0,0);
+  $('#homeBtn').classList.toggle('hidden',view==='home');
+  if(view==='home') return home();
+  if(view==='sum') return summary(arg);
+  if(view==='cards') return cards(arg);
+  if(view==='quiz') return startQuiz(arg);
+}
+
+function home(){
+  const weak=Q.filter(q=>isWeak(q.id)).length;
+  let h=`<h2>どこを勉強する？</h2><p class="lead">「まとめ」で確認 →「カード」で覚える →「クイズ」で力だめし。まちがえた問題は自動で記録されます。</p>
+  <div class="opts">クイズの問題数：<select id="nsel" onchange="ST.n=+this.value;save()">${[10,20,0].map(n=>`<option value="${n}" ${ST.n===n?'selected':''}>${n||'全部'}</option>`).join('')}</select></div>`;
+  for(const u in UNITS){
+    const U=UNITS[u],qs=Q.filter(q=>q.u===u),done=qs.filter(q=>ST.q[q.id]),good=qs.filter(q=>ST.q[q.id]&&ST.q[q.id].last);
+    h+=`<div class="unit" style="--c:${U.c}"><div class="t">${U.icon} ${U.name}</div><div class="s">${U.sub}</div>
+    <div class="bar"><i style="width:${qs.length?good.length/qs.length*100:0}%"></i></div>
+    <div class="stat">全${qs.length}問中　正解ずみ ${good.length}問　（とりくんだ ${done.length}問）</div>
+    <div class="btns" style="margin-top:8px"><button class="btn" onclick="go('sum','${u}')">📘 まとめ</button><button class="btn" onclick="go('cards','${u}')">🃏 カード</button><button class="btn fill" onclick="go('quiz','${u}')">✏️ クイズ</button></div></div>`;
+  }
+  h+=`<div class="unit" style="--c:var(--mix)"><div class="t">🎯 テスト本番モード</div><div class="s">5つの範囲をまぜて出題</div>
+  <div class="btns" style="margin-top:8px"><button class="btn fill" onclick="go('quiz','mix')">全範囲ミックス</button>
+  <button class="btn" onclick="go('quiz','weak')" ${weak?'':'disabled'}>まちがえた問題だけ（${weak}問）</button>
+  <button class="btn" onclick="if(confirm('記録をすべて消しますか？')){ST.q={};save();home();}">記録を消す</button></div></div>`;
+  $('#app').innerHTML=h;
+}
+
+function summary(u){
+  const U=UNITS[u];
+  $('#app').innerHTML=`<div style="--c:${U.c}"><h2>${U.icon} ${U.name}　まとめ</h2><p class="lead">黄色いマーカー＝テストに出やすい語句</p><div class="btns" style="margin-bottom:12px"><button class="btn" id="hideBtn" onclick="toggleHide()">🙈 マーカーをかくして確認</button><span id="hideNote"></span></div><div id="sumbody">${SUM[u]}</div>
+  <div class="btns"><button class="btn" onclick="go('cards','${u}')">🃏 カードで覚える</button><button class="btn fill" onclick="go('quiz','${u}')">✏️ クイズに挑戦</button></div></div>`;
+}
+
+/* ---------- カード ---------- */
+let C=null;
+function cards(u){
+  const list=Q.filter(q=>q.u===u&&q.type!=='order'&&!q.listen);
+  C={u,list:shuffle(list),i:0,flip:false};
+  drawCard();
+}
+function drawCard(){
+  const U=UNITS[C.u];
+  if(C.i>=C.list.length){
+    $('#app').innerHTML=`<div style="--c:${U.c}"><h2>🃏 カード おわり！</h2><p class="lead">「まだ」にした問題は「まちがえた問題だけ」で復習できます。</p>
+    <div class="btns"><button class="btn" onclick="cards('${C.u}')">もう一周</button><button class="btn fill" onclick="go('quiz','${C.u}')">クイズに挑戦</button></div></div>`;return;
+  }
+  const q=build(C.list[C.i]);
+  $('#app').innerHTML=`<div style="--c:${U.c}">
+  <div class="qhead"><span>${U.icon} ${U.name}　カード</span><span>${C.i+1} / ${C.list.length}</span></div>
+  <div class="prog"><i style="width:${C.i/C.list.length*100}%"></i></div>
+  <div class="flash" onclick="C.flip=!C.flip;drawCardFace()">
+    <div class="tag">${esc(q.tag)}</div>
+    ${q.fig?`<div class="fig">${staffSVG(q.fig)}</div>`:''}
+    <div class="front">${esc(q.q)}</div>
+    <div id="cb"></div>
+    <div class="hint" id="ch">タップで答えを見る（スペースキーでもOK）</div>
+  </div>
+  ${q.audio?`<div style="text-align:center;margin-top:10px"><button class="play" onclick="playQ()">▶ 音を聴く</button></div>`:''}
+  <div class="cardnav"><button class="btn" style="--c:var(--ng)" onclick="cardNext(false)">✕ まだ</button><button class="btn fill" style="--c:var(--ok)" onclick="cardNext(true)">○ 覚えた</button></div></div>`;
+  C.q=q; C.flip=false;
+}
+function drawCardFace(){
+  $('#cb').innerHTML=C.flip?`<div class="back">${esc(C.q.a)}</div><div class="ex">${esc(C.q.e||'')}</div>`:'';
+  $('#ch').textContent=C.flip?'○か✕を選んで次へ':'タップで答えを見る（スペースキーでもOK）';
+}
+function cardNext(ok){record(C.list[C.i].id,ok);C.i++;drawCard();}
+
+/* ---------- クイズ ---------- */
+function startQuiz(u,list){
+  let pool=list|| (u==='mix'?Q.slice(): u==='weak'?Q.filter(q=>isWeak(q.id)):Q.filter(q=>q.u===u));
+  pool=shuffle(pool);
+  if(!list && u!=='weak' && ST.n) pool=pool.slice(0,ST.n);
+  S={u,list:pool,i:0,ok:0,miss:[]};
+  drawQ();
+}
+function drawQ(){
+  if(S.i>=S.list.length) return result();
+  const raw=S.list[S.i],q=build(raw),uc=unitColor(raw.u);
+  S.cur=q; S.answered=false;
+  const title=S.u==='mix'?'全範囲ミックス':S.u==='weak'?'まちがえた問題':UNITS[S.u].name;
+  let body='';
+  if(q.type==='order'){
+    S.picked=[]; S.pool=shuffle(q.items);
+    body=`<div class="picked" id="picked"></div><div class="pool" id="pool"></div>
+    <div class="btns" style="margin-top:10px"><button class="btn" onclick="S.picked=[];drawOrder()">やり直す</button><button class="btn fill" id="chk" onclick="checkOrder()" disabled>答え合わせ</button></div>`;
+  }else{
+    S.opts=shuffle([q.a,...q.d]);
+    body=`<div class="choices">${S.opts.map((o,i)=>`<button class="choice" data-i="${i}" onclick="answer(${i})"><span class="n">${i+1}</span><span>${esc(o)}</span></button>`).join('')}</div>`;
+  }
+  $('#app').innerHTML=`<div style="--c:${uc}">
+  <div class="qhead"><span>${esc(title)}</span><span>${S.i+1} / ${S.list.length}　正解 ${S.ok}</span></div>
+  <div class="prog"><i style="width:${S.i/S.list.length*100}%"></i></div>
+  <div class="qcard" style="--c:${UNITS[raw.u].c}">
+    <div class="tag">${UNITS[raw.u].icon} ${esc(q.tag)}</div>
+    <p class="qtext">${esc(q.q)}</p>
+    ${q.fig?`<div class="fig">${staffSVG(q.fig)}</div>`:''}
+    ${q.audio?`<button class="play" onclick="playQ()">▶ 音を聴く</button>`:''}
+    ${body}
+    <div id="fb"></div>
+  </div></div>`;
+  if(q.type==='order') drawOrder();
+  if(q.listen) setTimeout(()=>{try{playQ();}catch(e){}},300);
+}
+function playQ(){
+  const q=S&&S.cur&&$('.qcard')?S.cur:C&&C.q;
+  if(!q||!q.audio) return;
+  if(q.audio.chord) playChord(CH[q.audio.chord]);
+  if(q.audio.meter) playMeter(q.audio.meter);
+}
+function answer(i){
+  if(S.answered) return; S.answered=true;
+  const q=S.cur,ok=S.opts[i]===q.a;
+  document.querySelectorAll('.choice').forEach((b,j)=>{b.disabled=true;if(S.opts[j]===q.a)b.classList.add('ok');else if(j===i)b.classList.add('ng');});
+  finish(ok,q.a);
+}
+function drawOrder(){
+  const rest=S.pool.filter(x=>!S.picked.includes(x));
+  $('#picked').innerHTML=S.picked.map((x,i)=>`<button class="chip in" onclick="S.picked.splice(${i},1);drawOrder()">${i+1}. ${esc(x)}</button>`).join('');
+  $('#pool').innerHTML=rest.map(x=>`<button class="chip" onclick='S.picked.push(${JSON.stringify(x)});drawOrder()'>${esc(x)}</button>`).join('');
+  $('#chk').disabled=S.picked.length!==S.pool.length;
+}
+function checkOrder(){
+  if(S.answered) return; S.answered=true;
+  const q=S.cur,ok=S.picked.every((x,i)=>x===q.items[i]);
+  $('#picked').innerHTML=S.picked.map((x,i)=>`<button class="chip ${x===q.items[i]?'ok':'ng'}" disabled>${i+1}. ${esc(x)}</button>`).join('');
+  document.querySelectorAll('.btns .btn').forEach(b=>b.disabled=true);
+  finish(ok,q.items.join(' → '));
+}
+function finish(ok,ans){
+  const q=S.cur;
+  record(q.id,ok);
+  if(ok) S.ok++; else S.miss.push({q:q.q,a:ans,e:q.e,raw:S.list[S.i]});
+  $('#fb').innerHTML=`<div class="fb ${ok?'ok':'ng'}"><b>${ok?'⭕ 正解！':'❌ ざんねん'}</b>${ok?'':`<br>正解：<b>${esc(ans)}</b>`}${q.e?`<br>${esc(q.e)}`:''}${ok?'':secHint(S.list[S.i])}</div>
+  <button class="btn fill next" id="nextBtn" onclick="S.i++;drawQ()">${S.i+1<S.list.length?'次の問題へ ▶':'結果を見る ▶'}</button>`;
+  $('#nextBtn').focus({preventScroll:true});
+  $('#fb').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function result(){
+  const n=S.list.length,p=Math.round(S.ok/n*100),uc=unitColor(S.u);
+  const msg=p===100?'パーフェクト！ テストもこの調子 🎉':p>=80?'よくできました！ あと少しで満点 👍':p>=50?'いい感じ。まちがえた所を「まとめ」で確認しよう':'まずは「まとめ」と「カード」で覚えてから再挑戦しよう';
+  $('#app').innerHTML=`<div style="--c:${uc}"><h2>結果</h2>
+  <p class="score">${S.ok} / ${n}</p><p class="msg">${p}点　${msg}</p>
+  <div class="btns" style="margin-bottom:14px">${S.miss.length?`<button class="btn fill" onclick="startQuiz('${S.u}',S.miss.map(m=>m.raw))">まちがえた${S.miss.length}問をもう一度</button>`:''}
+  <button class="btn" onclick="go('quiz','${S.u}')">別の問題で</button><button class="btn" onclick="go('home')">ホーム</button></div>
+  ${S.miss.map(m=>`<div class="miss">${esc(m.q)}<br><span class="a">→ ${esc(m.a)}</span>${m.e?`<br><span class="mini">${esc(m.e)}</span>`:''}${secLink(m.raw)}</div>`).join('')}</div>`;
+}
+
+/* キーボード：1〜4で選ぶ、Enterで次へ、スペースでカードをめくる */
+document.addEventListener('keydown',e=>{
+  if(e.target.tagName==='SELECT') return;
+  if($('.choices')&&!S.answered&&/^[1-4]$/.test(e.key)){const b=document.querySelector(`.choice[data-i="${+e.key-1}"]`);if(b){b.click();e.preventDefault();}}
+  else if(e.key==='Enter'&&$('#nextBtn')){e.preventDefault();$('#nextBtn').click();}
+  else if(e.key===' '&&$('.flash')){e.preventDefault();C.flip=!C.flip;drawCardFace();}
+});
+
+go('home');
+</script>
+</body>
+</html>

@@ -1,0 +1,833 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>3年技術 テスト勉強</title>
+<style>
+:root{
+  --bg:#f6f3ec; --card:#fff; --ink:#1f2633; --sub:#5a6272; --line:#ddd6c7;
+  --fab:#c8641e; --mbit:#2f6fb5; --deai:#178a7e; --hikari:#96700a; --ai:#7a3fb0; --mix:#374151;
+  --ok:#1e8a4c; --ng:#c0392b; --hl:#fff2b8;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"BIZ UDPGothic","BIZ UDGothic","Hiragino Sans","Yu Gothic",sans-serif;line-height:1.6;-webkit-text-size-adjust:100%}
+button{font:inherit;cursor:pointer}
+header{background:#1f2633;color:#fff;padding:10px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:5}
+header h1{font-size:18px;margin:0;flex:1}
+header button{background:#ffffff22;color:#fff;border:1px solid #ffffff55;border-radius:8px;padding:4px 12px}
+main{max-width:760px;margin:0 auto;padding:16px}
+.hidden{display:none!important}
+h2{font-size:20px;margin:6px 0 12px}
+.lead{color:var(--sub);font-size:14px;margin:0 0 14px}
+/* home */
+.unit{background:var(--card);border-radius:14px;padding:14px 16px;margin-bottom:12px;border-left:8px solid var(--c);box-shadow:0 1px 3px #0001}
+.unit .t{font-weight:bold;font-size:18px}
+.unit .s{color:var(--sub);font-size:13px}
+.unit .bar{height:6px;background:#eee;border-radius:3px;margin:8px 0 10px;overflow:hidden}
+.unit .bar i{display:block;height:100%;background:var(--c)}
+.unit .stat{font-size:12px;color:var(--sub)}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:2px solid var(--c,#555);background:#fff;color:var(--c,#555);border-radius:10px;padding:8px 14px;font-weight:bold;min-width:84px}
+.btn.fill{background:var(--c,#555);color:#fff}
+.btn:disabled{opacity:.4;cursor:default}
+.opts{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:14px;margin:4px 0 14px;color:var(--sub)}
+.opts select{font:inherit;padding:4px 8px;border-radius:8px;border:1px solid var(--line)}
+/* quiz */
+.qhead{display:flex;justify-content:space-between;font-size:13px;color:var(--sub)}
+.prog{height:8px;background:#e6e0d3;border-radius:4px;overflow:hidden;margin:4px 0 14px}
+.prog i{display:block;height:100%;background:var(--c);transition:width .3s}
+.qcard{background:var(--card);border-radius:14px;padding:16px;box-shadow:0 1px 3px #0001}
+.tag{display:inline-block;font-size:12px;background:var(--c);color:#fff;border-radius:20px;padding:1px 10px;margin-bottom:6px}
+.qtext{font-size:18px;font-weight:bold;margin:0 0 12px}
+.fig{text-align:center;margin:4px 0 12px}
+.fig svg{max-width:100%;height:auto}
+.choices{display:grid;gap:8px}
+.choice{text-align:left;background:#fff;border:2px solid var(--line);border-radius:10px;padding:10px 12px;font-size:16px;display:flex;gap:10px;align-items:flex-start}
+.choice .n{flex:none;width:24px;height:24px;border-radius:50%;background:#eee;font-size:13px;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.choice:hover:not(:disabled){border-color:var(--c)}
+.choice.ok{border-color:var(--ok);background:#e8f6ee}
+.choice.ng{border-color:var(--ng);background:#fbeaea}
+.choice:disabled{cursor:default;color:inherit}
+.fb{margin-top:12px;border-radius:10px;padding:10px 12px;font-size:15px}
+.fb.ok{background:#e8f6ee;border:1px solid #b7dfc7}
+.fb.ng{background:#fbeaea;border:1px solid #efc2bd}
+.fb b{font-size:17px}
+.next{margin-top:12px;width:100%;padding:12px;font-size:17px}
+.play{background:var(--c);color:#fff;border:none;border-radius:30px;padding:8px 18px;font-weight:bold;margin-bottom:12px}
+/* order */
+.picked{min-height:46px;border:2px dashed var(--line);border-radius:10px;padding:6px;display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;align-items:center}
+.picked:empty::before{content:"下のボタンを順番にタップ";color:#aaa;font-size:14px;padding-left:4px}
+.chip{border:2px solid var(--c);background:#fff;color:var(--ink);border-radius:20px;padding:5px 12px;font-size:15px}
+.chip.in{background:var(--c);color:#fff}
+.chip.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.chip.ng{background:var(--ng);border-color:var(--ng);color:#fff}
+.chip:disabled{cursor:default}
+.pool{display:flex;flex-wrap:wrap;gap:6px}
+/* result */
+.score{font-size:46px;font-weight:bold;text-align:center;color:var(--c);margin:6px 0 0}
+.msg{text-align:center;margin:0 0 14px}
+.miss{background:#fff;border-radius:10px;padding:10px 12px;margin-bottom:8px;border-left:5px solid var(--ng);font-size:14px}
+.miss .a{color:var(--ok);font-weight:bold}
+/* cards */
+.flash{background:var(--card);border-radius:16px;min-height:230px;padding:22px 18px;box-shadow:0 2px 6px #0002;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;cursor:pointer;user-select:none;border-top:8px solid var(--c)}
+.flash .front{font-size:19px;font-weight:bold}
+.flash .back{font-size:22px;font-weight:bold;color:var(--c)}
+.flash .ex{font-size:14px;color:var(--sub);margin-top:10px}
+.flash .hint{font-size:12px;color:#999;margin-top:14px}
+.cardnav{display:flex;gap:8px;margin-top:12px}
+.cardnav .btn{flex:1;padding:12px}
+/* summary */
+.sum{background:var(--card);border-radius:14px;padding:14px 16px;margin-bottom:12px;box-shadow:0 1px 3px #0001}
+.sum h3{margin:0 0 8px;font-size:17px;color:var(--c);border-bottom:2px solid var(--c);padding-bottom:3px}
+.sum p,.sum li{font-size:15px}
+.sum ul{padding-left:20px;margin:6px 0}
+.k{background:linear-gradient(transparent 55%,var(--hl) 55%);font-weight:bold}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:6px 0}
+table.t th,table.t td{border:1px solid var(--line);padding:5px 6px;text-align:center;vertical-align:middle}
+table.t th{background:#f3efe5}
+.flow{display:flex;flex-direction:column;gap:4px;margin:6px 0}
+.flow div{background:#f3efe5;border-radius:8px;padding:6px 10px;font-size:14px;position:relative}
+.flow div b{color:var(--c)}
+.mini{font-size:13px;color:var(--sub)}
+.keys{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
+.keys .kk{border:1px solid var(--line);border-radius:10px;padding:4px;text-align:center;font-size:13px}
+.chordbtns{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.chordbtns button{border:1px solid var(--c);background:#fff;color:var(--c);border-radius:8px;padding:4px 10px;font-size:14px}
+.tip{background:#fffbea;border:1px solid #efe1a4;border-radius:10px;padding:8px 12px;font-size:14px;margin-top:8px}
+footer{text-align:center;font-size:12px;color:#999;padding:20px}
+@media (max-width:480px){.qtext{font-size:17px}.choice{font-size:15px}}
+
+/* ---- 技術版の追加 ---- */
+.point{background:var(--c);color:#fff;border-radius:14px;padding:12px 16px;margin-bottom:12px}
+.point h3{margin:0 0 4px;font-size:16px}
+.point ul{margin:0;padding-left:20px}
+.point li{font-size:15px}
+.sum{scroll-margin-top:60px}
+.sum.hit{outline:3px solid var(--c)}
+.row3{display:flex;align-items:stretch;gap:4px;margin:8px 0}
+.row3>div{flex:1;min-width:0;background:#f3efe5;border-radius:10px;padding:8px 4px;text-align:center;font-size:13px;border-top:4px solid var(--c)}
+.row3>div b{display:block;font-size:15px;color:var(--c)}
+.row3>i{flex:none;align-self:center;font-style:normal;color:var(--c);font-size:12px}
+.flow.arrow div:not(:last-child){margin-bottom:14px}
+.flow.arrow div:not(:last-child)::after{content:"▼";position:absolute;left:50%;bottom:-18px;transform:translateX(-50%);color:var(--c);font-size:11px}
+.flow.steps div:nth-child(2){margin-left:8%}
+.flow.steps div:nth-child(3){margin-left:16%}
+.sw{display:inline-block;width:28px;height:10px;border-radius:5px;border:1px solid #888;vertical-align:middle;margin-right:6px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:6px 0}
+.grid2 div{background:#f3efe5;border-radius:8px;padding:6px 8px;font-size:14px}
+table.t td.l{text-align:left}
+table.t.nw td:first-child{white-space:nowrap}
+rt{font-size:9px;font-weight:normal}
+.hide .k{color:transparent;background:var(--hl);border-radius:4px;cursor:pointer;user-select:none}
+.hide .k.show{color:inherit;background:linear-gradient(transparent 55%,var(--hl) 55%)}
+.lk{border:none;background:none;color:#2f6fb5;text-decoration:underline;padding:0;font-size:13px}
+#hideNote{font-size:13px;color:var(--sub);align-self:center}
+</style>
+</head>
+<body>
+<header>
+  <h1>🔧 3年 技術 テスト勉強</h1>
+  <button id="homeBtn" class="hidden" onclick="go('home')">ホーム</button>
+</header>
+<main id="app"></main>
+<footer>成績はこの端末のブラウザだけに保存されます</footer>
+
+<script>
+'use strict';
+/* ===================== 単元 ===================== */
+const UNITS = {
+  fab:{name:'デジタルファブリケーション入門',sub:'データが、モノになる ── 3Dプリンタのしくみと設計',c:'var(--fab)',icon:'🖨️'},
+  mbit:{name:'micro:bitで計測・制御にチャレンジ',sub:'センサ・コンピュータ・アクチュエータと micro:bit の入力・出力',c:'var(--mbit)',icon:'🎛️'},
+  deai:{name:'micro:bitとの出会い',sub:'拡張ボード＋Groveケーブルで 振動モータと3色LED',c:'var(--deai)',icon:'💡'},
+  hikari:{name:'明るさで動かそう',sub:'光センサ＋しきい値＋「もし〜なら」で 振動モータを自動でON/OFF',c:'var(--hikari)',icon:'🔆'},
+  ai:{name:'AIに、何を任せる？',sub:'AIの歴史・しくみ・得意と苦手・頼み方・これから',c:'var(--ai)',icon:'🤖'}
+};
+function staffSVG(){return '';}
+
+/* ===================== 問題のタグ → まとめの何番か ===================== */
+const SEC = {
+  fab:{'用語':1,'加工法':2,'社会':3,'しくみ':4,'データの旅':5,'実機':6,'設計':6},
+  mbit:{'計測・制御':1,'身近な例':2,'micro:bit':3,'入力':3,'出力':3,'プログラム':4,'サイコロ':5,'お約束':6},
+  deai:{'しくみ':1,'拡張ボード':2,'Grove':2,'実習①':3,'振動モータ':3,'3色LED':4,'色づくり':5,'光の三原色':5,'安全':6},
+  hikari:{'自動':1,'光センサ':2,'値':3,'しきい値':4,'フローチャート':5,'プログラム':6,'こまったら':7},
+  ai:{'AIの歴史':1,'しくみ':2,'得意と苦手':3,'頼み方':4,'できる範囲':5,'任せる？':6,'これから':7}
+};
+const MARU='①②③④⑤⑥⑦⑧⑨';
+function secOf(q){return q.s||(SEC[q.u]||{})[q.tag]||0;}
+function secHint(q){const n=secOf(q);return n?`<br><span class="mini">📘 「まとめ」の${MARU[n-1]}にのっています</span>`:'';}
+function secLink(q){const n=secOf(q);return n?`<br><button class="lk" onclick="jump('${q.u}',${n})">📘 まとめ${MARU[n-1]}で確認する</button>`:'';}
+function jump(u,n){
+  go('sum',u);
+  const el=document.querySelectorAll('.sum')[n-1];
+  if(el){el.classList.add('hit');el.scrollIntoView({block:'start'});}
+}
+/* まとめ：マーカーをかくす */
+function toggleHide(){
+  const b=document.querySelector('#sumbody'),on=b.classList.toggle('hide');
+  b.querySelectorAll('.k.show').forEach(x=>x.classList.remove('show'));
+  document.querySelector('#hideBtn').textContent=on?'👀 ぜんぶ見せる':'🙈 マーカーをかくして確認';
+  document.querySelector('#hideNote').textContent=on?'かくれた所を、答えを思いうかべてからタップしよう':'';
+}
+document.addEventListener('click',e=>{const k=e.target.closest&&e.target.closest('.hide .k');if(k)k.classList.toggle('show');});
+
+/* ===================== 問題 ===================== */
+const Q = [
+/* ---------- デジタルファブリケーション ---------- */
+{id:'f01',u:'fab',tag:'用語',q:'「デジタルデータをもとに、機械でモノを作る技術」を何という？',a:'デジタルファブリケーション',d:['大量生産','手作業による加工','プログラミング'],e:'デジタル（データ）＋ファブリケーション（ものづくり）。合言葉は「データが、モノになる」。'},
+{id:'f02',u:'fab',tag:'用語',q:'デジタルファブリケーションのキーワード「データがあれば、誰でも・どこでも・（　）が作れる」の（　）は？',a:'同じもの',d:['安いもの','大きいもの','速いもの'],e:'腕前ではなくデータどおりに機械が動くので、だれが・どこで作っても同じものになる。'},
+{id:'f03',u:'fab',tag:'用語',q:'デジタルファブリケーションに使う機械として、授業で紹介されなかったものは？',a:'のこぎり',d:['3Dプリンタ','レーザー加工機','切削加工機（CNC）'],e:'3つの機械はどれも「データから作る」。のこぎりはデータではなく、人の腕前で使う道具。'},
+{id:'f04',u:'fab',tag:'加工法',q:'のこぎりで切る・かんなで削るなど、材料から不要な部分を取り除く加工は？',a:'引き算の加工（除去加工）',d:['足し算の加工（付加加工）','かけ算の加工','わり算の加工'],e:'取り除く＝材料が減る＝引き算。「除去」は取り除くという意味。切りくず（無駄）が出る。'},
+{id:'f05',u:'fab',tag:'加工法',q:'3Dプリンタのように、材料を少しずつ積み上げる加工は？',a:'足し算の加工（付加加工）',d:['引き算の加工（除去加工）','曲げ加工','鋳造'],e:'積み上げる＝材料が増える＝足し算。「付加」は付け加えるという意味。必要な分だけ使うので切りくずが出ない。'},
+{id:'f06',u:'fab',tag:'加工法',q:'引き算の加工で必ず出て、足し算の加工では出ないものは？',a:'切りくず（無駄）',d:['設計データ','熱','におい'],e:'引き算はかたまりから取り除くので、取り除いた分が切りくずになる。足し算は必要な分だけ積むので出ない。'},
+{id:'f07',u:'fab',tag:'加工法',q:'足し算の加工だからこそ作れるものは？',a:'中が空洞の形や、組み立てなしで動く部品',d:['大きな木の板','まっすぐな角材','同じ形の大量生産品を安く'],e:'引き算は外から刃を当てるので、中までは削れない。足し算は下から1層ずつ積むので、中の形も自由に作れる。'},
+{id:'f08',u:'fab',tag:'社会',q:'医療でのデジタルファブリケーションの例は？',a:'患者に合わせた義手や手術の練習モデル',d:['宇宙ステーションで部品を印刷','開発の試作品','ドローンのプロペラの修理'],e:'体の形は一人ひとり違う。データを変えるだけで「その人専用」が作れるのが強み。'},
+{id:'f09',u:'fab',tag:'社会',q:'宇宙ステーションで工具が壊れたとき、デジタルファブリケーションならどうする？',a:'データだけ送って、その場で印刷する',d:['地球から数か月かけて送る','宇宙飛行士が手作業で削る','あきらめて帰還する'],e:'モノを運ぶのは大変でも、データならネットで一瞬。「どこでも作れる」の例。'},
+{id:'f10',u:'fab',tag:'社会',q:'試作品づくりにデジタルファブリケーションを使うと、開発期間はどうなった？',a:'数か月から数日に短縮',d:['数日から数か月にのびた','変わらない','数年かかるようになった'],e:'データを直してすぐ作り直せるから速い。だから新商品が出るペースも速くなった。'},
+{id:'f11',u:'fab',tag:'社会',q:'大量生産とくらべた、デジタルファブリケーションの得意なことは？',a:'一人ひとり違うものを、少しずつ作る',d:['同じものを安くたくさん作る','材料を使わずに作る','人がいなくても設計する'],e:'大量生産＝同じものを安くたくさん。デジファブ＝データを変えれば1個ずつ違うものが作れる。'},
+{id:'f12',u:'fab',tag:'しくみ',q:'授業で使った3Dプリンタの方式「FDM方式」を漢字で何という？',a:'熱溶解積層方式',d:['光造形方式','粉末焼結方式','切削方式'],e:'漢字のとおり「熱で・溶解（とか）して・積層（つみ重ね）する」方式。'},
+{id:'f13',u:'fab',tag:'しくみ',q:'FDM方式の3Dプリンタをたとえると？',a:'グルーガンを、ロボットが超正確に動かしている',d:['のこぎりをロボットが動かしている','インクジェットで紙に印刷している','粘土を手でこねている'],e:'グルーガンも3Dプリンタも、材料を熱で溶かして細く出し、冷えると固まる。'},
+{id:'f14',u:'fab',tag:'しくみ',q:'3Dプリンタで使う、細い糸のような材料を何という？',a:'フィラメント',d:['インク','トナー','ワイヤー'],e:'フィラメント＝材料。これを約200℃で溶かして積み上げる。'},
+{id:'f15',u:'fab',tag:'しくみ',q:'フィラメントを溶かす温度は約何℃？',a:'約200℃',d:['約50℃','約100℃','約1000℃'],e:'お湯（100℃）では溶けない。覚える数字は2つ：約200℃ と 1層0.2mm。'},
+{id:'f16',u:'fab',tag:'しくみ',q:'授業の3Dプリンタで、1層の厚さは？',a:'0.2mm',d:['2mm','0.02mm','2cm'],e:'コピー用紙2枚分くらいのうすさ。これを何百回も重ねて形にする。'},
+{id:'f17',u:'fab',tag:'しくみ',q:'1層0.2mmで、高さ40mmのキーホルダーを作ると何層になる？',a:'200層',d:['20層','80層','400層'],e:'高さ ÷ 1層の厚さ ＝ 40 ÷ 0.2 ＝ 200層。層が多いから3Dプリンタは時間がかかる。'},
+{id:'f18',u:'fab',tag:'データの旅',type:'order',q:'3Dプリンタでモノができるまでの「データの旅」を順に並べよう',items:['設計データを作る','スライサーで輪切りにする','機械への命令（G-code）に変換','機械が積み上げて形にする'],e:'形を作る → 輪切りにする → 命令にする → 機械が動く、の順。'},
+{id:'f19',u:'fab',tag:'データの旅',q:'立体の設計データを、薄く「輪切り」にするソフトを何という？',a:'スライサー',d:['ブラウザ','MakeCode','ワープロ'],e:'スライス（うすく切る）するソフトだからスライサー。3Dプリンタは1層ずつしか作れないので、先に輪切りにしておく。'},
+{id:'f20',u:'fab',tag:'データの旅',q:'「どこへ、どの速さで、どれだけ材料を出しながら動くか」を表す、3Dプリンタへの命令を何という？',a:'G-code',d:['HTML','フィラメント','スライサー'],e:'スライサー＝輪切りにする「ソフト」、G-code＝できあがった「命令」。画面の「G1 X100 Y100 …」がそれ。'},
+{id:'f21',u:'fab',tag:'データの旅',q:'設計データを何に変えることで、機械はモノを作れる？',a:'輪切りの命令書',d:['写真','設計図の印刷','音声'],e:'「輪切り」＝スライサーの仕事、「命令書」＝G-code。2つを合わせた言い方。'},
+{id:'f22',u:'fab',tag:'データの旅',q:'3Dプリンタ（機械）について正しいのは？',a:'人が作ったデータと命令のとおりに動いているだけ',d:['自分で考えて形を決めている','どんなデータでも自動で直してくれる','設計しなくても作品を作れる'],e:'機械は自分では考えない。だから、いいものができるかどうかは設計する人しだい。'},
+{id:'f23',u:'fab',tag:'実機',q:'授業で使った3Dプリンタの機種は？',a:'Bambu Lab A1 mini',d:['micro:bit V2','Falcon2 Pro','Arduino Nano'],e:'本校に3台（壱號・弐號・参號）。micro:bit は計測・制御で使った小さなコンピュータ。'},
+{id:'f24',u:'fab',tag:'実機',q:'A1 mini で印刷できる大きさ（設計の制約条件）は？',a:'180×180×180mm',d:['50×50×50mm','300×300×300mm','1000×1000×1000mm'],e:'たて・横・高さ 18cm の箱。はみ出るものは作れない。50×50mm は「授業の作品の目安」なので別の数字。'},
+{id:'f25',u:'fab',tag:'実機',q:'授業で使った材料 PLA はどんなプラスチック？',a:'トウモロコシなどの植物から作られたプラスチック',d:['石油だけから作られた金属','木の粉を固めたもの','ガラスの一種'],e:'植物由来なので、燃やしても有害なガスが出にくく、条件がそろえば土に還る。環境への配慮も技術の大事な視点。'},
+{id:'f26',u:'fab',tag:'設計',q:'自作Webアプリ「ものづくり工房」で、15種類の形を選んでカスタマイズするのは？',a:'ガジェット工房',d:['ガジェットCAD','MakeCode','スライサー'],e:'工房＝用意された形を選んで作りかえる。CAD＝ゼロから自由に設計（もっと作りたい人向け）。'},
+{id:'f27',u:'fab',tag:'設計',q:'アプリの画面のマス目の枠（横幅180mm）は、何と同じ大きさ？',a:'プリンタのプレート',d:['タブレットの画面','A4用紙','500円玉'],e:'プリンタで作れる横幅も180mm。だから画面上の大きさが、そのまま現実の大きさになる。'},
+{id:'f28',u:'fab',tag:'設計',q:'作品を提出するとき、実際に送っているものは？',a:'作品のデータ（作品コード）',d:['作った実物','紙の設計図','フィラメント'],e:'データだから、瞬時に送れて、全く同じものが再現できる（誰でも・どこでも・同じもの）。'},
+{id:'f29',u:'fab',tag:'設計',q:'設計のルール「大きさは50×50mm以内を目安に」のような、決められた条件を何という？',a:'制約条件',d:['付加加工','出力条件','乱数'],e:'制約＝「ここまで」という決まり。設計とは、決められた条件の中で、いちばんいいものを考えること。'},
+{id:'f30',u:'fab',tag:'設計',q:'作品の大きさを50×50mm以内の目安にした理由は？',a:'大きいと印刷に時間がかかりすぎて、全員分が終わらないから',d:['プリンタに入らないから','フィラメントが溶けないから','データが送れないから'],e:'プリンタには180mmまで入る。足りないのは「時間」。大きさ・時間・材料 ── どんなモノづくりにも制約がある。'},
+
+/* ---------- micro:bitで計測・制御 ---------- */
+{id:'m01',u:'mbit',tag:'計測・制御',type:'order',q:'計測・制御のしくみ「見る・考える・動かす」を順に並べよう',items:['センサ','コンピュータ','アクチュエータ'],e:'人でいうと 目・耳（センサ）→ 頭（コンピュータ）→ 手足（アクチュエータ）の順。'},
+{id:'m02',u:'mbit',tag:'計測・制御',q:'「見る」＝周りの様子をはかる部分を何という？',a:'センサ',d:['アクチュエータ','コンピュータ','インタフェース'],e:'センサ＝はかる係。人でいう目や耳。例：温度・明るさ・人の動き をはかる。'},
+{id:'m03',u:'mbit',tag:'計測・制御',q:'「考える」＝プログラムで判断する部分を何という？',a:'コンピュータ',d:['センサ','アクチュエータ','スピーカー'],e:'コンピュータ＝判断する係。人でいう頭。micro:bit はこの役。'},
+{id:'m04',u:'mbit',tag:'計測・制御',q:'「動かす」＝実際に動く部分を何という？',a:'アクチュエータ',d:['センサ','コンピュータ','フィラメント'],e:'アクチュエータ＝動く係。人でいう手足。例：モータ・LED・スピーカー。'},
+{id:'m05',u:'mbit',tag:'身近な例',q:'エアコンの計測・制御で、センサがはかるものは？',a:'温度',d:['手','ボールの速さ','雪'],e:'部屋の温度をはかる → 設定温度とくらべる → 風を強めたり弱めたりする。'},
+{id:'m06',u:'mbit',tag:'身近な例',q:'ロードヒーティングの計測・制御として正しいのは？',a:'雪や気温を測る → 熱で溶かす',d:['手を検知する → 水を出す','ボールの速さを測る → 画面に表示する','温度を測る → 設定温度にする'],e:'ロード（道路）をヒーティング（あたためる）。雪が降ったときだけ自動で動く、北海道でおなじみのしくみ。'},
+{id:'m07',u:'mbit',tag:'身近な例',q:'自動水栓の計測・制御として正しいのは？',a:'手を検知する → 水を出す',d:['雪や気温を測る → 熱で溶かす','温度を測る → 設定温度にする','ボールの速さを測る → 画面に表示する'],e:'センサで手に気づき（見る）、水を出す（動かす）。手を引くと止まるのも同じしくみ。'},
+{id:'m08',u:'mbit',tag:'身近な例',q:'スピードガンの計測・制御として正しいのは？',a:'ボールの速さを測る → 画面に表示する',d:['手を検知する → 水を出す','温度を測る → 設定温度にする','雪や気温を測る → 熱で溶かす'],e:'動く部品がなくても、「画面に表示する」は出力の側。'},
+{id:'m09',u:'mbit',tag:'micro:bit',q:'micro:bit（マイクロビット）とは何？',a:'手のひらサイズの小さなコンピュータ',d:['3Dプリンタの部品','スマートフォンの一種','電池だけでできたおもちゃ'],e:'小さいけれど、センサ（入力）もLED・スピーカー（出力）も入ったコンピュータ。'},
+{id:'m10',u:'mbit',tag:'入力',q:'micro:bit本体の「入力（感じるしくみ）」に入らないものは？',a:'25個のLED',d:['ボタン（A/B）','明るさ','温度'],e:'LEDは光って知らせる側＝出力。入力は：ボタンA/B・明るさ・タッチ（ロゴマーク）・音（マイク）・温度・傾き・振る（加速度センサ）。'},
+{id:'m11',u:'mbit',tag:'入力',q:'micro:bitが「傾き」や「振る」を感じるセンサは？',a:'加速度センサ',d:['温度センサ','マイク','明るさセンサ'],e:'加速度＝動きの速さの変わり方。振ると速さが急に変わるので気づける。サイコロの「ゆさぶられたとき」で使う。'},
+{id:'m12',u:'mbit',tag:'入力',q:'micro:bit（V2）で「タッチ」を感じる場所は？',a:'ロゴマーク',d:['A・Bボタン','25個のLED','金色の端子のGND'],e:'表の上のほうにあるロゴマーク。A・Bボタンは「押す」、ロゴは「さわる」。'},
+{id:'m13',u:'mbit',tag:'出力',q:'micro:bit本体の「出力（動く・知らせるしくみ）」の組み合わせは？',a:'25個のLED と スピーカー',d:['ボタンA と ボタンB','マイク と 温度センサ','加速度センサ と ロゴマーク'],e:'出力は2つだけ：LED（光る・文字を出す）とスピーカー（音を鳴らす）。ほかは全部、入力。'},
+{id:'m14',u:'mbit',tag:'プログラム',type:'order',q:'プログラムを作って動かす3ステップを順に並べよう',items:['ブロックをつなぐ','画面でためす','ダウンロードして書き込む'],e:'作る → 画面でためす → 本物に入れる。先に画面でためすと、まちがいに早く気づける。'},
+{id:'m15',u:'mbit',tag:'プログラム',q:'「ボタンAが押されたとき → アイコンを表示（ハート）」で、入力にあたるのは？',a:'ボタンAが押される',d:['ハートを表示する','LED','パソコン'],e:'「〜されたとき」がきっかけ＝入力。「表示する」が結果＝出力。'},
+{id:'m16',u:'mbit',tag:'プログラム',q:'デタラメな数のことを何という？',a:'乱数（らんすう）',d:['整数','変数','定数'],e:'次に何が出るかわからない数。サイコロの目が出るのと同じ。'},
+{id:'m17',u:'mbit',tag:'サイコロ',q:'サイコロのプログラムで「入力（見る・センサ）」にあたるのは？',a:'ゆさぶられたことを感じる（加速度センサ）',d:['1から6までの乱数を選ぶ','LEDに数を表示する','ボタンBを押す'],e:'入力＝ゆさぶられた → 処理＝乱数を選ぶ → 出力＝数を表示。「見る・考える・動かす」と同じ順。'},
+{id:'m18',u:'mbit',tag:'サイコロ',q:'サイコロのプログラムで「処理（考える・コンピュータ）」にあたるのは？',a:'1から6までの乱数を選ぶ',d:['ゆさぶられたことを感じる','LEDに数を表示する','USBで書き込む'],e:'数を決めるのは、頭の役のコンピュータ。入力（ゆさぶられた）と出力（表示）の間の仕事。'},
+{id:'m19',u:'mbit',tag:'サイコロ',q:'サイコロのプログラムで「出力（動かす・アクチュエータ）」にあたるのは？',a:'LEDに数を表示する',d:['ゆさぶられたことを感じる','1から6までの乱数を選ぶ','温度をはかる'],e:'決まった数を、25個のLEDで人に知らせる。知らせる・光る・鳴るは出力。'},
+{id:'m20',u:'mbit',tag:'お約束',q:'micro:bitを取り扱うお約束として正しいのは？',a:'はしっこを持ち、水や金属に近づけない',d:['真ん中をしっかりつまむ','クリップの上に置いて保管する','ぬれた手でさわってもよい'],e:'部品がむき出しなので、真ん中をさわるとこわれる原因に。水・金属（クリップなど）は電気が流れてショートのもと。'},
+
+/* ---------- micro:bitとの出会い ---------- */
+{id:'d01',u:'deai',tag:'しくみ',q:'自動ドアで、人が近づいたことを感じる部分は？',a:'センサ',d:['モータ','コンピュータ','ドアのガラス'],e:'① センサが見つける → ② コンピュータが「開けよう」と判断 → ③ モータ（アクチュエータ）がドアを開ける。'},
+{id:'d02',u:'deai',tag:'しくみ',q:'コンピュータとセンサ・アクチュエータの間で、信号を つなぎ・変換する 部分を何という？',a:'インタフェース',d:['フィラメント','スライサー','アノード'],e:'インタフェース＝間をつなぐ「通訳」役。拡張ボードもその仲間。'},
+{id:'d03',u:'deai',tag:'しくみ',q:'センサ・コンピュータ・アクチュエータの例の組み合わせで正しいのは？',a:'人感センサ ／ micro:bit ／ モータ',d:['モータ ／ 人感センサ ／ micro:bit','micro:bit ／ モータ ／ 人感センサ','LED ／ ブザー ／ 温度センサ'],e:'はかる（人感・温度・明るさ）→ 判断する（micro:bit）→ 動く・光る・鳴る（モータ・LED・ブザー）。'},
+{id:'d04',u:'deai',tag:'拡張ボード',q:'拡張ボードとは何？',a:'micro:bitの「つなぐ口」をふやす板',d:['micro:bitの電池','プログラムを書くソフト','LEDの色を変えるアプリ'],e:'micro:bitの下の金色の端子は小さくて線をつなぎにくい → 拡張ボードが端子を引き出して、差すだけにしてくれる。'},
+{id:'d05',u:'deai',tag:'拡張ボード',q:'micro:bit本体だけではできないので、外の装置をつなぐ必要があるのは？',a:'土の水分をはかる',d:['ボタンを押したことを感じる','明るさをはかる','LEDに文字を出す'],e:'ボタン・明るさ・LEDは本体に入っている。土の水分・人が来たら知らせる・風を送る は外の装置が必要。'},
+{id:'d06',u:'deai',tag:'Grove',q:'Groveケーブルを使うよさとして正しくないのは？',a:'はんだ付けしないとつなげない',d:['差すだけでつなげる','向きが決まっていて、まちがえにくい','センサも装置も同じ形で、つけかえ自由'],e:'Groveは逆で、はんだ付けも配線もいらない。差すだけ・向きが決まっている・つけかえ自由。'},
+{id:'d07',u:'deai',tag:'Grove',q:'Groveケーブル（P3-P0）で、電源（−）GND の線の色は？',a:'黒',d:['赤','白','黄'],e:'マイナスは黒、プラスは赤（乾電池の線と同じ色分け）。白＝P3、黄＝P0 は信号。'},
+{id:'d08',u:'deai',tag:'Grove',q:'Groveケーブル（P3-P0）で、電源（＋3.3V）3V3 の線の色は？',a:'赤',d:['黒','白','黄'],e:'プラスは赤、マイナスは黒。電源の線はこの2本。3V3 は 3.3V のこと。'},
+{id:'d09',u:'deai',tag:'Grove',q:'Groveケーブル（P3-P0）で、信号の線2本の色は？',a:'白と黄',d:['黒と赤','赤と白','黒と黄'],e:'黒・赤が電源なので、残りの白（P3）・黄（P0）が信号。信号の線は、はかった結果や動きの指示を伝える。'},
+{id:'d10',u:'deai',tag:'Grove',q:'振動モータを動かしたのは、何色の線の何番端子？',a:'黄色の P0',d:['白の P3','赤の 3V3','黒の GND'],e:'プログラムも「デジタルで出力する 端子P0」だった。P3-P0 コネクタの黄色の線＝P0。'},
+{id:'d11',u:'deai',tag:'実習①',q:'振動モータをつなぐときの手順で正しいのは？',a:'USBは抜いたままケーブルを差し、最後にUSBでつなぐ',d:['USBをつないでから差しこむ','ケーブルの線を引っぱって差しこむ','つなぐ場所はどこでもよい'],e:'USBをつなぐ＝電気が流れる。電気が流れたまま差しかえると、こわれる原因になるので、USBは最後。'},
+{id:'d12',u:'deai',tag:'実習①',q:'「デジタルで出力する 端子P0 値（　）」で、モータを止める値は？',a:'0',d:['1','255','1000'],e:'デジタルは 1 か 0 の2つだけ。1＝高い電圧でモータON、0＝低い電圧でモータOFF。'},
+{id:'d13',u:'deai',tag:'実習①',q:'「一時停止（ミリ秒）1000」は何秒？',a:'1秒',d:['10秒','0.1秒','1000秒'],e:'ミリ＝1000分の1（1mm が 1mの1000分の1 なのと同じ）。1000ミリ秒＝1秒。'},
+{id:'d14',u:'deai',tag:'実習①',q:'「デジタルで出力する」ブロックがあるのは？',a:'高度なブロック → 入出力端子',d:['基本','LED','音楽'],e:'端子（P0など）に信号を出すブロックなので「入出力端子」の中。MakeCode（makecode.microbit.org）で組んだ。'},
+{id:'d15',u:'deai',tag:'振動モータ',q:'振動モータがブルブルするのはなぜ？',a:'中で かたよったおもり が回るから',d:['磁石どうしがぶつかるから','電気がとぎれとぎれに流れるから','中に水が入っているから'],e:'おもりがかたよっているので、回るたびに重さが右へ左へふり回されて、全体がゆれる。'},
+{id:'d16',u:'deai',tag:'振動モータ',q:'micro:bitの端子から出せる電流は小さい。モータに大きな電流を流すため、スイッチとして使う部品は？',a:'トランジスタ（FET）',d:['LED','抵抗','スピーカー'],e:'micro:bitの小さな信号でトランジスタのスイッチを入れ、電源から大きな電流をモータに流す。これもインタフェースの役目。'},
+{id:'d17',u:'deai',tag:'振動モータ',q:'音ではなく振動で知らせるよさとして、授業で出た例は？',a:'耳が聞こえにくい人にも伝わる',d:['遠くの人まで届く','電気をまったく使わない','色で区別できる'],e:'振動は体で感じる。ほかにも：静かな場所で迷惑をかけない、うるさい場所でも気づける。'},
+{id:'d18',u:'deai',tag:'3色LED',q:'今回の3色LEDの、いちばん長い足を差すのは？',a:'GND',d:['BAT+','P15','P13'],e:'今回のLEDは GND共通＝3色の電気の帰り道（−）を1本にまとめてある。その共通の足がいちばん長い。'},
+{id:'d19',u:'deai',tag:'3色LED',q:'3色LEDをつなぐとき、差してはいけない端子は？',a:'BAT+',d:['GND','P13','P15'],e:'BAT+は電池の＋。プログラムで点けたり消したりできず、こわれる原因になる。赤の足を曲げて、BAT+をとばしてP15へ。'},
+{id:'d20',u:'deai',tag:'3色LED',q:'3色LEDの色と端子の組み合わせで正しいのは？',a:'青＝P13、緑＝P14、赤＝P15',d:['赤＝P13、緑＝P14、青＝P15','青＝P15、緑＝P13、赤＝P14','どの足をどこに差してもよい'],e:'端子は P13・P14・GND・BAT+・P15・P16 の並び。番号の小さい順に 青(13)・緑(14)・赤(15)。'},
+{id:'d21',u:'deai',tag:'光の三原色',q:'光の三原色は？',a:'赤・緑・青',d:['赤・黄・青','白・黒・灰','赤・緑・黄'],e:'英語の頭文字で RGB（Red・Green・Blue）。3色LEDの3色もこれ。黄は「赤＋緑」で作る色。'},
+{id:'d22',u:'deai',tag:'光の三原色',q:'光の「赤＋緑」は何色？',a:'黄',d:['水色','赤むらさき','白'],e:'赤＋緑＝黄、緑＋青＝水色、青＋赤＝赤むらさき、全部＝白。'},
+{id:'d23',u:'deai',tag:'光の三原色',q:'光の「緑＋青」は何色？',a:'水色',d:['黄','赤むらさき','白'],e:'赤＋緑＝黄、緑＋青＝水色、青＋赤＝赤むらさき、全部＝白。'},
+{id:'d24',u:'deai',tag:'光の三原色',q:'光の「青＋赤」は何色？',a:'赤むらさき',d:['黄','水色','黒'],e:'赤＋緑＝黄、緑＋青＝水色、青＋赤＝赤むらさき、全部＝白。'},
+{id:'d25',u:'deai',tag:'光の三原色',q:'光の三原色を「全部」混ぜると何色？',a:'白',d:['黒','灰色','茶色'],e:'絵の具は混ぜるほど暗くなるが、光は混ぜるほど明るくなる。だから全部で白。'},
+{id:'d26',u:'deai',tag:'色づくり',q:'アプリのフェーダーで、LEDがいちばん明るく光る数字は？',a:'255',d:['0','100','1000'],e:'0＝消える、255＝いちばん明るい。0〜255の間で明るさを決める。'},
+{id:'d27',u:'deai',tag:'色づくり',q:'フェーダーで「黄」を作る数字（赤・緑・青）は？',a:'255・255・0',d:['255・0・255','0・255・255','0・0・0'],e:'黄＝赤＋緑。だから赤と緑を255（点ける）、青を0（消す）。'},
+{id:'d28',u:'deai',tag:'安全',q:'ケーブルを抜くときの正しい方法は？',a:'コネクタをつまんで抜く',d:['線を引っぱって抜く','USBをつないだまま抜く','ペンチではさんで抜く'],e:'線を引っぱると、中の細い線が切れる。かたいコネクタの部分をつまむ。'},
+{id:'d29',u:'deai',tag:'安全',q:'安全・あとかたづけの約束として正しくないのは？',a:'電気が流れたまま差しかえる',d:['つなぎかえはUSBを抜いてから','LEDの足を曲げすぎず袋にもどす','LEDの足どうしがふれないようにする'],e:'電気が流れたままだと、差しまちがえた瞬間にこわれる。つなぎかえは必ずUSBを抜いてから。'},
+
+/* ---------- 明るさで動かそう ---------- */
+{id:'h01',u:'hikari',tag:'自動',q:'前回は人がボタンを押してモータを動かした。今回、動かすかどうかを判断したのは？',a:'micro:bit（センサの値をもとに判断）',d:['ボタンを押した人','振動モータ','USBケーブル'],e:'センサがはかる → micro:bitが判断する → モータが動く。だから、だれも押さなくても自動で動く。'},
+{id:'h02',u:'hikari',tag:'自動',q:'「明るさをはかるセンサ」が入っている例として、授業で出なかったものは？',a:'自動水栓',d:['街灯','車のオートライト','スマホの画面'],e:'自動水栓がはかるのは「手」。街灯・オートライト・スマホの画面は、どれも明るさをはかって自動で動く。'},
+{id:'h03',u:'hikari',tag:'光センサ',q:'micro:bit の光センサはどこにある？',a:'表の 5×5のLED表示の一部',d:['裏側のマイク','ロゴマーク','金色の端子'],e:'LEDは光を受けると、ごくわずかな電流が流れる性質がある。これを使って、LED表示の一部が光センサをかねている。'},
+{id:'h04',u:'hikari',tag:'光センサ',q:'明るさを変えてはかりたい。手でおおうのはどこ？',a:'表側（LED表示のある面）',d:['裏側','金色の端子','USBの差しこみ口'],e:'光センサは表のLED表示の中にある。裏側をおおっても値はほとんど変わらない。'},
+{id:'h05',u:'hikari',tag:'光センサ',q:'書きこんだ直後、明るさの表示に 0 が出た。どうする？',a:'2回目からの数字を使う',d:['0 と記録する','micro:bitを交換する','しきい値を0にする'],e:'書きこんだ直後の最初の1回は 0 が出ることがある。2回目からの数字を読む。'},
+{id:'h06',u:'hikari',tag:'値',q:'「明るさ」ブロックの値は、いくつからいくつまで？',a:'0 〜 255',d:['0 〜 1','0 〜 100','1 〜 6'],e:'0＝暗い、255＝明るい の256段階。0か1だけなのは「デジタルで出力する」のほう。'},
+{id:'h07',u:'hikari',tag:'値',q:'暗くなるほど、「明るさ」の値はどうなる？',a:'小さくなる',d:['大きくなる','変わらない','255になる'],e:'0＝暗い、255＝明るい。「暗い＝値が小さい」は、条件の < を決めるときにも使う。'},
+{id:'h08',u:'hikari',tag:'値',q:'「デジタルで出力する」で出せる値は？',a:'0 と 1 の2通り',d:['0〜255 の256段階','1〜6 の6通り','いくつでも出せる'],e:'出力は 0（OFF）か 1（ON）だけ。入力の明るさは 0〜255 の256段階。'},
+{id:'h09',u:'hikari',tag:'値',q:'256段階の明るさを、ON・OFFの2通りの動きにつなぐのは何？',a:'コンピュータの判断（プログラム）',d:['光センサ','振動モータ','Groveケーブル'],e:'センサは「はかる」だけ、モータは「動く」だけ。間で「どこからONにするか」を決めるのがプログラム。'},
+{id:'h10',u:'hikari',tag:'しきい値',q:'ON と OFF を切りかえる境目の値を何という？',a:'しきい値',d:['乱数','制約条件','G-code'],e:'「ここより暗ければON」の「ここ」にあたる数字。'},
+{id:'h11',u:'hikari',tag:'しきい値',q:'明るさが「手でおおうと3」「机の上で55」だった。暗くなったら動かすとき、しきい値としてよいのは？',a:'20',d:['1','55','200'],e:'2つの値の間に置く。1だと、おおっても（3）動かない。55は机の値と同じで誤作動しやすい。200だと、いつでも動いてしまう。'},
+{id:'h12',u:'hikari',tag:'しきい値',q:'しきい値の数字は、どうやって決める？',a:'自分ではかった値をもとに決める',d:['いつでも20にする','できるだけ大きくする','できるだけ小さくする'],e:'教室の明るさは日や場所で変わる。スライドの20は一例で、実際にはかって決める。'},
+{id:'h13',u:'hikari',tag:'しきい値',q:'しきい値を、明るいときの値に近づけすぎるとどうなる？',a:'少し暗くなっただけで動いてしまう（誤作動しやすい）',d:['おおっても動かなくなる','明るさがはかれなくなる','モータがこわれる'],e:'例：机が55のとき、しきい値を50にすると、雲が出て少し暗くなっただけでブルブルする。'},
+{id:'h14',u:'hikari',tag:'フローチャート',q:'フローチャートで「判断（はい／いいえで分かれる）」を表す図形は？',a:'ひし形',d:['長方形','円','三角形'],e:'ひし形＝判断、長方形＝処理（やること）。ひし形からは「はい」「いいえ」の2本の線が出る。'},
+{id:'h15',u:'hikari',tag:'フローチャート',q:'プログラムの3つの形のうち、条件によって処理が分かれる形は？',a:'分岐',d:['順次','反復','乱数'],e:'分かれる＝分岐。「もし〜なら〜でなければ」がこれ。'},
+{id:'h16',u:'hikari',tag:'フローチャート',q:'プログラムの3つの形のうち、同じ処理をくり返す形は？',a:'反復',d:['順次','分岐','しきい値'],e:'反復＝くり返す。「ずっと」ブロックがこれ。'},
+{id:'h17',u:'hikari',tag:'フローチャート',q:'プログラムの3つの形のうち、上から順に進む形は？',a:'順次',d:['分岐','反復','出力'],e:'順次＝順番に次へ。3つの形は 順次・分岐・反復。'},
+{id:'h18',u:'hikari',tag:'プログラム',type:'order',q:'「暗くなったら自動でブルブル」の流れを順に並べよう',items:['光センサが明るさをはかる','micro:bitがしきい値とくらべる','振動モータを ON（1）か OFF（0）にする'],e:'はかる（センサ）→ くらべて判断（コンピュータ）→ 動かす（アクチュエータ）。'},
+{id:'h19',u:'hikari',tag:'プログラム',q:'「暗くなったら」動かすときの条件は？',a:'明るさ < しきい値',d:['明るさ > しきい値','明るさ ＝ 255','しきい値 < 0'],e:'暗い＝値が小さい。だから「明るさがしきい値より小さい」＝ 明るさ < しきい値。'},
+{id:'h20',u:'hikari',tag:'プログラム',q:'「もし 明るさ < 20 なら P0に1、でなければ P0に0」。明るさがちょうど 20 のとき、モータは？',a:'OFF（20 < 20 は成り立たない）',d:['ON','ONとOFFをくり返す','こわれる'],e:'< は「より小さい」。20は20より小さくないので「いいえ」→ でなければ → 0（OFF）。19ならON。'},
+{id:'h21',u:'hikari',tag:'プログラム',q:'「もし〜なら〜でなければ」のブロックがあるのは？',a:'論理',d:['基本','入力','音楽'],e:'判断やくらべる（<）のブロックは「論理」。「ずっと」は基本、「明るさ」は入力。'},
+{id:'h22',u:'hikari',tag:'プログラム',q:'「明るさ」のブロックがあるのは？',a:'入力',d:['基本','論理','LED'],e:'明るさはセンサではかる値＝入力。'},
+{id:'h23',u:'hikari',tag:'プログラム',q:'「ふたを開けたら知らせる箱」のように、明るくなったら動かしたい。どこを変える？',a:'くらべる記号を > にする',d:['端子を P3 にする','「ずっと」を外す','出力する値を 255 にする'],e:'明るい＝値が大きい。だから 明るさ > しきい値。しきい値の数字も考え直す。'},
+{id:'h24',u:'hikari',tag:'こまったら',q:'ずっとブルブルしっぱなし。原因は？',a:'しきい値が大きすぎる',d:['しきい値が小さすぎる','明るさが255をこえた','ケーブルが長すぎる'],e:'しきい値が明るいときの値より大きいと、「明るさ < しきい値」がいつでも「はい」になる。'},
+{id:'h25',u:'hikari',tag:'こまったら',q:'手でおおっても動かない。しきい値はどうなっていると考えられる？',a:'小さすぎる',d:['大きすぎる','ちょうどよい','255になっている'],e:'おおったときの値よりしきい値が小さいと、いつでも「いいえ」になる。端子がP0か、ケーブルがP3-P0に差さっているかも見る。'},
+{id:'h26',u:'hikari',tag:'こまったら',q:'暗くしてからブルブルするまでが、とてもおそい。原因は？',a:'同じ「ずっと」の中に「数を表示」が残っている',d:['しきい値が大きすぎる','しきい値が小さすぎる','< と > が逆'],e:'数字が流れ終わるまで、次の判断に進めない。だから実習②では「数を表示」を外した。'},
+{id:'h27',u:'hikari',tag:'こまったら',q:'明るいときにブルブルして、暗くすると止まる。原因は？',a:'< と > が逆になっている',d:['しきい値が小さすぎる','「数を表示」が残っている','USBが抜けている'],e:'「暗い」＝値が小さい＝ 明るさ < しきい値。> だと明るいときに動く。'},
+
+/* ---------- AI ---------- */
+{id:'a01',u:'ai',tag:'AIの歴史',type:'order',q:'AIの歴史を、古い順に並べよう',items:['ルールで動くAI','データから学ぶAI','ディープラーニング','文章や絵を作るAI（生成AI）','自分で作業するAI（AIエージェント）'],e:'人が教える → 自分で学ぶ → もっと深く学ぶ → 作る → 作業する。1950年代〜 → 1990年代〜 → 2010年代〜 → 2022年〜 → 2025年ごろ〜'},
+{id:'a02',u:'ai',tag:'AIの歴史',q:'1950年代〜の「ルールで動くAI」の特ちょうは？',a:'人間がルールを全部書く',d:['データから自分で学ぶ','文章や絵を作る','自分で作業する'],e:'いちばん最初のAI。人が書いたルールのとおりにしか動けない。AIは急に現れたわけじゃない。'},
+{id:'a03',u:'ai',tag:'AIの歴史',q:'1990年代〜の「データから学ぶAI」の例は？',a:'迷惑メールの仕分け',d:['囲碁AIがプロに勝つ','文章や絵を作る','自分で作業する'],e:'たくさんのメール（データ）から、迷惑メールの見分け方をAIが自分で学ぶ。囲碁AIは次のディープラーニングの時代。'},
+{id:'a04',u:'ai',tag:'AIの歴史',q:'2010年代〜、画像の見分けや「囲碁AIがプロに勝つ」で知られる技術は？',a:'ディープラーニング',d:['ルールで動くAI','AIエージェント','ハルシネーション'],e:'ディープ＝深い、ラーニング＝学習。データから学ぶAIが、さらに進んだもの。'},
+{id:'a05',u:'ai',tag:'AIの歴史',q:'2022年〜広まった、文章や絵を作るAIを何という？',a:'生成AI',d:['AIエージェント','AGI','ルールで動くAI'],e:'生成＝新しく作り出すこと。ChatGPT などが広まった。「作業までする」のは次のAIエージェント。'},
+{id:'a06',u:'ai',tag:'AIの歴史',q:'2025年ごろ〜の、自分で作業するAIを何という？',a:'AIエージェント',d:['生成AI','シンギュラリティ','ディープラーニング'],e:'生成AI＝答える・作る。AIエージェント＝答えるだけでなく、画面の中で作業までする。'},
+{id:'a07',u:'ai',tag:'しくみ',q:'生成AIは、文章の続きを何を基準に選ぶ？',a:'「本当か」ではなく「ありそうか」',d:['「本当か」どうか','先生が決めたルール','ランダム（でたらめ）'],e:'「昔々あるところに、おじいさんと…」→「おばあさんが」のように、ありそうな続きを選ぶ。事実を調べているわけではない。'},
+{id:'a08',u:'ai',tag:'得意と苦手',q:'生成AIの「得意」なことは？',a:'ありそうな文章をすらすら作る（要約・翻訳・アイデア出し・プログラム）',d:['本当かどうか確かめる','自分の気持ちを持つ','まちがいを絶対にしない'],e:'「ありそうな続き」を選ぶしくみだから、文章を作るのは得意。そのかわり、本当かどうか確かめるのは苦手。'},
+{id:'a09',u:'ai',tag:'得意と苦手',q:'生成AIの「苦手」なことは？',a:'本当かどうか確かめる',d:['要約','翻訳','アイデア出し'],e:'「ありそうか」で選ぶので、本当でなくても、ありそうなら答えてしまう。だから「もっともらしいウソ」が出ることがある。'},
+{id:'a10',u:'ai',tag:'得意と苦手',q:'AIが「もっともらしいウソ」を答えてしまうことを何という？',a:'ハルシネーション',d:['シンギュラリティ','ディープラーニング','インタフェース'],e:'わざとウソをつくのではなく、「ありそうな続き」を選んだ結果そうなる。例：「登別中学校の吹奏楽部は、コンクールで金賞を…」……それ、本当？'},
+{id:'a11',u:'ai',tag:'得意と苦手',q:'AIに「登別中学校」について聞いた答えから学べることは？',a:'もっともらしい答えでも、出典や事実を自分で確かめる必要がある',d:['AIの答えは全部正しい','AIはインターネットを使わない','AIは学校のことには答えられない'],e:'自分がよく知っている学校のことだから、ウソに気づけた。知らないことほど、自分で確かめるのが大事。'},
+{id:'a12',u:'ai',tag:'頼み方',q:'AIへの頼み方で、結果がよくなるのは？',a:'「見出しを大きく、背景を水色に、部活紹介の欄を追加して」',d:['「いい感じにして」','「なんとかして」','「おまかせで」'],e:'「いい感じ」が何なのか、AIにはわからない。どこを・どうするかを具体的に伝える。'},
+{id:'a13',u:'ai',tag:'頼み方',q:'上手に頼むコツ3つに入らないものは？',a:'できるだけ短く一言で',d:['何のために','どんな条件で','どんな形で'],e:'短すぎると伝わらない（「いい感じにして」と同じ）。コツは：何のために・どんな条件で・どんな形で。'},
+{id:'a14',u:'ai',tag:'頼み方',q:'授業のライブデモで使ったAIは？',a:'Claude',d:['micro:bit','MakeCode','スライサー'],e:'ほかにも Gemini、ChatGPT などがある。'},
+{id:'a15',u:'ai',tag:'できる範囲',type:'order',q:'AIの「できる範囲」の広がりを、1段目から順に並べよう',items:['答えるAI（チャット）','画面の中で作業するAI（AIエージェント）','現実の世界で体を動かすAI（ロボット）'],e:'答えるだけ → 画面の中で作業 → 現実で動く。だんだん「外」へ広がっている。'},
+{id:'a16',u:'ai',tag:'できる範囲',q:'AIが「体」を持ったとき（ロボット・自動運転など）に、特に気をつけることは？',a:'画面の中ならやり直せるが、現実で失敗すると取り消せない',d:['画面の中と同じでCtrl+Zで元に戻せる','体を持つと、まちがえなくなる','気をつけることは特にない'],e:'画面の中なら Ctrl+Z（元に戻す）がある。現実で物をこわしたり、人にぶつかったりしたら、元には戻せない。'},
+{id:'a17',u:'ai',tag:'任せる？',q:'「AIに、何を任せる？」の仕分けで使った3つの分け方は？',a:'任せてOK ／ 条件つきでOK ／ 任せない',d:['できる ／ できない','好き ／ きらい','速い ／ 遅い'],e:'「できるか」ではなく「任せていいか」を考えた。個人で仕分け → 班で理由を話し合う → 全体で共有。'},
+{id:'a18',u:'ai',tag:'任せる？',q:'「AIに、何を任せる？」の仕分けで、いちばん大事なのは？',a:'理由',d:['速さ','多数決','AIの値段'],e:'正解は1つではない。同じ場面でも、理由によって判断が分かれる。だから「なぜそう考えたか」が大事。'},
+{id:'a19',u:'ai',tag:'これから',q:'「人間のようにいろいろなことをこなせるAI（まだ実現していない）」を何という？',a:'AGI',d:['生成AI','AIエージェント','シンギュラリティ'],e:'AGI＝汎用人工知能（汎用＝何にでも使える）。AGIは「AIの種類」、シンギュラリティは「考え方」。'},
+{id:'a20',u:'ai',tag:'これから',q:'「AIが自分より賢いAIを作り続け、社会が予測できないほど変わる」という考え方を何という？',a:'シンギュラリティ',d:['AGI','ハルシネーション','ディープラーニング'],e:'シンギュラリティ＝技術的特異点。AIの名前ではなく、「これから社会がどうなるか」という考え方。'}
+];
+
+/* ===================== まとめ ===================== */
+const SUM = {
+fab:`
+<div class="point"><h3>⚡ まず、ここだけ</h3><ul>
+<li>デジタルファブリケーション＝<b>データをもとに、機械でモノを作る</b></li>
+<li>けずるのが<b>引き算</b>（除去加工）、積むのが<b>足し算</b>（付加加工）。3Dプリンタは足し算</li>
+<li>数字は2つ：<b>約200℃</b>で溶かす・<b>1層0.2mm</b></li>
+<li>設計データ → <b>スライサー</b>で輪切り → <b>G-code</b>（命令）→ 機械が積む</li></ul></div>
+
+<div class="sum"><h3>① デジタルファブリケーションとは</h3>
+<p><span class="k">デジタルデータをもとに、機械でモノを作る技術</span>。合言葉は「<b>データが、モノになる</b>」。</p>
+<p>「データがあれば、<span class="k">誰でも・どこでも・同じもの</span>が作れる」</p>
+<p class="mini">なぜ？ → 人の腕前ではなく、データどおりに機械が動くから。</p>
+<p class="mini">機械の例：3Dプリンタ／レーザー加工機／<ruby>切削<rt>せっさく</rt></ruby>加工機（CNC）。どれも「データから作る」点は同じ。</p></div>
+
+<div class="sum"><h3>② 引き算の加工と足し算の加工</h3>
+<div class="fig"><svg viewBox="0 0 340 118" width="340" font-size="11">
+<text x="75" y="14" text-anchor="middle" font-weight="bold">引き算：かたまりから取り除く</text>
+<rect x="25" y="32" width="100" height="70" fill="none" stroke="#999" stroke-dasharray="4 3"/>
+<path d="M35 102V62L75 38L115 62V102Z" fill="#d9a066"/>
+<path d="M132 96l8-4 2 7zM144 100l7-2-1 6zM134 86l6-3 1 6z" fill="#d9a066"/>
+<text x="141" y="78" text-anchor="middle" fill="#c0392b">切りくず</text>
+<text x="255" y="14" text-anchor="middle" font-weight="bold">足し算：少しずつ積み上げる</text>
+<g fill="#d9a066"><rect x="215" y="96" width="80" height="6"/><rect x="215" y="89" width="80" height="6"/><rect x="215" y="82" width="80" height="6"/><rect x="215" y="75" width="80" height="6"/><rect x="215" y="68" width="80" height="6"/><rect x="217" y="61" width="76" height="6"/><rect x="226" y="54" width="58" height="6"/><rect x="238" y="47" width="34" height="6"/></g>
+<path d="M249 22h12v10l-6 10l-6-10z" fill="#666"/>
+<text x="268" y="34" fill="#666">ノズル</text>
+<line x1="170" y1="24" x2="170" y2="110" stroke="#ddd"/>
+</svg></div>
+<table class="t"><tr><th></th><th>引き算の加工</th><th>足し算の加工</th></tr>
+<tr><th>別名</th><td><span class="k"><ruby>除去<rt>じょきょ</rt></ruby>加工</span><br><span class="mini">除去＝取り除く</span></td><td><span class="k"><ruby>付加<rt>ふか</rt></ruby>加工</span><br><span class="mini">付加＝付け加える</span></td></tr>
+<tr><th>やり方</th><td>切る・削る＝不要な部分を取り除く</td><td>材料を少しずつ積み上げる</td></tr>
+<tr><th>例</th><td>のこぎり・かんな・やすり（木材加工）</td><td>3Dプリンタ</td></tr>
+<tr><th>無駄</th><td><span class="k">切りくず</span>が出る</td><td>必要な分だけ使う</td></tr></table>
+<p>足し算だからできること：<span class="k">中が空洞の形</span>、<span class="k">一体で動く部品</span>（組み立てなしで動く歯車など）</p>
+<p class="mini">なぜ？ → 引き算は外から刃を当てるので中まで届かない。足し算は下から1層ずつ積むので、中の形も作れる。</p></div>
+
+<div class="sum"><h3>③ 社会で活躍するデジタルファブリケーション</h3>
+<ul><li><b>医療</b>：患者に合わせた義手や手術の練習モデル</li>
+<li><b>宇宙</b>：宇宙ステーションで部品をその場で印刷（データだけ送る）</li>
+<li><b>試作品</b>：開発が<span class="k">数か月から数日</span>に短縮</li>
+<li><b>修理</b>：壊れた部品を自分で作って直す</li></ul>
+<table class="t"><tr><th>大量生産</th><th>デジタルファブリケーション</th></tr>
+<tr><td>同じものを安くたくさん</td><td><span class="k">一人ひとり違うものを少しずつ</span></td></tr></table></div>
+
+<div class="sum"><h3>④ 3Dプリンタのしくみ</h3>
+<p><span class="k">FDM方式（<ruby>熱溶解積層<rt>ねつようかいせきそう</rt></ruby>方式）</span>＝<b>熱</b>で<b>溶</b>かして<b>積</b>み上げる（漢字のとおり）。たとえると「グルーガンを、ロボットが超正確に動かしている」。</p>
+<div class="fig"><svg viewBox="0 0 340 124" width="340" font-size="11">
+<circle cx="50" cy="34" r="20" fill="none" stroke="#c8641e" stroke-width="7"/>
+<path d="M68 26Q120 4 170 18V40" fill="none" stroke="#c8641e" stroke-width="2.5"/>
+<text x="50" y="72" text-anchor="middle">フィラメント</text><text x="50" y="85" text-anchor="middle">（材料）</text>
+<path d="M156 40h28v16l-14 14l-14-14z" fill="#666"/>
+<text x="192" y="52" font-weight="bold" fill="#c0392b">ここで約200℃</text><text x="192" y="65" fill="#666">溶かして細く出す</text>
+<g fill="#d9a066"><rect x="110" y="72" width="120" height="7"/><rect x="110" y="81" width="120" height="7"/><rect x="110" y="90" width="120" height="7"/><rect x="110" y="99" width="120" height="7"/></g>
+<rect x="95" y="108" width="150" height="5" fill="#888"/>
+<path d="M238 81h8v7h-8" fill="none" stroke="#333"/>
+<text x="250" y="89" font-weight="bold">1層 0.2mm</text><text x="250" y="102" fill="#666">何百回も重ねる</text>
+</svg></div>
+<ul><li>材料（<span class="k">フィラメント</span>）を<span class="k">約200℃</span>で溶かす</li>
+<li>1層はわずか<span class="k">0.2mm</span>。何百回も重ねて形にする</li></ul>
+<div class="tip">計算：<b>高さ ÷ 1層の厚さ ＝ 層の数</b>　例）高さ40mm → 40 ÷ 0.2 ＝ <b>200層</b>（だから時間がかかる）</div></div>
+
+<div class="sum"><h3>⑤ データの旅</h3>
+<div class="flow arrow"><div><b>① 設計データを作る</b>　パソコンやタブレットで立体の形を作る</div>
+<div><b>② <span class="k">スライサー</span>で「輪切り」にする</b>　1枚0.2mm</div>
+<div><b>③ 機械への命令（<span class="k">G-code</span>）に変換</b>　どこへ・どの速さで・どれだけ材料を出すか</div>
+<div><b>④ 機械が積み上げて形にする</b></div></div>
+<p>設計データを『<span class="k">輪切りの命令書</span>』に変えることで、機械はモノを作れる。機械は自分では考えない → いいものができるかは<b>設計する人しだい</b>。</p>
+<div class="tip">まぎらわしい言葉：<b>フィラメント</b>＝材料 ／ <b>スライサー</b>＝輪切りにする「ソフト」 ／ <b>G-code</b>＝輪切りからできた「命令」</div></div>
+
+<div class="sum"><h3>⑥ 実機と設計のルール</h3>
+<ul><li>機種：<b>Bambu Lab A1 mini</b>（本校3台：壱號・弐號・参號）。自動調整機能付きで高速・静か</li>
+<li>印刷サイズ：<span class="k">180×180×180mm</span>（はみ出るものは作れない）</li>
+<li>材料：<span class="k">PLA</span>（トウモロコシなど植物由来のプラスチック。燃やしても有害なガスが出にくく、条件がそろえば土に還る）</li>
+<li>アプリ「ものづくり工房」：①ガジェット工房（15種類の形をカスタマイズ）②ガジェットCAD（ゼロから自由に設計）</li>
+<li>画面のマス目の枠（横180mm）＝目の前のプレートそのもの → <b>画面上の大きさが、そのまま現実の大きさ</b></li>
+<li>提出するのは<b>データ（作品コード）</b>。データだから瞬時に送れて、全く同じものが再現できる</li></ul>
+<p><span class="k"><ruby>制約<rt>せいやく</rt></ruby>条件</span>：大きさは50×50mm以内が目安（大きいと印刷に時間がかかり、全員分が終わらない）。</p>
+<div class="tip">数字のちがい：<b>180mm</b>＝プリンタで作れる限界 ／ <b>50mm</b>＝授業の作品の目安（時間の都合）<br>設計とは、<b>決められた条件の中で、いちばんいいものを考えること</b>。大きさ・時間・材料 ── どんなモノづくりにも制約がある。</div></div>`,
+
+mbit:`
+<div class="point"><h3>⚡ まず、ここだけ</h3><ul>
+<li>計測・制御＝<b>センサ</b>（見る）→ <b>コンピュータ</b>（考える）→ <b>アクチュエータ</b>（動かす）</li>
+<li>micro:bit＝手のひらサイズの小さなコンピュータ</li>
+<li>micro:bitの出力は <b>LED</b> と <b>スピーカー</b> の2つ。ほかは入力</li>
+<li>サイコロ：ゆさぶられた（入力）→ 乱数を選ぶ（処理）→ 数を表示（出力）</li></ul></div>
+
+<div class="sum"><h3>① 計測・制御のしくみ</h3>
+<div class="row3"><div><b>センサ</b>見る<br><span class="mini">周りの様子をはかる</span></div><i>▶</i><div><b>コンピュータ</b>考える<br><span class="mini">プログラムで判断する</span></div><i>▶</i><div><b>アクチュエータ</b>動かす<br><span class="mini">実際に動く</span></div></div>
+<p class="mini">人にたとえると：目・耳（センサ）→ 頭（コンピュータ）→ 手足（アクチュエータ）</p>
+<p class="mini">例：自動ドア（人に気づく → 開けると判断 → ドアを動かす）</p></div>
+
+<div class="sum"><h3>② 身の回りの計測・制御</h3>
+<table class="t"><tr><th>もの</th><th>はかる（センサ）</th><th>動かす（アクチュエータ）</th></tr>
+<tr><td>エアコン</td><td>温度を測る</td><td>設定温度にする</td></tr>
+<tr><td>ロードヒーティング</td><td>雪や気温を測る</td><td>熱で溶かす</td></tr>
+<tr><td>自動水栓</td><td>手を検知する</td><td>水を出す</td></tr>
+<tr><td>スピードガン</td><td>ボールの速さを測る</td><td>画面に表示する</td></tr></table>
+<p class="mini">どれも「はかる → 動かす」の組み合わせ。「画面に表示する」も出力の側。</p></div>
+
+<div class="sum"><h3>③ micro:bit の入力と出力</h3>
+<p>micro:bit ＝ <span class="k">手のひらサイズの小さなコンピュータ</span></p>
+<table class="t"><tr><th>入力（感じるしくみ）</th><th>出力（動く・知らせるしくみ）</th></tr>
+<tr><td class="l">・ボタン（A/B）<br>・明るさ<br>・タッチ（<span class="k">ロゴマーク</span>）<br>・音（マイク）<br>・温度<br>・傾き・振る（<span class="k">加速度センサ</span>）</td><td class="l">・<span class="k">25個のLED</span><br>　光る・文字を出す<br>・<span class="k">スピーカー</span><br>　音を鳴らす</td></tr></table>
+<div class="tip">見分け方：micro:bitが<b>受け取る</b>のが入力、micro:bitが<b>外へ出す</b>のが出力。出力は LED と スピーカー の2つだけ。</div></div>
+
+<div class="sum"><h3>④ プログラムを作って動かす3ステップ</h3>
+<div class="flow arrow"><div><b>1</b>　ブロックをつなぐ</div><div><b>2</b>　画面でためす</div><div><b>3</b>　ダウンロードして書き込む</div></div>
+<p>やってみよう①：<b>ボタンAが押されたとき → アイコン（ハート）を表示</b></p>
+<p>やってみよう②：<b>ゆさぶられたとき → 1から6までの乱数を表示</b>（サイコロ）</p>
+<p class="mini">「〜されたとき」＝きっかけ（入力）、「表示」＝結果（出力）。</p>
+<p><span class="k">乱数（らんすう）</span>＝デタラメな数のこと。サイコロの目が出るのと同じ。</p></div>
+
+<div class="sum"><h3>⑤ サイコロの「入力・処理・出力」</h3>
+<div class="row3"><div><b>入力</b>見る（センサ）<br><span class="mini">ゆさぶられた<br>（加速度センサ）</span></div><i>▶</i><div><b>処理</b>考える（コンピュータ）<br><span class="mini">1から6までの<br>乱数を選ぶ</span></div><i>▶</i><div><b>出力</b>動かす（アクチュエータ）<br><span class="mini">LEDに数を<br>表示する</span></div></div>
+<p class="mini">①の「センサ → コンピュータ → アクチュエータ」と同じ形。</p></div>
+
+<div class="sum"><h3>⑥ micro:bitを取り扱うお約束</h3>
+<ul><li>⭕ <span class="k">はしっこを持とう</span>　<span class="mini">部品がむき出しなので、真ん中をさわるとこわれる原因に</span></li><li>❌ <span class="k">水や金属に近づけない</span>　<span class="mini">電気が流れてショートのもと</span></li></ul></div>`,
+
+deai:`
+<div class="point"><h3>⚡ まず、ここだけ</h3><ul>
+<li>センサ → コンピュータ → アクチュエータ。間をつなぐのが<b>インタフェース</b></li>
+<li>Groveケーブル：<b>黒＝GND・赤＝3V3</b>（電源）、<b>白＝P3・黄＝P0</b>（信号）</li>
+<li>デジタル出力：<b>1＝ON、0＝OFF</b>。1000ミリ秒＝1秒</li>
+<li>光の三原色＝<b>赤・緑・青</b>。全部まぜると<b>白</b></li></ul></div>
+
+<div class="sum"><h3>① 計測・制御のしくみ（テストに出る）</h3>
+<div class="row3"><div><b>センサ</b><span class="mini">周りのようすを<br>はかる（計測）</span></div><i>▶</i><div><b>コンピュータ</b><span class="mini">プログラムどおりに<br>判断する</span></div><i>▶</i><div><b>アクチュエータ</b><span class="mini">命令を受けて<br>動く・光る・鳴る</span></div></div>
+<table class="t"><tr><th>センサの例</th><th>コンピュータの例</th><th>アクチュエータの例</th></tr>
+<tr><td>人感・温度・明るさ</td><td>micro:bit</td><td>モータ・LED・ブザー</td></tr></table>
+<p>コンピュータとセンサ・アクチュエータの間で、信号を<b>つなぎ・変換する</b>部分＝<span class="k">インタフェース</span>（拡張ボードもその仲間）。</p></div>
+
+<div class="sum"><h3>② 拡張ボードとGroveケーブル</h3>
+<p><span class="k">拡張ボード</span>＝micro:bitの「つなぐ口」をふやす板。下の金色の端子は小さくてつなぎにくい → 端子を引き出してくれる。</p>
+<p>micro:bit本体だけではできないこと（土の水分をはかる・人が来たら知らせる・風を送る）は、<b>外の装置</b>をつなぐ。</p>
+<p>Groveケーブルのよさ：<b>差すだけ</b>（はんだ付け・配線いらず）／<b>向きが決まっている</b>（まちがえにくい）／<b>つけかえ自由</b></p>
+<table class="t"><tr><th>線の色</th><th>ボードの印字</th><th>役わり</th></tr>
+<tr><td><i class="sw" style="background:#222"></i><span class="k">黒</span></td><td>GND</td><td>電源（−）</td></tr>
+<tr><td><i class="sw" style="background:#dc2626"></i><span class="k">赤</span></td><td>3V3</td><td>電源（＋3.3V）</td></tr>
+<tr><td><i class="sw" style="background:#fff"></i><span class="k">白</span></td><td>P3</td><td>信号</td></tr>
+<tr><td><i class="sw" style="background:#facc15"></i><span class="k">黄</span></td><td>P0</td><td>信号（振動モータを動かす）</td></tr></table>
+<p class="mini">電源の線2本（黒・赤）＋ 信号の線2本（白・黄）。P3-P0 コネクタの場合。</p>
+<div class="tip">覚え方：<b>−は黒、＋は赤</b>（電源）。残りの白・黄が信号で、コネクタ名「P3-P0」の順に <b>白＝P3、黄＝P0</b>。</div></div>
+
+<div class="sum"><h3>③ 実習① 振動モータ</h3>
+<p><b>つなぎ方</b>（USBは最後）</p>
+<div class="flow arrow"><div><b>1</b>　USBは抜いたまま、ケーブルを差す</div><div><b>2</b>　拡張ボードの <b>P3-P0</b> に「カチッ」</div><div><b>3</b>　最後にUSBでつなぐ</div></div>
+<p><b>プログラム</b>（ボタンAで1秒ブルブル）</p>
+<div class="flow arrow"><div>ボタンAが押されたとき</div><div>デジタルで出力する 端子P0 値 <b>1</b>　<span class="mini">← モータON</span></div><div>一時停止（ミリ秒）<b>1000</b>　<span class="mini">← 1秒まつ</span></div><div>デジタルで出力する 端子P0 値 <b>0</b>　<span class="mini">← モータOFF</span></div></div>
+<ul><li><span class="k">1＝高い電圧 → モータON</span>、<span class="k">0＝低い電圧 → モータOFF</span></li>
+<li>1000ミリ秒＝<span class="k">1秒</span>（ミリ＝1000分の1）</li>
+<li>「デジタルで出力する」は <b>高度なブロック → 入出力端子</b></li></ul>
+<p>しくみ：中で<span class="k">かたよったおもり</span>が回るので全体がゆれる。micro:bitの端子から出せる電流は小さい → 基板の<span class="k">トランジスタ（FET）</span>がスイッチになって、電源から大きな電流をモータに流す（これもインタフェースの役目）。</p>
+<p>振動で知らせるよさ：静かな場所で迷惑をかけない／耳が聞こえにくい人にも伝わる／うるさい場所でも体で気づける</p></div>
+
+<div class="sum"><h3>④ 実習② 3色LED</h3>
+<p>右側の黒い端子：<b>P13・P14・GND・BAT+・P15・P16</b>（今回のLEDは <span class="k">GND共通</span>）</p>
+<div class="fig"><svg viewBox="0 0 340 150" width="340" font-size="11" text-anchor="middle">
+<path d="M150 8a22 22 0 0 1 44 0v26h-44z" fill="#eef" stroke="#888"/><rect x="146" y="34" width="52" height="6" fill="#ccd" stroke="#888"/>
+<g fill="none" stroke-width="3">
+<path d="M156 40V62L45 84V100" stroke="#2563eb"/>
+<path d="M166 40V66L95 86V100" stroke="#16a34a"/>
+<path d="M176 40V70L145 88V100" stroke="#222"/>
+<path d="M186 40V58L245 80V100" stroke="#dc2626"/></g>
+<g stroke="#555"><rect x="23" y="100" width="44" height="22" fill="#fff"/><rect x="73" y="100" width="44" height="22" fill="#fff"/><rect x="123" y="100" width="44" height="22" fill="#fff"/><rect x="173" y="100" width="44" height="22" fill="#fde2e0"/><rect x="223" y="100" width="44" height="22" fill="#fff"/><rect x="273" y="100" width="44" height="22" fill="#fff"/></g>
+<g font-weight="bold"><text x="45" y="115">P13</text><text x="95" y="115">P14</text><text x="145" y="115">GND</text><text x="195" y="115" fill="#c0392b">BAT+</text><text x="245" y="115">P15</text><text x="295" y="115">P16</text></g>
+<text x="45" y="138" fill="#2563eb">青</text><text x="95" y="138" fill="#16a34a">緑</text><text x="145" y="138">長い足</text><text x="195" y="138" fill="#c0392b" font-weight="bold">✕ 差さない</text><text x="245" y="138" fill="#dc2626">赤</text><text x="295" y="138" fill="#999">使わない</text>
+<text x="262" y="62" fill="#dc2626">足を曲げて、とばす</text>
+</svg></div>
+<ul><li>いちばん長い足 → <span class="k">GND</span></li>
+<li>赤の足は曲げて <span class="k">BAT+をとばして P15</span></li>
+<li>残り2本 → <b>緑＝P14・青＝P13</b></li></ul>
+<p class="mini">GND共通＝3色の電気の帰り道（−）を1本にまとめてある、ということ。</p>
+<p>フェーダーの数字：<span class="k">0＝消える、255＝いちばん明るい</span></p></div>
+
+<div class="sum"><h3>⑤ 光の三原色（テストに出る）</h3>
+<p>光の三原色＝<span class="k">赤・緑・青</span>（RGB）</p>
+<div class="fig"><svg viewBox="0 0 220 190" width="220" font-size="12" font-weight="bold" text-anchor="middle">
+<rect width="220" height="190" rx="12" fill="#000"/>
+<g style="isolation:isolate"><circle cx="110" cy="70" r="52" fill="#f00" style="mix-blend-mode:screen"/><circle cx="78" cy="122" r="52" fill="#0f0" style="mix-blend-mode:screen"/><circle cx="142" cy="122" r="52" fill="#00f" style="mix-blend-mode:screen"/></g>
+<text x="110" y="45" fill="#fff">赤</text><text x="56" y="142">緑</text><text x="164" y="142" fill="#fff">青</text>
+<text x="78" y="92">黄</text><line x1="148" y1="90" x2="172" y2="66" stroke="#fff"/><text x="184" y="58" fill="#fff" font-size="11">赤むらさき</text><text x="110" y="150">水色</text><text x="110" y="112">白</text>
+</svg></div>
+<table class="t"><tr><th>混ぜる色</th><th>できる色</th><th>数字の例（赤・緑・青）</th></tr>
+<tr><td>赤＋緑</td><td><span class="k">黄</span></td><td>255・255・0</td></tr>
+<tr><td>緑＋青</td><td><span class="k">水色</span></td><td>0・255・255</td></tr>
+<tr><td>青＋赤</td><td><span class="k">赤むらさき</span></td><td>255・0・255</td></tr>
+<tr><td>3つ全部</td><td><span class="k">白</span></td><td>255・255・255</td></tr></table>
+<div class="tip">数字の読み方：<b>点ける色が255、消す色が0</b>。黄＝赤＋緑 だから「255・255・0」。<br>絵の具は混ぜるほど暗くなるが、<b>光は混ぜるほど明るくなる</b> → 全部で白。</div>
+<p class="mini">実物のLEDは色ごとに明るさがちがうので、数字で調整する。</p></div>
+
+<div class="sum"><h3>⑥ こわさない・けがをしない 4つの約束</h3>
+<ul><li>ケーブルは<b>コネクタをつまんで</b>抜く（線を引っぱると中で切れる）</li>
+<li>LEDの足を<b>BAT+に差さない</b>。足どうしがふれないようにする</li>
+<li>つなぎかえは<b>USBを抜いてから</b>（電気が流れたまま差しかえない）</li>
+<li>LEDは足を曲げすぎず袋にもどす（何度も曲げると折れる）</li></ul></div>`,
+
+hikari:`
+<div class="point"><h3>⚡ まず、ここだけ</h3><ul>
+<li>光センサは、表の<b>LED表示の一部</b>がかねている</li>
+<li>明るさは <b>0〜255</b>（暗いほど小さい）。出力は <b>0 か 1</b></li>
+<li>ONとOFFを切りかえる境目の値＝<b>しきい値</b></li>
+<li>暗くなったら動かす条件：<b>明るさ &lt; しきい値</b></li>
+<li>プログラムの3つの形：<b>順次・分岐・反復</b>。判断は<b>ひし形</b></li></ul></div>
+
+<div class="sum"><h3>① 人が動かす → 自動で動く</h3>
+<table class="t"><tr><th>前回</th><th>今回</th></tr>
+<tr><td>ボタンAを押したらブルブル<br>決めていたのは<b>人</b></td><td>センサの値でブルブル<br>判断するのは<b>micro:bit</b></td></tr></table>
+<div class="row3"><div><b>センサ</b><span class="mini">明るさを<br>はかる</span></div><i>▶</i><div><b>micro:bit</b><span class="mini">しきい値とくらべて<br>判断する</span></div><i>▶</i><div><b>振動モータ</b><span class="mini">ON か OFF</span></div></div>
+<p>センサの値で判断させると、<span class="k">人が操作しなくても</span>動く。</p>
+<p class="mini">明るさをはかるセンサが入っているもの：街灯（暗くなると点く）／車のオートライト（トンネルで点く）／スマホの画面（周りに合わせて明るさが変わる）</p></div>
+
+<div class="sum"><h3>② micro:bit の光センサ（テストに出る）</h3>
+<p>表の <span class="k">5×5のLED表示</span>の一部が、光センサをかねている。</p>
+<p class="mini">なぜ？ → LEDは光を受けると、ごくわずかな電流が流れる性質がある。これを使って明るさをはかる。</p>
+<ul><li>はかるときは<span class="k">表側</span>に光を当てる・手で表をおおう（裏側をおおっても値はほとんど変わらない）</li>
+<li>書きこんだ直後は 0 が出ることがある → <b>2回目からの数字</b>を使う</li></ul></div>
+
+<div class="sum"><h3>③ はかる値は256段階、出す値は2通り（テストに出る）</h3>
+<table class="t"><tr><th></th><th>入力：明るさ</th><th>出力：振動モータ</th></tr>
+<tr><th>値</th><td><span class="k">0〜255</span>（256段階）</td><td><span class="k">0 か 1</span>（2通り）</td></tr>
+<tr><th>意味</th><td>0＝暗い、255＝明るい<br><span class="k">暗いほど小さい</span></td><td>0＝OFF、1＝ON</td></tr>
+<tr><th>ブロック</th><td>明るさ</td><td>デジタルで出力する</td></tr></table>
+<p>256段階の値を、2通りの動きにつなぐのが<span class="k">コンピュータの判断</span>（プログラム）。</p></div>
+
+<div class="sum"><h3>④ しきい値（テストに出る）</h3>
+<p><span class="k">しきい値</span>＝ON と OFF を切りかえる<b>境目の値</b>。</p>
+<div class="fig"><svg viewBox="0 0 320 96" width="320" font-size="11" text-anchor="middle">
+<defs><linearGradient id="gr"><stop offset="0" stop-color="#1b1d24"/><stop offset="1" stop-color="#fff6c8"/></linearGradient></defs>
+<rect x="20" y="40" width="280" height="16" rx="8" fill="url(#gr)" stroke="#9aa08f"/>
+<text x="20" y="72">0</text><text x="20" y="84" fill="#666">暗い</text><text x="300" y="72">255</text><text x="300" y="84" fill="#666">明るい</text>
+<line x1="23" y1="24" x2="23" y2="40" stroke="#333" stroke-width="2"/><text x="24" y="20">おおう 3</text>
+<line x1="80" y1="24" x2="80" y2="40" stroke="#333" stroke-width="2"/><text x="84" y="20">机の上 55</text>
+<line x1="42" y1="32" x2="42" y2="64" stroke="#6b3fb0" stroke-width="3"/><text x="78" y="76" fill="#6b3fb0" font-weight="bold">しきい値 20</text>
+<text x="200" y="20" fill="#666">しきい値より暗ければ ON</text>
+</svg></div>
+<p class="mini">数字は一例（おおう3 と 机55 の間 → 20）。</p>
+<ul><li>決め方：暗いときの値と、明るいときの値の<b>間</b>に置く</li>
+<li>数字は<span class="k">自分ではかって</span>決める（教室の明るさは日や場所で変わる）</li>
+<li>明るいときの値に<b>近すぎる</b>と、少し暗くなっただけで動く＝<span class="k">誤作動</span>しやすい</li></ul></div>
+
+<div class="sum"><h3>⑤ フローチャートと、プログラムの3つの形（テストに出る）</h3>
+<div class="fig"><svg viewBox="0 0 300 250" width="300" font-size="12" text-anchor="middle">
+<defs><marker id="ar" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8z" fill="#555"/></marker></defs>
+<g fill="none" stroke="#555" stroke-width="2">
+<path d="M150 30V46" marker-end="url(#ar)"/><path d="M150 76V90" marker-end="url(#ar)"/>
+<path d="M70 118H55V170" marker-end="url(#ar)"/><path d="M230 118H245V170" marker-end="url(#ar)"/>
+<path d="M55 200V218"/><path d="M245 200V218H5V38H148" marker-end="url(#ar)"/></g>
+<rect x="110" y="6" width="80" height="24" rx="12" fill="#fff" stroke="#555" stroke-width="2"/><text x="150" y="23">はじめ</text>
+<rect x="85" y="48" width="130" height="28" fill="#fff" stroke="#555" stroke-width="2"/><text x="150" y="67">明るさをはかる</text>
+<path d="M150 92L230 118L150 144L70 118z" fill="#f1e9fb" stroke="#6b3fb0" stroke-width="2"/><text x="150" y="115" font-size="11">明るさ &lt;</text><text x="150" y="129" font-size="11">しきい値？</text>
+<text x="36" y="140" fill="#1e8a4c" font-weight="bold">はい</text><text x="268" y="140" fill="#c0392b" font-weight="bold">いいえ</text>
+<rect x="8" y="172" width="94" height="28" fill="#fff" stroke="#555" stroke-width="2"/><text x="55" y="191">P0に 1（ON）</text>
+<rect x="198" y="172" width="94" height="28" fill="#fff" stroke="#555" stroke-width="2"/><text x="245" y="191">P0に 0（OFF）</text>
+<text x="150" y="236" fill="#666">ずっと くり返す</text>
+</svg></div>
+<table class="t"><tr><th>図形</th><th>意味</th></tr>
+<tr><td>▭ 長方形</td><td><b>処理</b>：やること</td></tr>
+<tr><td>◇ <span class="k">ひし形</span></td><td><b>判断</b>：はい／いいえで分かれる</td></tr></table>
+<table class="t"><tr><th>形</th><th>意味</th><th>今回のプログラムでは</th></tr>
+<tr><td><span class="k">順次</span></td><td>上から順に進む</td><td>はかる → くらべる</td></tr>
+<tr><td><span class="k">分岐</span></td><td>条件で分かれる</td><td>もし〜なら〜でなければ</td></tr>
+<tr><td><span class="k">反復</span></td><td>くり返す</td><td>ずっと</td></tr></table></div>
+
+<div class="sum"><h3>⑥ プログラム：暗くなったら、自動でブルブル</h3>
+<div class="flow"><div><b>ずっと</b>　<span class="mini">← 反復</span></div>
+<div style="margin-left:6%"><b>もし</b> 明るさ &lt; 20 <b>なら</b>　<span class="mini">← 分岐</span></div>
+<div style="margin-left:12%">デジタルで出力する 端子P0 値 <b>1</b>　<span class="mini">← ON</span></div>
+<div style="margin-left:6%"><b>でなければ</b></div>
+<div style="margin-left:12%">デジタルで出力する 端子P0 値 <b>0</b>　<span class="mini">← OFF</span></div></div>
+<p class="mini">20 は例。自分のしきい値に変える。振動モータは前回と同じ P3-P0 の P0。</p>
+<p>暗くなったら動かす条件：<span class="k">明るさ &lt; しきい値</span>（暗い＝値が小さい、だから &lt;）</p>
+<p>明るくなったら動かすとき（ふたを開けたら知らせる箱など）：記号を <span class="k">&gt;</span> にする</p>
+<div class="tip">しきい値20のとき：明るさ <b>19 → ON</b> ／ <b>20 → OFF</b> ／ <b>21 → OFF</b><br>&lt; は「より小さい」。20 は 20 より小さくないので「いいえ」。</div>
+<table class="t"><tr><th>ブロック</th><th>ある場所</th></tr>
+<tr><td>ずっと</td><td>基本</td></tr>
+<tr><td>もし〜なら〜でなければ ／ くらべる（&lt;）</td><td><span class="k">論理</span></td></tr>
+<tr><td>明るさ</td><td><span class="k">入力</span></td></tr>
+<tr><td>デジタルで出力する</td><td>高度なブロック → 入出力端子</td></tr></table></div>
+
+<div class="sum"><h3>⑦ うまく動かないとき</h3>
+<table class="t"><tr><th>こまったこと</th><th>原因</th></tr>
+<tr><td>ずっとブルブルしっぱなし</td><td>しきい値が<span class="k">大きすぎる</span><br><span class="mini">いつでも「はい」になる</span></td></tr>
+<tr><td>おおっても動かない</td><td>しきい値が<span class="k">小さすぎる</span><br><span class="mini">端子がP0か、ケーブルがP3-P0かも見る</span></td></tr>
+<tr><td>反応がおそい</td><td>「ずっと」の中に<span class="k">「数を表示」</span>が残っている<br><span class="mini">数字が流れ終わるまで次の判断に進まない</span></td></tr>
+<tr><td>明るいときにブルブルする</td><td><span class="k">&lt; と &gt; が逆</span></td></tr></table>
+<p class="mini">あとかたづけ：USBを先に抜いてからケーブルを外す／コネクタをつまんで抜く／プログラムは名前をつけて保存／部品は数を確かめて袋にもどす</p></div>`,
+
+ai:`
+<div class="point"><h3>⚡ まず、ここだけ</h3><ul>
+<li>歴史：ルール → データから学ぶ → ディープラーニング → <b>生成AI</b> → <b>AIエージェント</b></li>
+<li>生成AIは「本当か」ではなく<b>「ありそうか」</b>で続きを選ぶ</li>
+<li>だから、もっともらしいウソ＝<b>ハルシネーション</b>が出る → 自分で確かめる</li>
+<li>任せるかどうかは<b>「理由」</b>が大事</li></ul></div>
+
+<div class="sum"><h3>① AIは、急に現れたわけじゃない</h3>
+<table class="t nw"><tr><th>年代</th><th>AI</th><th>例・特ちょう</th></tr>
+<tr><td>1950年代〜</td><td><span class="k">ルールで動くAI</span></td><td>人間がルールを全部書く</td></tr>
+<tr><td>1990年代〜</td><td><span class="k">データから学ぶAI</span></td><td>迷惑メールの仕分け</td></tr>
+<tr><td>2010年代〜</td><td><span class="k">ディープラーニング</span></td><td>画像の見分け、囲碁AIがプロに勝つ</td></tr>
+<tr><td>2022年〜</td><td><span class="k">生成AI</span></td><td>文章や絵を作る</td></tr>
+<tr><td>2025年ごろ〜</td><td><span class="k">AIエージェント</span></td><td>自分で作業する</td></tr></table>
+<div class="tip">流れで覚える：人が<b>教える</b> → AIが自分で<b>学ぶ</b> → もっと深く<b>学ぶ</b> → <b>作る</b> → <b>作業する</b></div></div>
+
+<div class="sum"><h3>② 生成AIのしくみ ── 続きの言葉は？</h3>
+<p>「昔々あるところに、おじいさんと＿＿」→「おばあさんが」<br>「登別といえば＿＿」→「温泉」「クマ牧場」</p>
+<p>AIは<span class="k">「本当か」ではなく「ありそうか」</span>で、続きの言葉を選ぶ。</p>
+<p>「登別中学校の吹奏楽部は、コンクールで＿＿」→「金賞を受賞しました」……<b>それ、本当？</b></p>
+<p class="mini">事実を調べて答えているのではなく、「ありそうな続き」をつなげている。</p></div>
+
+<div class="sum"><h3>③ 得意と苦手</h3>
+<table class="t"><tr><th>✅ 得意</th><th>⚠ 苦手</th></tr>
+<tr><td>ありそうな文章をすらすら作る<br>（要約・翻訳・アイデア出し・プログラム）</td><td>本当かどうか確かめる<br>→ <span class="k">ハルシネーション</span>（もっともらしいウソ）</td></tr></table>
+<div class="flow arrow"><div>「ありそうか」で続きを選ぶ（②）</div><div>本当でなくても、ありそうなら答えてしまう</div><div><b>ハルシネーション</b>（もっともらしいウソ）</div><div>だから、<b>出典や事実を自分で確かめる</b></div></div>
+<p class="mini">AIに「登別中学校」について聞いてみると、もっともらしいけれど事実とちがう部分が出てきた。</p></div>
+
+<div class="sum"><h3>④ 頼み方で、結果が変わる</h3>
+<table class="t"><tr><th>✕ あいまい</th><th>○ 具体的</th></tr>
+<tr><td>「いい感じにして」</td><td>「見出しを大きく、背景を水色に、部活紹介の欄を追加して」</td></tr></table>
+<p>上手に頼むコツ：<span class="k">何のために</span>・<span class="k">どんな条件で</span>・<span class="k">どんな形で</span></p>
+<p class="mini">ライブデモで使ったのは Claude。ほかにも Gemini、ChatGPT などがある。</p></div>
+
+<div class="sum"><h3>⑤ AIの「できる範囲」が広がっている</h3>
+<div class="flow steps"><div><b>1段目</b>　答えるAI（チャット）</div><div><b>2段目</b>　画面の中で作業するAI（AIエージェント）</div><div><b>3段目</b>　現実の世界で体を動かすAI（ロボット）</div></div>
+<p>AIが「体」を持ったら？ ── <span class="k">画面の中ならやり直せる（Ctrl+Z）。現実で失敗したら取り消せない。</span></p></div>
+
+<div class="sum"><h3>⑥ AIに、何を任せる？</h3>
+<p>3つに仕分け：<b>任せてOK ／ 条件つきでOK ／ 任せない</b>。大事なのは<span class="k">「理由」</span>。</p>
+<p class="mini">授業で仕分けた8つの場面</p>
+<div class="grid2"><div>① 英単語の小テストを出してもらう</div><div>② 読書感想文を丸ごと書いてもらう</div><div>③ 入試の面接練習の相手をしてもらう</div><div>④ 志望校を決めてもらう</div><div>⑤ 部活のメニューを考えてもらう</div><div>⑥ 友達に謝る文を書いてもらう</div><div>⑦ 体調が悪いときどうするか聞く</div><div>⑧ 調べ学習の情報を集めてもらう</div></div>
+<div class="tip">理由を書くときのヒント（授業で学んだこと）：<br>・AIは「ありそうか」で答える → <b>本当かどうか自分で確かめられるか</b>？<br>・<b>まちがえたとき取り消せるか</b>？（現実の失敗はやり直せない）<br>・<b>自分で考えること・自分の言葉に意味があるか</b>？</div></div>
+
+<div class="sum"><h3>⑦ これからのAI</h3>
+<ul><li><span class="k">AGI</span>（<ruby>汎用<rt>はんよう</rt></ruby>人工知能）：人間のようにいろいろなことをこなせるAI（まだ実現していない）</li>
+<li><span class="k">シンギュラリティ</span>（技術的特異点）：AIが自分より賢いAIを作り続け、社会が予測できないほど変わるという考え方</li></ul>
+<div class="tip">まぎらわしい言葉：<b>AGI</b>＝「AIの種類」 ／ <b>シンギュラリティ</b>＝「考え方」 ／ <b>ハルシネーション</b>＝もっともらしいウソ（③）</div>
+<p class="mini">ふりかえり：今日「任せない」に置いたカードは、「任せてOK」に移る？</p></div>`
+};
+
+/* ===================== 保存 ===================== */
+const KEY='gijutsu3-test-v1';
+let ST={};
+try{ST=JSON.parse(localStorage.getItem(KEY))||{};}catch(e){ST={};}
+ST.q=ST.q||{}; ST.n=ST.n||10;
+function save(){try{localStorage.setItem(KEY,JSON.stringify(ST));}catch(e){}}
+function record(id,ok){const r=ST.q[id]||{ok:0,ng:0,last:null};ok?r.ok++:r.ng++;r.last=ok;ST.q[id]=r;save();}
+const isWeak=id=>ST.q[id]&&ST.q[id].last===false;
+
+/* ===================== 道具 ===================== */
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function pickOne(a){return a[Math.floor(Math.random()*a.length)];}
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function unitColor(u){return u==='mix'||u==='weak'?'var(--mix)':UNITS[u].c;}
+function build(q){ // 生成問題を実体化
+  const base=Object.assign({},q);
+  if(q.gen){Object.assign(base,q.gen.call(base));}
+  return base;
+}
+
+/* ===================== 画面 ===================== */
+let S=null; // クイズ状態
+function go(view,arg){
+  window.scrollTo(0,0);
+  $('#homeBtn').classList.toggle('hidden',view==='home');
+  if(view==='home') return home();
+  if(view==='sum') return summary(arg);
+  if(view==='cards') return cards(arg);
+  if(view==='quiz') return startQuiz(arg);
+}
+
+function home(){
+  const weak=Q.filter(q=>isWeak(q.id)).length;
+  let h=`<h2>どこを勉強する？</h2><p class="lead">「まとめ」で確認 →「カード」で覚える →「クイズ」で力だめし。まちがえた問題は自動で記録されます。</p>
+  <div class="opts">クイズの問題数：<select id="nsel" onchange="ST.n=+this.value;save()">${[10,20,0].map(n=>`<option value="${n}" ${ST.n===n?'selected':''}>${n||'全部'}</option>`).join('')}</select></div>`;
+  for(const u in UNITS){
+    const U=UNITS[u],qs=Q.filter(q=>q.u===u),done=qs.filter(q=>ST.q[q.id]),good=qs.filter(q=>ST.q[q.id]&&ST.q[q.id].last);
+    h+=`<div class="unit" style="--c:${U.c}"><div class="t">${U.icon} ${U.name}</div><div class="s">${U.sub}</div>
+    <div class="bar"><i style="width:${qs.length?good.length/qs.length*100:0}%"></i></div>
+    <div class="stat">全${qs.length}問中　正解ずみ ${good.length}問　（とりくんだ ${done.length}問）</div>
+    <div class="btns" style="margin-top:8px"><button class="btn" onclick="go('sum','${u}')">📘 まとめ</button><button class="btn" onclick="go('cards','${u}')">🃏 カード</button><button class="btn fill" onclick="go('quiz','${u}')">✏️ クイズ</button></div></div>`;
+  }
+  h+=`<div class="unit" style="--c:var(--mix)"><div class="t">🎯 テスト本番モード</div><div class="s">5つの範囲をまぜて出題</div>
+  <div class="btns" style="margin-top:8px"><button class="btn fill" onclick="go('quiz','mix')">全範囲ミックス</button>
+  <button class="btn" onclick="go('quiz','weak')" ${weak?'':'disabled'}>まちがえた問題だけ（${weak}問）</button>
+  <button class="btn" onclick="if(confirm('記録をすべて消しますか？')){ST.q={};save();home();}">記録を消す</button></div></div>`;
+  $('#app').innerHTML=h;
+}
+
+function summary(u){
+  const U=UNITS[u];
+  $('#app').innerHTML=`<div style="--c:${U.c}"><h2>${U.icon} ${U.name}　まとめ</h2><p class="lead">黄色いマーカー＝テストに出やすい語句</p><div class="btns" style="margin-bottom:12px"><button class="btn" id="hideBtn" onclick="toggleHide()">🙈 マーカーをかくして確認</button><span id="hideNote"></span></div><div id="sumbody">${SUM[u]}</div>
+  <div class="btns"><button class="btn" onclick="go('cards','${u}')">🃏 カードで覚える</button><button class="btn fill" onclick="go('quiz','${u}')">✏️ クイズに挑戦</button></div></div>`;
+}
+
+/* ---------- カード ---------- */
+let C=null;
+function cards(u){
+  const list=Q.filter(q=>q.u===u&&q.type!=='order'&&!q.listen);
+  C={u,list:shuffle(list),i:0,flip:false};
+  drawCard();
+}
+function drawCard(){
+  const U=UNITS[C.u];
+  if(C.i>=C.list.length){
+    $('#app').innerHTML=`<div style="--c:${U.c}"><h2>🃏 カード おわり！</h2><p class="lead">「まだ」にした問題は「まちがえた問題だけ」で復習できます。</p>
+    <div class="btns"><button class="btn" onclick="cards('${C.u}')">もう一周</button><button class="btn fill" onclick="go('quiz','${C.u}')">クイズに挑戦</button></div></div>`;return;
+  }
+  const q=build(C.list[C.i]);
+  $('#app').innerHTML=`<div style="--c:${U.c}">
+  <div class="qhead"><span>${U.icon} ${U.name}　カード</span><span>${C.i+1} / ${C.list.length}</span></div>
+  <div class="prog"><i style="width:${C.i/C.list.length*100}%"></i></div>
+  <div class="flash" onclick="C.flip=!C.flip;drawCardFace()">
+    <div class="tag">${esc(q.tag)}</div>
+    ${q.fig?`<div class="fig">${staffSVG(q.fig)}</div>`:''}
+    <div class="front">${esc(q.q)}</div>
+    <div id="cb"></div>
+    <div class="hint" id="ch">タップで答えを見る（スペースキーでもOK）</div>
+  </div>
+  ${q.audio?`<div style="text-align:center;margin-top:10px"><button class="play" onclick="playQ()">▶ 音を聴く</button></div>`:''}
+  <div class="cardnav"><button class="btn" style="--c:var(--ng)" onclick="cardNext(false)">✕ まだ</button><button class="btn fill" style="--c:var(--ok)" onclick="cardNext(true)">○ 覚えた</button></div></div>`;
+  C.q=q; C.flip=false;
+}
+function drawCardFace(){
+  $('#cb').innerHTML=C.flip?`<div class="back">${esc(C.q.a)}</div><div class="ex">${esc(C.q.e||'')}</div>`:'';
+  $('#ch').textContent=C.flip?'○か✕を選んで次へ':'タップで答えを見る（スペースキーでもOK）';
+}
+function cardNext(ok){record(C.list[C.i].id,ok);C.i++;drawCard();}
+
+/* ---------- クイズ ---------- */
+function startQuiz(u,list){
+  let pool=list|| (u==='mix'?Q.slice(): u==='weak'?Q.filter(q=>isWeak(q.id)):Q.filter(q=>q.u===u));
+  pool=shuffle(pool);
+  if(!list && u!=='weak' && ST.n) pool=pool.slice(0,ST.n);
+  S={u,list:pool,i:0,ok:0,miss:[]};
+  drawQ();
+}
+function drawQ(){
+  if(S.i>=S.list.length) return result();
+  const raw=S.list[S.i],q=build(raw),uc=unitColor(raw.u);
+  S.cur=q; S.answered=false;
+  const title=S.u==='mix'?'全範囲ミックス':S.u==='weak'?'まちがえた問題':UNITS[S.u].name;
+  let body='';
+  if(q.type==='order'){
+    S.picked=[]; S.pool=shuffle(q.items);
+    body=`<div class="picked" id="picked"></div><div class="pool" id="pool"></div>
+    <div class="btns" style="margin-top:10px"><button class="btn" onclick="S.picked=[];drawOrder()">やり直す</button><button class="btn fill" id="chk" onclick="checkOrder()" disabled>答え合わせ</button></div>`;
+  }else{
+    S.opts=shuffle([q.a,...q.d]);
+    body=`<div class="choices">${S.opts.map((o,i)=>`<button class="choice" data-i="${i}" onclick="answer(${i})"><span class="n">${i+1}</span><span>${esc(o)}</span></button>`).join('')}</div>`;
+  }
+  $('#app').innerHTML=`<div style="--c:${uc}">
+  <div class="qhead"><span>${esc(title)}</span><span>${S.i+1} / ${S.list.length}　正解 ${S.ok}</span></div>
+  <div class="prog"><i style="width:${S.i/S.list.length*100}%"></i></div>
+  <div class="qcard" style="--c:${UNITS[raw.u].c}">
+    <div class="tag">${UNITS[raw.u].icon} ${esc(q.tag)}</div>
+    <p class="qtext">${esc(q.q)}</p>
+    ${q.fig?`<div class="fig">${staffSVG(q.fig)}</div>`:''}
+    ${q.audio?`<button class="play" onclick="playQ()">▶ 音を聴く</button>`:''}
+    ${body}
+    <div id="fb"></div>
+  </div></div>`;
+  if(q.type==='order') drawOrder();
+  if(q.listen) setTimeout(()=>{try{playQ();}catch(e){}},300);
+}
+function playQ(){
+  const q=S&&S.cur&&$('.qcard')?S.cur:C&&C.q;
+  if(!q||!q.audio) return;
+  if(q.audio.chord) playChord(CH[q.audio.chord]);
+  if(q.audio.meter) playMeter(q.audio.meter);
+}
+function answer(i){
+  if(S.answered) return; S.answered=true;
+  const q=S.cur,ok=S.opts[i]===q.a;
+  document.querySelectorAll('.choice').forEach((b,j)=>{b.disabled=true;if(S.opts[j]===q.a)b.classList.add('ok');else if(j===i)b.classList.add('ng');});
+  finish(ok,q.a);
+}
+function drawOrder(){
+  const rest=S.pool.filter(x=>!S.picked.includes(x));
+  $('#picked').innerHTML=S.picked.map((x,i)=>`<button class="chip in" onclick="S.picked.splice(${i},1);drawOrder()">${i+1}. ${esc(x)}</button>`).join('');
+  $('#pool').innerHTML=rest.map(x=>`<button class="chip" onclick='S.picked.push(${JSON.stringify(x)});drawOrder()'>${esc(x)}</button>`).join('');
+  $('#chk').disabled=S.picked.length!==S.pool.length;
+}
+function checkOrder(){
+  if(S.answered) return; S.answered=true;
+  const q=S.cur,ok=S.picked.every((x,i)=>x===q.items[i]);
+  $('#picked').innerHTML=S.picked.map((x,i)=>`<button class="chip ${x===q.items[i]?'ok':'ng'}" disabled>${i+1}. ${esc(x)}</button>`).join('');
+  document.querySelectorAll('.btns .btn').forEach(b=>b.disabled=true);
+  finish(ok,q.items.join(' → '));
+}
+function finish(ok,ans){
+  const q=S.cur;
+  record(q.id,ok);
+  if(ok) S.ok++; else S.miss.push({q:q.q,a:ans,e:q.e,raw:S.list[S.i]});
+  $('#fb').innerHTML=`<div class="fb ${ok?'ok':'ng'}"><b>${ok?'⭕ 正解！':'❌ ざんねん'}</b>${ok?'':`<br>正解：<b>${esc(ans)}</b>`}${q.e?`<br>${esc(q.e)}`:''}${ok?'':secHint(S.list[S.i])}</div>
+  <button class="btn fill next" id="nextBtn" onclick="S.i++;drawQ()">${S.i+1<S.list.length?'次の問題へ ▶':'結果を見る ▶'}</button>`;
+  $('#nextBtn').focus({preventScroll:true});
+  $('#fb').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function result(){
+  const n=S.list.length,p=Math.round(S.ok/n*100),uc=unitColor(S.u);
+  const msg=p===100?'パーフェクト！ テストもこの調子 🎉':p>=80?'よくできました！ あと少しで満点 👍':p>=50?'いい感じ。まちがえた所を「まとめ」で確認しよう':'まずは「まとめ」と「カード」で覚えてから再挑戦しよう';
+  $('#app').innerHTML=`<div style="--c:${uc}"><h2>結果</h2>
+  <p class="score">${S.ok} / ${n}</p><p class="msg">${p}点　${msg}</p>
+  <div class="btns" style="margin-bottom:14px">${S.miss.length?`<button class="btn fill" onclick="startQuiz('${S.u}',S.miss.map(m=>m.raw))">まちがえた${S.miss.length}問をもう一度</button>`:''}
+  <button class="btn" onclick="go('quiz','${S.u}')">別の問題で</button><button class="btn" onclick="go('home')">ホーム</button></div>
+  ${S.miss.map(m=>`<div class="miss">${esc(m.q)}<br><span class="a">→ ${esc(m.a)}</span>${m.e?`<br><span class="mini">${esc(m.e)}</span>`:''}${secLink(m.raw)}</div>`).join('')}</div>`;
+}
+
+/* キーボード：1〜4で選ぶ、Enterで次へ、スペースでカードをめくる */
+document.addEventListener('keydown',e=>{
+  if(e.target.tagName==='SELECT') return;
+  if($('.choices')&&!S.answered&&/^[1-4]$/.test(e.key)){const b=document.querySelector(`.choice[data-i="${+e.key-1}"]`);if(b){b.click();e.preventDefault();}}
+  else if(e.key==='Enter'&&$('#nextBtn')){e.preventDefault();$('#nextBtn').click();}
+  else if(e.key===' '&&$('.flash')){e.preventDefault();C.flip=!C.flip;drawCardFace();}
+});
+
+go('home');
+</script>
+</body>
+</html>

@@ -369,7 +369,7 @@ const Q = [
 {id:'z29',u:'anzen',tag:'計算',q:'800Wの電気ストーブを100Vで使うと、流れる電流は？',a:'8A',d:['0.8A','80A','800A'],e:'800 ÷ 100 ＝ 8A。'},
 {id:'z30',u:'anzen',tag:'計算',q:'定格15Aのテーブルタップで、電気ストーブ800Wとノートパソコン22Wを同時に使う。流れる電流と判定は？',a:'8.22A で定格以内',d:['82.2A で危険','22.5A で危険','0.22A で定格以内'],e:'8.0 ＋ 0.22 ＝ 8.22A ＜ 15A。'},
 {id:'z31',u:'anzen',tag:'計算',q:'定格15Aのテーブルタップで、オーブントースタ1000Wと電気ケトル1250Wを同時に使う。流れる電流と判定は？',a:'22.5A で危険',d:['8.22A で定格以内','2.25A で定格以内','12.5A で定格以内'],e:'10.0 ＋ 12.5 ＝ 22.5A ＞ 15A。タップやコードが発熱し、火災のおそれ。'},
-{id:'z32',u:'anzen',tag:'計算',q:'合計が定格をこえそうなときは、どうする？',a:'同時に使わず、時間をずらす',d:['コードを束ねて使う','タップをもう1つつなぐ（たこ足配線）','そのまま短い時間だけ使う'],e:'ワット数を見て、合計1500W（15A）以内に。'},
+{id:'z32',u:'anzen',tag:'計算',q:'合計が定格をこえそうなときは、どうする？',a:'同時に使わず、時間をずらす',d:['コードを束ねて使う','タップをもう1つつなぐ（たこ足配線）','そのまま短い時間だけ使う'],e:'このタップ（15A）なら、ワット数の合計1500W以内に。タップやコードに表示された容量を守る。'},
 {id:'z33',u:'anzen',tag:'警告図記号',q:'警告図記号で「丸に斜線」が表す意味は？',a:'禁止（してはいけない）',d:['注意（気をつける）','指示（必ずする）','安全（してもよい）'],e:'丸に斜線＝禁止、△＝注意、●塗りつぶし＝指示。'},
 {id:'z34',u:'anzen',tag:'警告図記号',q:'警告図記号で「△（三角）」が表す意味は？',a:'注意（気をつける）',d:['禁止（してはいけない）','指示（必ずする）','故障'],e:'△＝注意。例：感電注意。'},
 {id:'z35',u:'anzen',tag:'警告図記号',q:'警告図記号で「●（塗りつぶした丸）」が表す意味は？',a:'指示（必ずする）',d:['禁止（してはいけない）','注意（気をつける）','電源'],e:'例：電源プラグを抜く。'},
@@ -706,7 +706,7 @@ anzen:`
 <li>3つの言葉：<b>漏電</b>（漏れる）・<b>感電</b>（体に流れる）・<b>ショート</b>（大電流）</li>
 <li>分電盤のブレーカは3種類。<b>アース線</b>は漏れた電流を地面へ</li>
 <li><b>トラッキング現象</b>＝プラグのほこり＋湿気で発火</li>
-<li>計算：<b>電流 ＝ 電力 ÷ 電圧（100V）</b>。タップは<b>15A（1500W）</b>以内</li></ul></div>
+<li>計算：<b>電流 ＝ 電力 ÷ 電圧（100V）</b>。タップ・コードに<b>表示された容量</b>以内（15Aのタップなら1500W）</li></ul></div>
 
 <div class="sum"><h3>① 電気による事故</h3>
 <p>家庭用電気製品の火災は、<span class="k">プラグ・テーブルタップ・コード</span> など、毎日さわる「電気の通り道」が上位。</p>
@@ -768,7 +768,93 @@ anzen:`
 <p>差しっぱなしのプラグが危ない ── <span class="k">トラッキング現象</span></p>
 <div class="flow arrow"><div><b>①</b>　プラグのすき間に <span class="k">ほこり</span> がたまる</div><div><b>②</b>　ほこりが <span class="k">湿気</span> を吸う</div><div><b>③</b>　刃と刃の間で <b>小さな放電</b> がくり返される</div><div><b>④</b>　表面がこげて電気の通り道ができ、<span class="k">発火</span></div></div>
 <p>対策：<span class="k">ときどきプラグを抜いて、ほこりをふく</span>。</p>
-<p class="mini">トラッキング対策プラグ：ほこりがたまる刃の <b>根元を絶縁</b>（カバー）して、電気の通り道をできにくくしている。</p>
+<svg viewBox="0 0 1500 1060" style="width:100%;max-width:440px;display:block;margin:6px auto;border-radius:12px" role="img" aria-label="ふつうのプラグとトラッキング対策プラグの根元の比較">
+  <defs>
+    <linearGradient id="tp-metal" x1="0" x2="1">
+      <stop offset="0" stop-color="#8d949b"/><stop offset=".35" stop-color="#e6eaee"/><stop offset=".6" stop-color="#b9c0c7"/><stop offset="1" stop-color="#7e868e"/>
+    </linearGradient>
+    <linearGradient id="tp-body" x1="0" x2="1">
+      <stop offset="0" stop-color="#e9e6df"/><stop offset=".3" stop-color="#ffffff"/><stop offset=".75" stop-color="#f6f4ef"/><stop offset="1" stop-color="#d8d4cb"/>
+    </linearGradient>
+    <linearGradient id="tp-sleeve" x1="0" x2="1">
+      <stop offset="0" stop-color="#d9d4c8"/><stop offset=".4" stop-color="#fffdf7"/><stop offset="1" stop-color="#cfc9bb"/>
+    </linearGradient>
+    <radialGradient id="tp-spark">
+      <stop offset="0" stop-color="#fff"/><stop offset=".35" stop-color="#fff59d"/><stop offset=".7" stop-color="#ffb300" stop-opacity=".8"/><stop offset="1" stop-color="#ff6f00" stop-opacity="0"/>
+    </radialGradient>
+    <clipPath id="tp-zl"><circle cx="375" cy="830" r="190"/></clipPath>
+    <clipPath id="tp-zr"><circle cx="1125" cy="830" r="190"/></clipPath>
+    <g id="tp-cordbody">
+      <path d="M0 -40 C 0 20, 0 60, 0 120" stroke="#e4e0d7" stroke-width="44" fill="none" stroke-linecap="round"/>
+      <path d="M0 -40 C 0 20, 0 60, 0 120" stroke="#fff" stroke-width="30" fill="none" stroke-linecap="round"/>
+      <rect x="-48" y="90" width="96" height="70" rx="18" fill="url(#tp-body)" stroke="#bdb6a8" stroke-width="3"/>
+      <rect x="-150" y="150" width="300" height="250" rx="46" fill="url(#tp-body)" stroke="#bdb6a8" stroke-width="4"/>
+      <g stroke="#d6d0c4" stroke-width="7" stroke-linecap="round">
+        <line x1="-70" y1="215" x2="70" y2="215"/><line x1="-80" y1="240" x2="80" y2="240"/><line x1="-70" y1="265" x2="70" y2="265"/>
+      </g>
+    </g>
+  </defs>
+  <rect width="1500" height="1060" fill="#fefaee"/>
+  <line x1="750" y1="40" x2="750" y2="1020" stroke="#e6dcc4" stroke-width="4" stroke-dasharray="14 14"/>
+  <g transform="translate(375 40)">
+    <ellipse cx="0" cy="590" rx="190" ry="18" fill="#000" opacity=".07"/>
+    <use href="#tp-cordbody"/>
+    <rect x="-94" y="398" width="40" height="180" rx="5" fill="url(#tp-metal)" stroke="#6f767d" stroke-width="3"/>
+    <rect x="54" y="398" width="40" height="180" rx="5" fill="url(#tp-metal)" stroke="#6f767d" stroke-width="3"/>
+    <rect x="-120" y="385" width="240" height="80" rx="16" fill="none" stroke="#d32f2f" stroke-width="5" stroke-dasharray="12 9"/>
+  </g>
+  <path d="M255 505 L230 655 M495 505 L520 655" stroke="#d32f2f" stroke-width="4" stroke-dasharray="10 8" fill="none"/>
+  <g clip-path="url(#tp-zl)">
+    <rect x="160" y="620" width="440" height="430" fill="#fbf6e8"/>
+    <rect x="160" y="620" width="440" height="100" fill="url(#tp-body)"/>
+    <line x1="160" y1="720" x2="600" y2="720" stroke="#bdb6a8" stroke-width="4"/>
+    <rect x="160" y="840" width="440" height="220" fill="#ece7dc"/>
+    <line x1="160" y1="840" x2="600" y2="840" stroke="#a79f8e" stroke-width="5"/>
+    <rect x="205" y="840" width="105" height="220" fill="#5d564c"/>
+    <rect x="440" y="840" width="105" height="220" fill="#5d564c"/>
+    <rect x="215" y="720" width="85" height="340" fill="url(#tp-metal)" stroke="#6f767d" stroke-width="3"/>
+    <rect x="450" y="720" width="85" height="340" fill="url(#tp-metal)" stroke="#6f767d" stroke-width="3"/>
+    <path d="M300 722 L450 722 L450 760 q-20 26 -45 14 q-25 22 -55 4 q-28 18 -50 -6z" fill="#9e9a92"/>
+    <path d="M300 838 q40 -30 75 -10 q35 -24 75 8z" fill="#9e9a92"/>
+    <g fill="#8a857c"><circle cx="330" cy="748" r="8"/><circle cx="400" cy="756" r="9"/><circle cx="430" cy="740" r="7"/></g>
+    <g fill="#64b5f6" stroke="#1e88e5" stroke-width="2"><path d="M345 770 q8 14 0 22 q-8 -8 0 -22z"/><path d="M415 775 q9 15 0 24 q-9 -9 0 -24z"/></g>
+    <path d="M300 727 L450 727" stroke="#3e2723" stroke-width="12" stroke-linecap="round"/>
+    <path d="M300 731 L330 744 L352 728 L380 746 L405 729 L430 744 L450 731" stroke="#ff6f00" stroke-width="7" fill="none" stroke-linejoin="round"/>
+    <path d="M300 731 L330 744 L352 728 L380 746 L405 729 L430 744 L450 731" stroke="#fff59d" stroke-width="3" fill="none" stroke-linejoin="round"/>
+    <circle cx="375" cy="738" r="40" fill="url(#tp-spark)"/>
+  </g>
+  <circle cx="375" cy="830" r="190" fill="none" stroke="#d32f2f" stroke-width="8"/>
+  <g transform="translate(1125 40)">
+    <ellipse cx="0" cy="590" rx="190" ry="18" fill="#000" opacity=".07"/>
+    <use href="#tp-cordbody"/>
+    <rect x="-94" y="398" width="40" height="180" rx="5" fill="url(#tp-metal)" stroke="#6f767d" stroke-width="3"/>
+    <rect x="54" y="398" width="40" height="180" rx="5" fill="url(#tp-metal)" stroke="#6f767d" stroke-width="3"/>
+    <rect x="-100" y="396" width="52" height="72" rx="8" fill="url(#tp-sleeve)" stroke="#a79f8e" stroke-width="3"/>
+    <rect x="48" y="396" width="52" height="72" rx="8" fill="url(#tp-sleeve)" stroke="#a79f8e" stroke-width="3"/>
+    <rect x="-120" y="385" width="240" height="80" rx="16" fill="none" stroke="#1565c0" stroke-width="5" stroke-dasharray="12 9"/>
+  </g>
+  <path d="M1005 505 L980 655 M1245 505 L1270 655" stroke="#1565c0" stroke-width="4" stroke-dasharray="10 8" fill="none"/>
+  <g clip-path="url(#tp-zr)">
+    <rect x="910" y="620" width="440" height="430" fill="#fbf6e8"/>
+    <rect x="910" y="620" width="440" height="100" fill="url(#tp-body)"/>
+    <line x1="910" y1="720" x2="1350" y2="720" stroke="#bdb6a8" stroke-width="4"/>
+    <rect x="910" y="840" width="440" height="220" fill="#ece7dc"/>
+    <line x1="910" y1="840" x2="1350" y2="840" stroke="#a79f8e" stroke-width="5"/>
+    <rect x="955" y="840" width="105" height="220" fill="#5d564c"/>
+    <rect x="1190" y="840" width="105" height="220" fill="#5d564c"/>
+    <rect x="965" y="720" width="85" height="340" fill="url(#tp-metal)" stroke="#6f767d" stroke-width="3"/>
+    <rect x="1200" y="720" width="85" height="340" fill="url(#tp-metal)" stroke="#6f767d" stroke-width="3"/>
+    <rect x="953" y="720" width="109" height="150" rx="10" fill="url(#tp-sleeve)" stroke="#a79f8e" stroke-width="4"/>
+    <rect x="1188" y="720" width="109" height="150" rx="10" fill="url(#tp-sleeve)" stroke="#a79f8e" stroke-width="4"/>
+    <path d="M1062 722 L1188 722 L1188 760 q-20 26 -45 14 q-25 22 -55 4 q-15 10 -26 -6z" fill="#9e9a92"/>
+    <path d="M1062 838 q30 -26 63 -10 q30 -20 63 8z" fill="#9e9a92"/>
+    <g fill="#64b5f6" stroke="#1e88e5" stroke-width="2"><path d="M1100 770 q8 14 0 22 q-8 -8 0 -22z"/><path d="M1155 775 q9 15 0 24 q-9 -9 0 -24z"/></g>
+    <g transform="translate(1125 905) scale(.85)"><circle r="44" fill="#2e7d32"/><path d="M-20 0 L-5 16 L22 -16" stroke="#fff" stroke-width="11" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+  </g>
+  <circle cx="1125" cy="830" r="190" fill="none" stroke="#1565c0" stroke-width="8"/>
+</svg>
+<p class="mini" style="text-align:center">左：ふつうのプラグ（根元が金属のまま）／右：対策プラグ（根元を絶縁カバーで覆う）。下の丸はコンセントに差した根元の拡大。</p>
+<p class="mini">トラッキング対策プラグ：ほこりがたまる刃の <b>根元を絶縁</b>（カバー）して、電気の通り道をできにくくしている。<b>対策プラグでも、ときどきほこりをそうじ</b>する。</p>
 <p><b>コードを束ねたまま使うと</b>：熱が <span class="k">逃げにくい</span> → 発熱 → コードの劣化 → 発火</p>
 <div class="grid2"><div>✅ コードはほどいて使う</div><div>✅ 家具の下じきにしない</div><div>✅ <b>プラグを持って</b>抜く</div><div>✅ ぬれた手でさわらない</div></div></div>
 
@@ -802,7 +888,7 @@ anzen:`
 <text x="36" y="68" text-anchor="middle">0A</text><text x="286" y="68" text-anchor="middle">25A</text>
 </svg></div>
 <p>定格をこえた電流 → タップやコードが <b>発熱</b> → <b>火災</b> のおそれ。</p>
-<p>ワット数を見て <span class="k">合計1500W（15A）以内</span> に。多いときは <span class="k">同時に使わず、時間をずらす</span>。</p>
+<p>このタップ（15A）なら、ワット数の <span class="k">合計1500W以内</span> に（タップ・コードに <b>表示された容量</b> を守る）。多いときは <span class="k">同時に使わず、時間をずらす</span>。</p>
 <p class="mini">定格以内でも、コードの傷・ほこり・束ねた使い方には注意。</p></div>
 
 <div class="sum"><h3>⑨ 警告図記号・災害のとき</h3>
